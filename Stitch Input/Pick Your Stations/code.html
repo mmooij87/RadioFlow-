@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KINK | Station Selection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#d4e3ff",
+              "secondary": "#a4c9ff",
+              "outline-variant": "#4f4633",
+              "outline": "#9c8f79",
+              "inverse-on-surface": "#243240",
+              "on-tertiary-fixed": "#001d36",
+              "tertiary-container": "#9fc5f5",
+              "surface-tint": "#f8bd20",
+              "secondary-fixed-dim": "#a4c9ff",
+              "surface-variant": "#283644",
+              "on-surface": "#d5e4f6",
+              "on-primary-fixed": "#261a00",
+              "on-error": "#690005",
+              "surface-container-lowest": "#020f1c",
+              "surface-container": "#12212e",
+              "inverse-surface": "#d5e4f6",
+              "on-tertiary-container": "#29527b",
+              "on-secondary-fixed-variant": "#034883",
+              "on-tertiary-fixed-variant": "#1f4972",
+              "on-secondary-fixed": "#001c39",
+              "surface-bright": "#2d3a49",
+              "tertiary-fixed": "#d1e4ff",
+              "inverse-primary": "#795900",
+              "secondary-container": "#084a86",
+              "on-background": "#d5e4f6",
+              "error-container": "#93000a",
+              "primary-container": "#f3b91a",
+              "surface-container-high": "#1d2b39",
+              "primary-fixed": "#ffdf9e",
+              "on-tertiary": "#003258",
+              "on-secondary": "#00315d",
+              "on-primary-container": "#664b00",
+              "tertiary-fixed-dim": "#a3caf9",
+              "on-primary-fixed-variant": "#5b4300",
+              "tertiary": "#c9e0ff",
+              "primary": "#ffd98a",
+              "surface-container-highest": "#283644",
+              "error": "#ffb4ab",
+              "background": "#061421",
+              "surface-dim": "#061421",
+              "surface": "#061421",
+              "on-error-container": "#ffdad6",
+              "surface-container-low": "#0e1d2a",
+              "primary-fixed-dim": "#f8bd20",
+              "on-surface-variant": "#d3c5ac",
+              "on-secondary-container": "#8bbbfe",
+              "on-primary": "#3f2e00"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .station-card-active {
+            box-shadow: 0 0 20px rgba(243, 185, 26, 0.15);
+        }
+        .text-stroke {
+            -webkit-text-stroke: 1px #d5e4f6;
+            color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 z-50 w-full h-16 px-6 flex justify-between items-center bg-gradient-to-b from-[#061421] to-transparent">
+<div class="flex items-center gap-4">
+<button class="text-[#f3b91a] active:scale-95 transition-transform">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-['Space_Grotesk'] font-black text-2xl text-[#f3b91a] tracking-[-0.04em] uppercase">KINK</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#f3b91a] active:scale-95 transition-transform">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-5xl mx-auto">
+<!-- Hero Selection Logic -->
+<section class="mb-12">
+<h2 class="font-headline font-extrabold text-5xl md:text-7xl tracking-tighter uppercase mb-2">
+                CHOOSE YOUR <span class="text-primary-container">SOUND</span>
+</h2>
+<p class="font-body text-on-surface-variant text-lg max-w-xl">
+                Select 1 to 3 stations to fuse into your custom sonic profile. We'll generate a brutalist mix based on your frequency.
+            </p>
+</section>
+<!-- Station Grid: Bento Style -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+<!-- KINK Main -->
+<div class="group relative overflow-hidden aspect-square bg-surface-container-highest border-l-4 border-primary-container station-card-active p-6 flex flex-col justify-between cursor-pointer active:scale-95 transition-all">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">radio</span>
+<span class="material-symbols-outlined text-primary-container">check_circle</span>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase tracking-widest text-primary-container mb-1 block">Live Now</span>
+<h3 class="font-headline font-bold text-2xl leading-none uppercase tracking-tighter">KINK Main</h3>
+</div>
+</div>
+<!-- KINK 80s -->
+<div class="group relative overflow-hidden aspect-square bg-surface-container-low p-6 flex flex-col justify-between cursor-pointer hover:bg-surface-container-high transition-all active:scale-95">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-on-surface/40 text-4xl">settings_input_component</span>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface/40 mb-1 block">Classic Rock</span>
+<h3 class="font-headline font-bold text-2xl leading-none uppercase tracking-tighter">KINK 80s</h3>
+</div>
+</div>
+<!-- KINK 90s -->
+<div class="group relative overflow-hidden aspect-square bg-surface-container-low p-6 flex flex-col justify-between cursor-pointer hover:bg-surface-container-high transition-all active:scale-95">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-on-surface/40 text-4xl">album</span>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface/40 mb-1 block">Grunge Era</span>
+<h3 class="font-headline font-bold text-2xl leading-none uppercase tracking-tighter">KINK 90s</h3>
+</div>
+</div>
+<!-- KINK Distortion -->
+<div class="group relative overflow-hidden aspect-square bg-surface-container-highest border-l-4 border-primary-container station-card-active p-6 flex flex-col justify-between cursor-pointer active:scale-95 transition-all">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="material-symbols-outlined text-primary-container">check_circle</span>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase tracking-widest text-primary-container mb-1 block">Heavy Metal</span>
+<h3 class="font-headline font-bold text-2xl leading-none uppercase tracking-tighter">KINK Distortion</h3>
+</div>
+</div>
+<!-- KINK Indie -->
+<div class="group relative overflow-hidden aspect-square bg-surface-container-low p-6 flex flex-col justify-between cursor-pointer hover:bg-surface-container-high transition-all active:scale-95">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-on-surface/40 text-4xl">auto_awesome</span>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface/40 mb-1 block">New Wave</span>
+<h3 class="font-headline font-bold text-2xl leading-none uppercase tracking-tighter">KINK Indie</h3>
+</div>
+</div>
+<!-- KINK Classics -->
+<div class="group relative overflow-hidden aspect-square bg-surface-container-low p-6 flex flex-col justify-between cursor-pointer hover:bg-surface-container-high transition-all active:scale-95">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-on-surface/40 text-4xl">history</span>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface/40 mb-1 block">Vintage</span>
+<h3 class="font-headline font-bold text-2xl leading-none uppercase tracking-tighter">KINK Classics</h3>
+</div>
+</div>
+<!-- KINK Fresh -->
+<div class="group relative overflow-hidden aspect-square bg-surface-container-low p-6 flex flex-col justify-between cursor-pointer hover:bg-surface-container-high transition-all active:scale-95">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-on-surface/40 text-4xl">fiber_new</span>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface/40 mb-1 block">Modern Rock</span>
+<h3 class="font-headline font-bold text-2xl leading-none uppercase tracking-tighter">KINK Fresh</h3>
+</div>
+</div>
+<!-- KINK Alternative -->
+<div class="group relative overflow-hidden aspect-square bg-surface-container-low p-6 flex flex-col justify-between cursor-pointer hover:bg-surface-container-high transition-all active:scale-95">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-on-surface/40 text-4xl">shuffle</span>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface/40 mb-1 block">Alternative</span>
+<h3 class="font-headline font-bold text-2xl leading-none uppercase tracking-tighter">KINK Alt</h3>
+</div>
+</div>
+</div>
+<!-- Action Button Container -->
+<div class="mt-16 flex flex-col items-center">
+<button class="group relative w-full md:w-auto md:min-w-[400px] h-16 bg-gradient-to-r from-primary-container to-primary font-headline font-black text-on-primary-container uppercase tracking-[0.2em] rounded-sm flex items-center justify-center gap-4 hover:shadow-[0_0_40px_rgba(243,185,26,0.3)] transition-all active:scale-95">
+                GENERATE PLAYLIST
+                <span class="material-symbols-outlined font-bold">bolt</span>
+</button>
+<p class="font-label text-[10px] text-on-surface/40 mt-4 uppercase tracking-[0.3em]">2 Stations Selected</p>
+</div>
+</main>
+<!-- Loading State Overlay (Hidden by Default) -->
+<div class="fixed inset-0 z-[60] bg-surface/90 backdrop-blur-2xl flex flex-col items-center justify-center text-center px-6 hidden">
+<div class="relative w-24 h-24 mb-8">
+<div class="absolute inset-0 border-4 border-primary-container/20 rounded-full"></div>
+<div class="absolute inset-0 border-4 border-t-primary-container rounded-full animate-spin"></div>
+<span class="absolute inset-0 flex items-center justify-center material-symbols-outlined text-primary-container text-4xl">graphic_eq</span>
+</div>
+<h2 class="font-headline font-extrabold text-4xl uppercase tracking-tighter mb-2">Amplifying Signals</h2>
+<p class="font-body text-on-surface-variant">Mixing KINK Main and KINK Distortion frequencies...</p>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-[#12212e]/90 backdrop-blur-xl border-t border-[#283644]/30 shadow-[0_-4px_40px_rgba(243,185,26,0.08)] flex justify-around items-center pt-2 pb-safe-offset-2 px-4 h-20">
+<a class="flex flex-col items-center justify-center text-[#f3b91a] bg-[#283644] rounded-sm px-4 py-1 active:scale-90 duration-150 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">radio</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-widest mt-1">Stations</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#d5e4f6]/60 hover:text-[#f3b91a] active:scale-90 duration-150 transition-all" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-widest mt-1">Mosaic</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#d5e4f6]/60 hover:text-[#f3b91a] active:scale-90 duration-150 transition-all" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-widest mt-1">Favorites</span>
+</a>
+</nav>
+</body></html>

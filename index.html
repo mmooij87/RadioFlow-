@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KINK Sonic Feed — RadioFlow</title>
+  <meta name="description" content="A brutalist music discovery experience powered by KINK radio. Explore a sonic mosaic of alternative, rock, and indie tracks." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles/design-system.css" />
+  <link rel="stylesheet" href="/src/styles/pages.css" />
+</head>
+<body>
+  <!-- Top App Bar -->
+  <header id="top-bar" class="top-bar">
+    <div class="top-bar__left">
+      <button class="icon-btn icon-btn--primary" aria-label="Menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <h1 class="top-bar__brand">KINK</h1>
+    </div>
+    <div class="top-bar__right">
+      <button class="icon-btn icon-btn--primary" aria-label="Search">
+        <span class="material-symbols-outlined">search</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Area (SPA pages render here) -->
+  <main id="app"></main>
+
+  <!-- Bottom Navigation -->
+  <nav id="bottom-nav" class="bottom-nav">
+    <a href="#/stations" class="bottom-nav__item bottom-nav__item--active" data-page="stations" id="nav-stations">
+      <span class="material-symbols-outlined">radio</span>
+      <span class="bottom-nav__label">Stations</span>
+    </a>
+    <a href="#/feed" class="bottom-nav__item" data-page="feed" id="nav-feed">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;">vertical_split</span>
+      <span class="bottom-nav__label">Feed</span>
+    </a>
+    <a href="#/favorites" class="bottom-nav__item" data-page="favorites" id="nav-favorites">
+      <span class="material-symbols-outlined">favorite</span>
+      <span class="bottom-nav__label">Favorites</span>
+    </a>
+  </nav>
+
+  <!-- Global Audio Player (hidden) -->
+  <audio id="audio-player" preload="none"></audio>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

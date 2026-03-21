@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Favorites - KINK</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed": "#d4e3ff",
+                        "secondary": "#a4c9ff",
+                        "outline-variant": "#4f4633",
+                        "outline": "#9c8f79",
+                        "inverse-on-surface": "#243240",
+                        "on-tertiary-fixed": "#001d36",
+                        "tertiary-container": "#9fc5f5",
+                        "surface-tint": "#f8bd20",
+                        "secondary-fixed-dim": "#a4c9ff",
+                        "surface-variant": "#283644",
+                        "on-surface": "#d5e4f6",
+                        "on-primary-fixed": "#261a00",
+                        "on-error": "#690005",
+                        "surface-container-lowest": "#020f1c",
+                        "surface-container": "#12212e",
+                        "inverse-surface": "#d5e4f6",
+                        "on-tertiary-container": "#29527b",
+                        "on-secondary-fixed-variant": "#034883",
+                        "on-tertiary-fixed-variant": "#1f4972",
+                        "on-secondary-fixed": "#001c39",
+                        "surface-bright": "#2d3a49",
+                        "tertiary-fixed": "#d1e4ff",
+                        "inverse-primary": "#795900",
+                        "secondary-container": "#084a86",
+                        "on-background": "#d5e4f6",
+                        "error-container": "#93000a",
+                        "primary-container": "#f3b91a",
+                        "surface-container-high": "#1d2b39",
+                        "primary-fixed": "#ffdf9e",
+                        "on-tertiary": "#003258",
+                        "on-secondary": "#00315d",
+                        "on-primary-container": "#664b00",
+                        "tertiary-fixed-dim": "#a3caf9",
+                        "on-primary-fixed-variant": "#5b4300",
+                        "tertiary": "#c9e0ff",
+                        "primary": "#ffd98a",
+                        "surface-container-highest": "#283644",
+                        "error": "#ffb4ab",
+                        "background": "#061421",
+                        "surface-dim": "#061421",
+                        "surface": "#061421",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#0e1d2a",
+                        "primary-fixed-dim": "#f8bd20",
+                        "on-surface-variant": "#d3c5ac",
+                        "on-secondary-container": "#8bbbfe",
+                        "on-primary": "#3f2e00"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container min-h-screen pb-24">
+<header class="bg-[#061421] dark:bg-[#020f1c] fixed top-0 w-full z-50 bg-gradient-to-b from-[#061421] to-transparent">
+<div class="flex justify-between items-center w-full px-6 h-16">
+<button class="text-[#f3b91a] active:scale-95 transition-transform">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-2xl font-black text-[#f3b91a] tracking-[-0.04em] font-['Space_Grotesk'] uppercase">KINK</h1>
+<button class="text-[#f3b91a] active:scale-95 transition-transform">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<main class="pt-20 px-4 md:max-w-4xl md:mx-auto">
+<div class="mb-10">
+<h2 class="text-[3.5rem] font-headline font-black leading-none tracking-tighter uppercase mb-2">Favorites</h2>
+<div class="flex items-center gap-2">
+<span class="text-primary-container font-headline font-bold">12 TRACKS</span>
+<div class="h-[2px] flex-grow bg-surface-container-highest"></div>
+</div>
+</div>
+<section class="space-y-4">
+<!-- Track 1 -->
+<div class="group flex items-center bg-surface-container p-3 gap-4 transition-all hover:bg-surface-container-high border-l-2 border-primary-container">
+<div class="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-sm">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Grungy alternative rock album cover art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBG13D38GxA9v9NV8XsjSQwqwr7WIRoS75dFDHDAfDeyMJiW4rCHIcU8T75RawvfHsFJqYpceYfojJoe_szlilNTXXpurXIOzBPxVbiZrwNT7ioc3mcuyNnb6-h0HSMjLrrpGi93MR9OV0hVUjIth-xU4RyTGjt4ppn-Y9UZmGOxf6432--0vJfqBGv4h9hhTFn6Ge3q-eTgm9EIJ4hUdKAqtrYu12z-gH1o-YQjIGySuOK2r92yMSa5W7blFVapvzUwWBK-jaEKBXe"/>
+</div>
+<div class="flex-grow min-w-0">
+<h3 class="font-headline text-lg font-bold truncate leading-tight uppercase text-on-surface">The Heavy Sun</h3>
+<p class="font-body text-sm text-on-surface-variant truncate">Architects of Silence</p>
+<div class="mt-2 flex items-center gap-3">
+<span class="font-label text-[10px] tracking-widest text-primary font-bold uppercase">Rock</span>
+<span class="font-label text-[10px] text-on-surface/40 uppercase">04:22</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<button class="flex items-center justify-center w-10 h-10 bg-surface-container-highest text-primary-container active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 border border-primary/20 text-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]">music_note</span>
+</button>
+</div>
+</div>
+<!-- Track 2 -->
+<div class="group flex items-center bg-surface-container p-3 gap-4 transition-all hover:bg-surface-container-high">
+<div class="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-sm">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Abstract distorted music visualization artwork" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOrAb09H1MDiGcWQEUKi3eTlf4llXzGJWxSR0oMT7oHXTrOjXU6xu-xfdDzzvuA43fCQ054gnntg4X4wq_BcWLcXK6-1X5cf6g6hZjtcQCLWmUxb__po03AApcFa9C2EygOqPt_QO8A87OoxcDJzuTerkaryGkgqN-adgrlyFxNycoup0GiXsiFa-qxpSMFqh3hGnRsqTK1keAa0Jyc_TPyIP-lB-yDxSKWvBBXDgki4xotLU25uqOvWgEZPpWkeoisBHFuG1bV33j"/>
+</div>
+<div class="flex-grow min-w-0">
+<h3 class="font-headline text-lg font-bold truncate leading-tight uppercase text-on-surface">Velocity Zero</h3>
+<p class="font-body text-sm text-on-surface-variant truncate">Neon Riot</p>
+<div class="mt-2 flex items-center gap-3">
+<span class="font-label text-[10px] tracking-widest text-primary font-bold uppercase">Punk</span>
+<span class="font-label text-[10px] text-on-surface/40 uppercase">03:15</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<button class="flex items-center justify-center w-10 h-10 bg-surface-container-highest text-primary-container active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 border border-primary/20 text-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+</button>
+</div>
+</div>
+<!-- Track 3 -->
+<div class="group flex items-center bg-surface-container p-3 gap-4 transition-all hover:bg-surface-container-high">
+<div class="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-sm">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Electric guitar close up with lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBNfSoKFc337GRoIagUGxQuPfOu-3KxhRjiiSNiWW7gbU4_vBx8jrUDoRPGE6qd4JSZVkG_uXig4XTk_Tne5gkgZdxH8EeQ551e4t5n2wB7iNe6inOwAfauokkkbxLLjjyOQYFPb8EJaNUMOKSWDXhvE3ctfkc6rLjOVlB12uvWy_DYmD51tdrwW-gb8PPtNcT7ZPBchVA5fEEWIffvlQaxxn3MLBdqACJGrjlgGz9tpNUiIVX8eI0OIfMDIh_4l83ebWFB-Fjubxw"/>
+</div>
+<div class="flex-grow min-w-0">
+<h3 class="font-headline text-lg font-bold truncate leading-tight uppercase text-on-surface">Feedback Loop</h3>
+<p class="font-body text-sm text-on-surface-variant truncate">Static Noise</p>
+<div class="mt-2 flex items-center gap-3">
+<span class="font-label text-[10px] tracking-widest text-primary font-bold uppercase">Indie</span>
+<span class="font-label text-[10px] text-on-surface/40 uppercase">05:40</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<button class="flex items-center justify-center w-10 h-10 bg-surface-container-highest text-primary-container active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 border border-primary/20 text-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]">music_note</span>
+</button>
+</div>
+</div>
+<!-- Featured Album/CTA Bento -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-8">
+<div class="relative bg-primary-container p-6 flex flex-col justify-end min-h-[200px] overflow-hidden group">
+<div class="absolute inset-0 opacity-20 transition-transform duration-700 group-hover:scale-110">
+<img class="w-full h-full object-cover" data-alt="Audio equalizer and spectrum analyzer display" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmN09C5UsTZo2Be3Gr31ACyRBzD7eQOGG8K8AK7eQLAS4JtCOBqjhQ3wUkxB4hJRuEWKdL9LXIfIKBIXXpJI3FTeRKvr7qE0g8sPt5QUwE57mVnPWVT2LpHJxQGwBkM90kJMW3TK1tKoCqKqHFh40ur0ytVbkt1HMNOrAhZc29e9il76KnuYuVIqwab36yAp4rakZ6FqDASazT-lj3f82fiqAYZDfJQiqY6g3UUMXzrROTJUW5UxbdqpGRuVh0cR533nsf2MhfHvPx"/>
+</div>
+<div class="relative z-10">
+<h4 class="font-headline text-3xl font-black text-on-primary-container leading-none uppercase mb-2">Sync to Cloud</h4>
+<p class="font-body text-sm text-on-primary-container font-medium mb-4">Export your KINK favorites to Spotify or Apple Music instantly.</p>
+<button class="bg-surface-container-lowest px-6 py-2 font-headline font-bold text-xs tracking-widest uppercase hover:bg-surface text-primary transition-colors">Connect Now</button>
+</div>
+</div>
+<div class="bg-surface-container-highest p-6 flex flex-col justify-center border border-primary/10">
+<div class="mb-4">
+<span class="material-symbols-outlined text-primary text-4xl">headphones</span>
+</div>
+<h4 class="font-headline text-2xl font-bold text-on-surface leading-tight uppercase">Curated For You</h4>
+<p class="font-body text-sm text-on-surface-variant mt-2">Based on your hearted tracks, we've built a custom playlist of new releases.</p>
+</div>
+</div>
+<!-- Track 4 -->
+<div class="group flex items-center bg-surface-container p-3 gap-4 transition-all hover:bg-surface-container-high">
+<div class="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-sm">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Microphone in a dark recording studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsOMFG6Bo5hQrn0uJuB5DpvQWAdhjvHtx_TNvmlO4lVj0_1dYSvWTnbsubxHZuSBD6rso0SKt3u7Dpc9EeDcIx5JAVVEFTA_m9DZx2PE187Yc0RZOZ3cC9bmE4yRDEew8rugTt8I_1eM0HoC_gw5a-UIRD8qBq6rxLOxNsDdjZjMrMxsfxK8aMvdEWtA5Z3GL0xnWNY1hDoVTm6B6yJtWhajp2-lgLVUK46rlYvmsryDpoHvMvBxHXGKgQN2tLbYxIq9GOQYefNjlb"/>
+</div>
+<div class="flex-grow min-w-0">
+<h3 class="font-headline text-lg font-bold truncate leading-tight uppercase text-on-surface">Silver Tongue</h3>
+<p class="font-body text-sm text-on-surface-variant truncate">The Echo Chamber</p>
+<div class="mt-2 flex items-center gap-3">
+<span class="font-label text-[10px] tracking-widest text-primary font-bold uppercase">Rock</span>
+<span class="font-label text-[10px] text-on-surface/40 uppercase">03:55</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<button class="flex items-center justify-center w-10 h-10 bg-surface-container-highest text-primary-container active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 border border-primary/20 text-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]">music_note</span>
+</button>
+</div>
+</div>
+<!-- Track 5 -->
+<div class="group flex items-center bg-surface-container p-3 gap-4 transition-all hover:bg-surface-container-high">
+<div class="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-sm">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Live concert silhouette in smoky lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC72jec8V16_K8TThgRi8SU7sproYOR5OW-TkoY92KZwuorlQnvp2dXDMLxkmcwP7ewS_-KUrVZTDWfqx3mJ2thz4ZDalm3FDTRclQB_QXPG1T6hq8dN_t9MSCc4J5S98mBBqLmsioss_WltMbeO42UPK6lAPJMkRK-EMnGZBiDjgJeBVBZCOzCwvGZl_mD1g21cmq7J9b8gcxEvYGj344UYjRgre3xah9QboqmHsIlk7mrBGwRkm5TNpvo3wZ_lAccPOm3y5pXz7RJ"/>
+</div>
+<div class="flex-grow min-w-0">
+<h3 class="font-headline text-lg font-bold truncate leading-tight uppercase text-on-surface">Distorted Dreams</h3>
+<p class="font-body text-sm text-on-surface-variant truncate">Fuzz Factory</p>
+<div class="mt-2 flex items-center gap-3">
+<span class="font-label text-[10px] tracking-widest text-primary font-bold uppercase">Grunge</span>
+<span class="font-label text-[10px] text-on-surface/40 uppercase">04:10</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<button class="flex items-center justify-center w-10 h-10 bg-surface-container-highest text-primary-container active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 border border-primary/20 text-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[20px]">music_note</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-safe-offset-2 px-4 bg-[#12212e]/90 backdrop-blur-xl border-t border-[#283644]/30 shadow-[0_-4px_40px_rgba(243,185,26,0.08)] z-50">
+<a class="flex flex-col items-center justify-center text-[#d5e4f6]/60 hover:text-[#f3b91a] transition-all active:scale-90 duration-150 py-2" href="#">
+<span class="material-symbols-outlined">radio</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-widest mt-1">Stations</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#d5e4f6]/60 hover:text-[#f3b91a] transition-all active:scale-90 duration-150 py-2" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-widest mt-1">Mosaic</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#f3b91a] bg-[#283644] rounded-sm px-4 py-2 active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-widest mt-1">Favorites</span>
+</a>
+</nav>
+</body></html>

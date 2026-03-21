@@ -1,0 +1,61 @@
+# Product Requirements Document: KINK Mosaic App
+
+**Project Name:** KINK Mosaic - Dynamic Radio Discovery
+**Status:** Initial Draft
+**Device:** Mobile (iOS/Android)
+
+---
+
+## 1. Executive Summary
+KINK Mosaic is a music discovery application that reimagines the radio experience. Instead of a linear stream, it provides a high-energy, visual "mosaic" of tracks curated from multiple KINK radio stations. Users can select their favorite genres, explore a dynamic, three-column feed with synchronized auto-scrolling, and seamlessly save tracks to their preferred streaming services.
+
+## 2. Target Audience
+*   **Primary:** Alternative, Rock, and Indie music fans who want a more active and visual way to discover new music.
+*   **Secondary:** Existing KINK Radio listeners looking for a modern, interactive mobile experience.
+
+## 3. Key User Flows
+
+### 3.1. Station Selection (The "Fuser")
+*   **Entry:** Users land on a "Choose Your Sound" screen.
+*   **Action:** Select 1 to 3 radio station tiles (e.g., KINK Main, KINK 80s, KINK Distortion).
+*   **Constraint:** Minimum 1 selection, maximum 3.
+*   **Transition:** A "Generate Playlist" button appears. Upon clicking, the app simulates a "gathering" of 150 tracks.
+
+### 3.2. The Sonic Mosaic Feed
+*   **Layout:** A three-column grid of song tiles.
+*   **Interaction:** 
+    *   **Autoscroll:** The outer columns (left and right) scroll downward at a subtle, constant speed. The middle column scrolls upward.
+    *   **Playback Preview:** Clicking a tile pauses the autoscroll and plays a short snippet of the track.
+    *   **Favoriting:** A heart icon appears on the active/clicked tile to add the track to the "Favorites" list.
+*   **Visuals:** High-impact cover art, bold 'Space Grotesk' typography, and the "Amplified Edge" dark-mode aesthetic.
+
+### 3.3. Favorites & Sync
+*   **View:** A chronological list of tracks the user has "hearted."
+*   **Action:** "Sync to Cloud" feature to export the list to Spotify or Apple Music.
+*   **Interaction:** Clicking a track allows for full playback on the user's preferred streaming service.
+
+## 4. Technical Requirements
+
+### 4.1. Frontend (UI/UX)
+*   **Design System:** "Amplified Edge" (Dark mode, #F3B91A Primary Color, Space Grotesk font).
+*   **Animations:** CSS/JavaScript-driven synchronized column scrolling.
+*   **Responsiveness:** Optimized for modern mobile screen aspect ratios.
+
+### 4.2. Backend & Data
+*   **API Integration:** 
+    *   Connection to the KINK playlist feed (e.g., via OnlineRadioBox or direct KINK APIs).
+    *   Song metadata retrieval (Artist, Title, Album Art).
+    *   Spotify/Apple Music API for "Sync to Cloud" and "Open in Spotify" functionality.
+*   **Storage:** Local or cloud storage for the user's "Favorites" list.
+
+## 5. Success Metrics
+*   **User Retention:** Number of daily active users exploring the feed.
+*   **Engagement:** Average number of tracks "hearted" per session.
+*   **Conversion:** Number of successful playlist exports to external streaming services.
+
+---
+
+## 6. Development Phases
+*   **Phase 1 (MVP):** Station selection and static mosaic feed with manual scrolling.
+*   **Phase 2:** Implementation of the synchronized autoscroll and "Heart" functionality.
+*   **Phase 3:** Real-time data integration with KINK stations and external streaming sync.

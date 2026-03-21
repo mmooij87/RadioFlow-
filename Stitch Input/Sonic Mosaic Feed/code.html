@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom continuous scroll animations */
+        @keyframes scroll-down {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+        @keyframes scroll-up {
+            0% { transform: translateY(-50%); }
+            100% { transform: translateY(0); }
+        }
+        .mosaic-column-down {
+            animation: scroll-down 40s linear infinite;
+        }
+        .mosaic-column-up {
+            animation: scroll-up 35s linear infinite;
+        }
+        /* Pause behavior on interaction */
+        .mosaic-container:active .mosaic-column-down,
+        .mosaic-container:active .mosaic-column-up {
+            animation-play-state: paused;
+        }
+        /* Smooth transition for active states */
+        .tile-active .now-playing-indicator {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-fixed": "#d4e3ff",
+                        "secondary": "#a4c9ff",
+                        "outline-variant": "#4f4633",
+                        "outline": "#9c8f79",
+                        "inverse-on-surface": "#243240",
+                        "on-tertiary-fixed": "#001d36",
+                        "tertiary-container": "#9fc5f5",
+                        "surface-tint": "#f8bd20",
+                        "secondary-fixed-dim": "#a4c9ff",
+                        "surface-variant": "#283644",
+                        "on-surface": "#d5e4f6",
+                        "on-primary-fixed": "#261a00",
+                        "on-error": "#690005",
+                        "surface-container-lowest": "#020f1c",
+                        "surface-container": "#12212e",
+                        "inverse-surface": "#d5e4f6",
+                        "on-tertiary-container": "#29527b",
+                        "on-secondary-fixed-variant": "#034883",
+                        "on-tertiary-fixed-variant": "#1f4972",
+                        "on-secondary-fixed": "#001c39",
+                        "surface-bright": "#2d3a49",
+                        "tertiary-fixed": "#d1e4ff",
+                        "inverse-primary": "#795900",
+                        "secondary-container": "#084a86",
+                        "on-background": "#d5e4f6",
+                        "error-container": "#93000a",
+                        "primary-container": "#f3b91a",
+                        "surface-container-high": "#1d2b39",
+                        "primary-fixed": "#ffdf9e",
+                        "on-tertiary": "#003258",
+                        "on-secondary": "#00315d",
+                        "on-primary-container": "#664b00",
+                        "tertiary-fixed-dim": "#a3caf9",
+                        "on-primary-fixed-variant": "#5b4300",
+                        "tertiary": "#c9e0ff",
+                        "primary": "#ffd98a",
+                        "surface-container-highest": "#283644",
+                        "error": "#ffb4ab",
+                        "background": "#061421",
+                        "surface-dim": "#061421",
+                        "surface": "#061421",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#0e1d2a",
+                        "primary-fixed-dim": "#f8bd20",
+                        "on-surface-variant": "#d3c5ac",
+                        "on-secondary-container": "#8bbbfe",
+                        "on-primary": "#3f2e00"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container overflow-hidden h-screen flex flex-col">
+<!-- TopAppBar from COMPONENTS_4 -->
+<header class="fixed top-0 z-50 w-full flex justify-between items-center px-6 h-16 bg-gradient-to-b from-[#061421] to-transparent">
+<div class="flex items-center gap-4">
+<button class="text-[#f3b91a] active:scale-95 transition-transform">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-2xl font-black text-[#f3b91a] tracking-[-0.04em] font-['Space_Grotesk'] uppercase">KINK</h1>
+</div>
+<div class="flex items-center">
+<button class="text-[#f3b91a] active:scale-95 transition-transform hover:text-[#f8bd20] transition-colors duration-200">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<!-- Main Content: Sonic Mosaic -->
+<main class="flex-grow relative mt-16 mb-20 overflow-hidden mosaic-container">
+<!-- Sonic Brutalist Background Text -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+<span class="text-[20vw] font-black font-headline text-surface-variant/10 uppercase tracking-tighter leading-none select-none">MOSAIC</span>
+</div>
+<div class="grid grid-cols-3 gap-1 h-full px-1 relative z-10">
+<!-- Column 1 (Down) -->
+<div class="flex flex-col gap-1 mosaic-column-down">
+<!-- Set 1 -->
+<button class="group relative aspect-[3/4] bg-surface-container-high overflow-hidden text-left focus:outline-none focus:ring-2 focus:ring-primary/50" onclick="this.classList.toggle('tile-active')">
+<img alt="The Void Album" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2gUi4XSNBJv1lMuBEMasd2vvbogQ0mD9VgfRLn29tZIPysL7LcKq8ahSPRWAZxElREG2Boxs-q_pwh2YzeV5dWLiSxuGwDDF91tVDx5AEDK4hPbjgnWxYvevD1Rx3c-ih5Dg9KvoB_Jpq9AOEgIBUB6r6PnItCosWgqwS8FRhSCV4O_HZ81pID0gql-Yq9LpcwQA7xYVjXPtgnw9B2CPIwS6krccpskO20cTV1u1uNxYJn_pp40NAMQcMChLsfHARSgLx67iMqm2V"/>
+<div class="absolute top-2 right-2 z-20">
+<span class="material-symbols-outlined text-primary-container drop-shadow-md" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container now-playing-indicator opacity-0 scale-0 transition-all duration-300">equalizer</span>
+<p class="font-headline font-bold text-xs text-primary uppercase tracking-widest">The Void</p>
+</div>
+</button>
+<button class="group relative aspect-[3/4] bg-surface-container-high overflow-hidden text-left" onclick="this.classList.toggle('tile-active')">
+<img alt="Sonic Riot" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6NPRkfttY_IIKjS2gch-2ohBwqfXxBYTSZBMVHVIvWoKYHwgpCFG_ssIzIXXQiCQNwPsZtcwJqmqX9OEjVtoLL2xuGc67_XCmKzi3kC0IZPPdwbbfLWsJ_mE6dSeCZyxfbJgZY_RVXSvwh56v7sVx0yJJICXyLGY9AaBxdMkMTphcxbuh2cmWbdv6h039Ti2tDCuRDfNoFow-YbFaX_vm9XWPPnV-AARdYQrjliULjf3V0AW3LrbBlgQSKvv2ujD60Cn1UmS_A0u4"/>
+<div class="absolute top-2 right-2 z-20">
+<span class="material-symbols-outlined text-primary-container drop-shadow-md" style="font-variation-settings: 'FILL' 0;">favorite</span>
+</div>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container now-playing-indicator opacity-0 scale-0 transition-all duration-300">equalizer</span>
+<p class="font-headline font-bold text-xs text-primary uppercase tracking-widest">Sonic Riot</p>
+</div>
+</button>
+<!-- Repeated for continuous scroll -->
+<div aria-hidden="true" class="contents">
+<div class="aspect-[3/4] bg-surface-container-high"><img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2gUi4XSNBJv1lMuBEMasd2vvbogQ0mD9VgfRLn29tZIPysL7LcKq8ahSPRWAZxElREG2Boxs-q_pwh2YzeV5dWLiSxuGwDDF91tVDx5AEDK4hPbjgnWxYvevD1Rx3c-ih5Dg9KvoB_Jpq9AOEgIBUB6r6PnItCosWgqwS8FRhSCV4O_HZ81pID0gql-Yq9LpcwQA7xYVjXPtgnw9B2CPIwS6krccpskO20cTV1u1uNxYJn_pp40NAMQcMChLsfHARSgLx67iMqm2V"/></div>
+<div class="aspect-[3/4] bg-surface-container-high"><img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6NPRkfttY_IIKjS2gch-2ohBwqfXxBYTSZBMVHVIvWoKYHwgpCFG_ssIzIXXQiCQNwPsZtcwJqmqX9OEjVtoLL2xuGc67_XCmKzi3kC0IZPPdwbbfLWsJ_mE6dSeCZyxfbJgZY_RVXSvwh56v7sVx0yJJICXyLGY9AaBxdMkMTphcxbuh2cmWbdv6h039Ti2tDCuRDfNoFow-YbFaX_vm9XWPPnV-AARdYQrjliULjf3V0AW3LrbBlgQSKvv2ujD60Cn1UmS_A0u4"/></div>
+</div>
+</div>
+<!-- Column 2 (Up) -->
+<div class="flex flex-col gap-1 mosaic-column-up">
+<!-- Set 1 -->
+<button class="group relative aspect-[3/4] bg-surface-container-high overflow-hidden text-left" onclick="this.classList.toggle('tile-active')">
+<img alt="Voltage" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBonw2OLV7oLPCV0pjjNVqW9KwTRVVci3hEvSUQzaB6IIw7EaYAhFmLtruxUj0HfVh57wcP2_5lauc2JP9DD2AA0V0GN5KPBftQA57JxmRW_8Wn0VK8sUuAOXhUTcjjh5qjEj5MAToDYNFegxdI092T1KzFtMdtT1tdDQbKcJ9piVmxwAkKfmt0ZidJgkXdjcQYdomq8Uhja4x0KR_2wrZ4DKFYk-gzIfQnBM4Qmd0K-jLfQFBCO38NwOUWbTUcYiYBci3uOyso8C1y"/>
+<div class="absolute top-2 right-2 z-20">
+<span class="material-symbols-outlined text-primary-container drop-shadow-md" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container now-playing-indicator opacity-0 scale-0 transition-all duration-300">equalizer</span>
+<p class="font-headline font-bold text-xs text-primary uppercase tracking-widest">Voltage</p>
+</div>
+</button>
+<button class="group relative aspect-[3/4] bg-surface-container-high overflow-hidden text-left" onclick="this.classList.toggle('tile-active')">
+<img alt="Heavy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsxEd7nVLYdkYpvuEDp30Lx9JL_lxGFcKbsUIkTMkNmuRgc44nm7NhqxDMQ6wTPiRezloJsKLdJrxcqP409qtwU_2gdpde8Vsz9dxU4b2mNQs-F7IuRjtm1YtKkPMlFH6ASWaOTklR3Vupg7_UfeiCYiBDELCQMGuUQ70Tlat239_KIbkRb6WYDTHw_6_CI4MSOxSth_X06yE_QkInO_xXNW_xIGYxN0jp5vX62-ULnZaC-Ye1O3qI5Il8znrIXDr5idmNgGl8RyK6"/>
+<div class="absolute top-2 right-2 z-20">
+<span class="material-symbols-outlined text-primary-container drop-shadow-md" style="font-variation-settings: 'FILL' 0;">favorite</span>
+</div>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container now-playing-indicator opacity-0 scale-0 transition-all duration-300">equalizer</span>
+<p class="font-headline font-bold text-xs text-primary uppercase tracking-widest">Heavy</p>
+</div>
+</button>
+<!-- Repeated for continuous scroll -->
+<div aria-hidden="true" class="contents">
+<div class="aspect-[3/4] bg-surface-container-high"><img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBonw2OLV7oLPCV0pjjNVqW9KwTRVVci3hEvSUQzaB6IIw7EaYAhFmLtruxUj0HfVh57wcP2_5lauc2JP9DD2AA0V0GN5KPBftQA57JxmRW_8Wn0VK8sUuAOXhUTcjjh5qjEj5MAToDYNFegxdI092T1KzFtMdtT1tdDQbKcJ9piVmxwAkKfmt0ZidJgkXdjcQYdomq8Uhja4x0KR_2wrZ4DKFYk-gzIfQnBM4Qmd0K-jLfQFBCO38NwOUWbTUcYiYBci3uOyso8C1y"/></div>
+<div class="aspect-[3/4] bg-surface-container-high"><img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsxEd7nVLYdkYpvuEDp30Lx9JL_lxGFcKbsUIkTMkNmuRgc44nm7NhqxDMQ6wTPiRezloJsKLdJrxcqP409qtwU_2gdpde8Vsz9dxU4b2mNQs-F7IuRjtm1YtKkPMlFH6ASWaOTklR3Vupg7_UfeiCYiBDELCQMGuUQ70Tlat239_KIbkRb6WYDTHw_6_CI4MSOxSth_X06yE_QkInO_xXNW_xIGYxN0jp5vX62-ULnZaC-Ye1O3qI5Il8znrIXDr5idmNgGl8RyK6"/></div>
+</div>
+</div>
+<!-- Column 3 (Down) -->
+<div class="flex flex-col gap-1 mosaic-column-down">
+<!-- Set 1 -->
+<button class="group relative aspect-[3/4] bg-surface-container-high overflow-hidden text-left" onclick="this.classList.toggle('tile-active')">
+<img alt="Neon Dust" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5Hpuoilk-drEnZncgC9wKIVUUP_awX3HGzTW9TJFo2U-d9AmGVqCuUt5FR4PvivhQx4M6N2H20lYSlznuDePRV2xsYOkQIoWoyP969qQXpdofVMO9gkNEnx9lH-gr_cndnce2Ym4-BIpyC_h-ffgz87FBoNWmfI8UgMzshuORsIX0DlzkDWATvfkP9p7poQa0bMN9PY9JOlwnGLfxeh6a4TmZz46wrcEORn95UmoGxPQXe-ZXiuLYuanKBJUMCCesB_mBU5k2Q6Ea"/>
+<div class="absolute top-2 right-2 z-20">
+<span class="material-symbols-outlined text-primary-container drop-shadow-md" style="font-variation-settings: 'FILL' 0;">favorite</span>
+</div>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container now-playing-indicator opacity-0 scale-0 transition-all duration-300">equalizer</span>
+<p class="font-headline font-bold text-xs text-primary uppercase tracking-widest">Neon Dust</p>
+</div>
+</button>
+<button class="group relative aspect-[3/4] bg-surface-container-high overflow-hidden text-left" onclick="this.classList.toggle('tile-active')">
+<img alt="Distortion" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJsSUfNDUtvcOdmrDyDPUa4y9L06IUj2pKZ_enKlznpCEpph7vEXJ23465UEjrIq-UqO5811ZoWSJ7JzTwvORYrkszZ-RMEtEEqBBRE94scRUJSZPn5XSv5t5K09BgDzeECQR51sUL5BOkzV1UYptYz3AgrWKpfz-QwsXxvWYsv0AJIegfBWOflVPte2FRl7HLqS6_GaESHgzlGTdBCgXny0Q_nlQTfUsO6eWtgD776czQ9PRp4RuEK-ssoy0cnfFdc_ZYnAhYTmp3"/>
+<div class="absolute top-2 right-2 z-20">
+<span class="material-symbols-outlined text-primary-container drop-shadow-md" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container now-playing-indicator opacity-0 scale-0 transition-all duration-300">equalizer</span>
+<p class="font-headline font-bold text-xs text-primary uppercase tracking-widest">Distortion</p>
+</div>
+</button>
+<!-- Repeated for continuous scroll -->
+<div aria-hidden="true" class="contents">
+<div class="aspect-[3/4] bg-surface-container-high"><img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5Hpuoilk-drEnZncgC9wKIVUUP_awX3HGzTW9TJFo2U-d9AmGVqCuUt5FR4PvivhQx4M6N2H20lYSlznuDePRV2xsYOkQIoWoyP969qQXpdofVMO9gkNEnx9lH-gr_cndnce2Ym4-BIpyC_h-ffgz87FBoNWmfI8UgMzshuORsIX0DlzkDWATvfkP9p7poQa0bMN9PY9JOlwnGLfxeh6a4TmZz46wrcEORn95UmoGxPQXe-ZXiuLYuanKBJUMCCesB_mBU5k2Q6Ea"/></div>
+<div class="aspect-[3/4] bg-surface-container-high"><img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJsSUfNDUtvcOdmrDyDPUa4y9L06IUj2pKZ_enKlznpCEpph7vEXJ23465UEjrIq-UqO5811ZoWSJ7JzTwvORYrkszZ-RMEtEEqBBRE94scRUJSZPn5XSv5t5K09BgDzeECQR51sUL5BOkzV1UYptYz3AgrWKpfz-QwsXxvWYsv0AJIegfBWOflVPte2FRl7HLqS6_GaESHgzlGTdBCgXny0Q_nlQTfUsO6eWtgD776czQ9PRp4RuEK-ssoy0cnfFdc_ZYnAhYTmp3"/></div>
+</div>
+</div>
+</div>
+<!-- Now Playing FAB Overlay -->
+<div class="fixed bottom-24 right-6 z-40">
+<button class="w-14 h-14 bg-primary-container text-on-primary-container rounded-sm flex items-center justify-center shadow-[0_0_40px_rgba(243,185,26,0.3)] active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl">equalizer</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar from COMPONENTS_4 -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-[#12212e]/90 backdrop-blur-xl border-t border-[#283644]/30 shadow-[0_-4px_40px_rgba(243,185,26,0.08)] flex justify-around items-center pt-2 pb-safe-offset-2 px-4 h-20">
+<a class="flex flex-col items-center justify-center text-[#d5e4f6]/60 hover:text-[#f3b91a] transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">radio</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-widest mt-1">Stations</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#f3b91a] bg-[#283644] rounded-sm px-4 py-1 active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-widest mt-1">Mosaic</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#d5e4f6]/60 hover:text-[#f3b91a] transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-['Manrope'] font-bold text-[10px] uppercase tracking-widest mt-1">Favorites</span>
+</a>
+</nav>
+</body></html>
