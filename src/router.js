@@ -1,78 +1,51 @@
 /**
- * Simple hash-based SPA router
+ * Hash-based SPA router with top-bar visibility + nav highlight.
  */
 
 const routes = {};
 let currentPage = null;
 
-/**
- * Register a route.
- * @param {string} path - hash path (e.g., '/stations')
- * @param {Function} handler - async function(container) to render the page
- */
-export function route(path, handler) {
-  routes[path] = handler;
-}
+export function route(path, handler) { routes[path] = handler; }
+export function navigate(path)       { window.location.hash = path; }
+export function getCurrentRoute()    { return currentPage; }
 
-/**
- * Navigate to a route.
- */
-export function navigate(path) {
-  window.location.hash = path;
-}
-
-/**
- * Get the current route path.
- */
-export function getCurrentRoute() {
-  return currentPage;
-}
-
-/**
- * Initialize the router.
- */
 export function initRouter() {
   const container = document.getElementById('app');
 
   async function handleRoute() {
-    const hash = window.location.hash.replace('#', '') || '/stations';
+    const hash = window.location.hash.replace('#', '') || '/feed';
     const handler = routes[hash];
-
     if (handler) {
       currentPage = hash;
       updateNav(hash);
       await handler(container);
     } else {
-      // Default to stations
-      navigate('/stations');
+      navigate('/feed');
     }
   }
 
   window.addEventListener('hashchange', handleRoute);
-  handleRoute(); // Initial route
+  handleRoute();
 }
 
 function updateNav(hash) {
-  const pageName = hash.replace('/', '');
+  const page = hash.replace('/', '');
 
+  // Nav highlight
   document.querySelectorAll('.bottom-nav__item').forEach(item => {
-    const itemPage = item.dataset.page;
-    if (itemPage === pageName) {
-      item.classList.add('bottom-nav__item--active');
-    } else {
-      item.classList.remove('bottom-nav__item--active');
-    }
+    item.classList.toggle('bottom-nav__item--active', item.dataset.page === page);
   });
 
+  // The feed is dark + full-bleed; everything else shows the paper top-bar.
   const topBar = document.getElementById('top-bar');
-  const appContainer = document.getElementById('app');
-  if (topBar) {
-    if (pageName === 'stations') {
-      topBar.style.display = '';
-      if (appContainer) appContainer.style.paddingTop = ''; // Keep CSS default (64px)
-    } else {
-      topBar.style.display = 'none';
-      if (appContainer) appContainer.style.paddingTop = '0px';
-    }
+  const app = document.getElementById('app');
+  if (!topBar || !app) return;
+
+  if (page === 'feed') {
+    topBar.style.display = 'none';
+    app.style.paddingTop = '0';
+  } else {
+    topBar.style.display = '';
+    app.style.paddingTop = '';
   }
 }

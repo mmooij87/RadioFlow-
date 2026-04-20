@@ -7,41 +7,53 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 
-// In-memory cache
+// ─────────────────────────────────────────────────────────────
+// Tiered in-memory cache.
+//   playlist: 60s  (a station's recent plays rarely change faster)
+//   search:   30m  (track → cover/preview lookups are stable)
+// Matches the v2 architecture's "edge cache" model.
+// ─────────────────────────────────────────────────────────────
 const cache = new Map();
-const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
 
 function getCached(key) {
-  const entry = cache.get(key);
-  if (entry && Date.now() - entry.time < CACHE_TTL) return entry.data;
+  const e = cache.get(key);
+  if (e && Date.now() - e.time < e.ttl) return e.data;
   return null;
 }
-
-function setCache(key, data) {
-  cache.set(key, { data, time: Date.now() });
+function setCache(key, data, ttlMs) {
+  cache.set(key, { data, time: Date.now(), ttl: ttlMs });
 }
 
-// ─── GET /api/playlist ────────────────────────────────────────────
-// Scrapes playlist from OnlineRadioBox
+// ─── Station registry ────────────────────────────────────────
+// id → OnlineRadioBox playlist URL. Add a station by appending a row.
+// The ids must match src/data/stations.js.
+const STATION_URLS = {
+  kink:       'https://onlineradiobox.com/nl/kink/playlist/',
+  nporadio2:  'https://onlineradiobox.com/nl/radio2/playlist/',
+  npo3fm:     'https://onlineradiobox.com/nl/npo3fm/playlist/',
+  pinguin:    'https://onlineradiobox.com/nl/pinguinr/playlist/',
+  bbc6:       'https://onlineradiobox.com/uk/bbcradio6/playlist/',
+  nts1:       'https://onlineradiobox.com/uk/nts1/playlist/',
+  fip:        'https://onlineradiobox.com/fr/fip/playlist/',
+  rinsefr:    'https://onlineradiobox.com/fr/rinsefrance/playlist/',
+  fluxfm:     'https://onlineradiobox.com/de/fluxfm1006/playlist/',
+  byte:       'https://onlineradiobox.com/de/bytefm/playlist/',
+  kexp:       'https://onlineradiobox.com/us/kexp/playlist/',
+  kcrw:       'https://onlineradiobox.com/us/kcrw/playlist/',
+  triplej:    'https://onlineradiobox.com/au/triplej/playlist/',
+  radioswiss: 'https://onlineradiobox.com/ch/swissjazz/playlist/',
+};
+
+// ─── GET /api/playlist ───────────────────────────────────────
 app.get('/api/playlist', async (req, res) => {
   try {
-    const stationId = req.query.station || 'main';
-    const stationUrls = {
-      'main': 'https://onlineradiobox.com/nl/kink/playlist/',
-      'pinguin': 'https://onlineradiobox.com/nl/pinguinr/playlist/',
-      'bbc6': 'https://onlineradiobox.com/uk/bbcradio6/playlist/',
-      'fluxfm': 'https://onlineradiobox.com/de/fluxfm1006/playlist/',
-      'npo3fm': 'https://onlineradiobox.com/nl/npo3fm/playlist/',
-      'nporadio2': 'https://onlineradiobox.com/nl/radio2/playlist/',
-    };
-    
-    const targetUrl = stationUrls[stationId] || stationUrls['main'];
+    const stationId = req.query.station || 'kink';
+    const target = STATION_URLS[stationId] || STATION_URLS.kink;
     const cacheKey = `playlist_${stationId}`;
-
     const cached = getCached(cacheKey);
     if (cached) return res.json(cached);
 
-    const response = await fetch(targetUrl, {
+    const response = await fetch(target, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Accept': 'text/html',
@@ -52,11 +64,9 @@ app.get('/api/playlist', async (req, res) => {
     const html = await response.text();
     const root = parse(html);
 
-    // Playlist tracks are in anchor links with format "Artist - Title"
     const trackLinks = root.querySelectorAll('a[href*="/track/"]');
     const tracks = [];
     const seen = new Set();
-
     for (const link of trackLinks) {
       const text = link.textContent.trim();
       const parts = text.split(' - ');
@@ -71,10 +81,7 @@ app.get('/api/playlist', async (req, res) => {
       }
     }
 
-    if (tracks.length > 0) {
-      setCache(cacheKey, tracks);
-    }
-
+    if (tracks.length > 0) setCache(cacheKey, tracks, 60 * 1000);
     res.json(tracks);
   } catch (err) {
     console.error('Playlist fetch error:', err.message);
@@ -82,21 +89,18 @@ app.get('/api/playlist', async (req, res) => {
   }
 });
 
-// ─── GET /api/search?artist=X&title=Y ────────────────────────────
-// Proxies to Deezer API for cover art + preview
+// ─── GET /api/search?artist=X&title=Y ────────────────────────
 app.get('/api/search', async (req, res) => {
   try {
     const { artist, title } = req.query;
-    if (!artist || !title) {
-      return res.status(400).json({ error: 'artist and title required' });
-    }
+    if (!artist || !title) return res.status(400).json({ error: 'artist and title required' });
 
     const cacheKey = `search:${artist}:${title}`.toLowerCase();
     const cached = getCached(cacheKey);
     if (cached) return res.json(cached);
 
-    const query = encodeURIComponent(`artist:"${artist}" track:"${title}"`);
-    const response = await fetch(`https://api.deezer.com/search?q=${query}&limit=1`);
+    const q = encodeURIComponent(`artist:"${artist}" track:"${title}"`);
+    const response = await fetch(`https://api.deezer.com/search?q=${q}&limit=1`);
     const data = await response.json();
 
     if (data.data && data.data.length > 0) {
@@ -111,17 +115,12 @@ app.get('/api/search', async (req, res) => {
         duration: track.duration || null,
         deezerLink: track.link || null,
       };
-      setCache(cacheKey, result);
+      setCache(cacheKey, result, 30 * 60 * 1000);
       res.json(result);
     } else {
       res.json({
-        coverArt: null,
-        previewUrl: null,
-        album: null,
-        artistName: artist,
-        trackTitle: title,
-        duration: null,
-        deezerLink: null,
+        coverArt: null, previewUrl: null, album: null,
+        artistName: artist, trackTitle: title, duration: null, deezerLink: null,
       });
     }
   } catch (err) {
@@ -130,6 +129,13 @@ app.get('/api/search', async (req, res) => {
   }
 });
 
+// ─── GET /api/stations ──────────────────────────────────────
+// List of station ids the backend knows about. Handy for the client to
+// verify a station is scrapeable.
+app.get('/api/stations', (_req, res) => {
+  res.json(Object.keys(STATION_URLS));
+});
+
 app.listen(PORT, () => {
-  console.log(`🎸 RadioFlow proxy running at http://localhost:${PORT}`);
+  console.log(`RadioFlow v2 proxy running at http://localhost:${PORT}`);
 });
