@@ -519,6 +519,16 @@
   color: var(--paper);
   border-color: var(--ink);
 }
+.tool-pill--danger {
+  flex: 0 0 auto;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.tool-pill--danger:hover,
+.tool-pill--danger:active {
+  background: var(--accent);
+  color: var(--paper);
+}
 .tool-pill .material-symbols-outlined { font-size: 14px; }
 
 .liked__grid {

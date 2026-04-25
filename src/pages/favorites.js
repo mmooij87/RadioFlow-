@@ -1,7 +1,7 @@
 /**
  * Liked — Rams-style artwork grid of saved tracks.
  */
-import { getFavorites, toggleFavorite, onFavoritesChange } from '../services/favoritesService.js';
+import { getFavorites, toggleFavorite, onFavoritesChange, clearFavorites } from '../services/favoritesService.js';
 
 let unsubscribe = null;
 
@@ -49,6 +49,10 @@ export function renderFavorites(container) {
             <span class="material-symbols-outlined">open_in_new</span>
             SEND · SPOTIFY
           </button>
+          <button class="tool-pill tool-pill--danger" data-action="clear">
+            <span class="material-symbols-outlined">delete_sweep</span>
+            CLEAR
+          </button>
         </div>
 
         <div class="liked__grid">
@@ -69,6 +73,11 @@ export function renderFavorites(container) {
         window.open(`https://open.spotify.com/search/${q}`, '_blank');
       } else if (action === 'export') {
         exportM3U(getFavorites());
+      } else if (action === 'clear') {
+        const n = getFavorites().length;
+        if (confirm(`Clear all ${n} liked song${n === 1 ? '' : 's'}? This can't be undone.`)) {
+          clearFavorites();
+        }
       }
     });
 
