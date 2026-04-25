@@ -34,7 +34,7 @@ export async function renderFeed(container) {
 
   if (tracks.length === 0) {
     try {
-      tracks = await buildMosaic(20);
+      tracks = await buildMosaic(60);
     } catch (e) {
       console.error('buildMosaic failed', e);
       tracks = [];
@@ -217,8 +217,8 @@ function handleClick(e) {
       toast(`Share: ${track.title}`);
     }
   } else if (action === 'handoff') {
-    const q = encodeURIComponent(`${track.artist} ${track.title}`);
-    window.open(`https://open.spotify.com/search/${q}`, '_blank');
+    const url = track.spotifyLink || `https://open.spotify.com/search/${encodeURIComponent(`${track.artist} ${track.title}`)}`;
+    window.open(url, '_blank');
     toast(`→ OPENING SPOTIFY: ${track.title}`);
   } else if (action === 'open-stations') {
     window.location.hash = '/stations';

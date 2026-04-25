@@ -1,0 +1,44 @@
+name: Refresh playlists
+
+on:
+  schedule:
+    - cron: '30 0 * * *'   # daily at 00:30 UTC
+  workflow_dispatch:        # allow manual run from the GitHub UI
+
+permissions:
+  contents: write           # needed to commit the updated JSON
+
+concurrency:
+  group: refresh-playlists
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Refresh playlists.json
+        run: node scripts/refresh-playlists.js
+
+      - name: Commit changes
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add public/data/playlists.json
+          if git diff --staged --quiet; then
+            echo "No changes."
+          else
+            git commit -m "chore: refresh playlists $(date -u +%Y-%m-%d)"
+            git push
+          fi
