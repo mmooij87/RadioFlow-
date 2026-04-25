@@ -7,10 +7,8 @@ import { STATIONS, findStation } from '../data/stations.js';
 
 const iTunesCache = new Map();
 
-// In dev, '' uses the Vite proxy. In prod, point to the hosted backend.
-const API_BASE = import.meta.env.PROD
-  ? 'https://radioflow-c6zh.onrender.com'
-  : '';
+// Same-origin everywhere: dev → Vite proxy, prod → Vercel rewrite.
+const API_BASE = '';
 
 /**
  * Fetch one station's recent playlist. Returns rows tagged with { stationId, station }.
