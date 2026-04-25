@@ -93,12 +93,11 @@ function renderSlide(track, i) {
   const st = findStation(track.stationId) || {};
   const stationLabel = st.cc ? `${st.cc} ${st.name || track.station || 'Radio'}` : (track.station || 'Radio');
   const freq = st.freq || '';
-  const duration = track.duration || 210;
   const bg = track.coverArt
     ? `style="background-image:url('${escapeAttr(track.coverArt)}')"`
     : '';
   return `
-    <section class="feed-slide" data-track-id="${escapeAttr(track.id)}" data-index="${i}" data-duration="${duration}">
+    <section class="feed-slide" data-track-id="${escapeAttr(track.id)}" data-index="${i}">
       <div class="feed-slide__topbar">
         <div class="feed-slide__topbar-left">
           <span class="mono mono--light">Playlist · 24h window</span>
@@ -145,7 +144,7 @@ function renderSlide(track, i) {
         <div class="feed-slide__times">
           <span data-elapsed>0:00</span>
           <span style="opacity:.6">${track.album ? escapeHtml(track.album).toUpperCase() : escapeHtml((st.genre || '').toUpperCase())}</span>
-          <span>${mmss(duration)}</span>
+          <span data-total>0:30</span>
         </div>
       </div>
 
@@ -171,16 +170,22 @@ function startProgressAnim(slideEl) {
   if (progressTimer) clearInterval(progressTimer);
   const bar = slideEl.querySelector('[data-progress]');
   const elapsed = slideEl.querySelector('[data-elapsed]');
-  const duration = parseInt(slideEl.dataset.duration, 10) || 210;
-  // seed at 18–58% like the mock
-  let p = 0.18 + Math.random() * 0.4;
-  if (bar) bar.style.width = `${p * 100}%`;
+  const totalEl = slideEl.querySelector('[data-total]');
+  const audio = document.getElementById('audio-player');
+  if (bar) bar.style.width = '0%';
+  if (elapsed) elapsed.textContent = '0:00';
+  if (!audio) return;
+
+  // Drive the bar from real audio playback. Fallback to "0:30" until metadata loads.
   progressTimer = setInterval(() => {
-    p += 0.003;
-    if (p > 1) p = 0;
+    const dur = audio.duration;
+    if (!dur || isNaN(dur) || !isFinite(dur)) return;
+    const t = Math.min(audio.currentTime, dur);
+    const p = t / dur;
     if (bar) bar.style.width = `${p * 100}%`;
-    if (elapsed) elapsed.textContent = mmss(Math.floor(duration * p));
-  }, 120);
+    if (elapsed) elapsed.textContent = mmss(Math.floor(t));
+    if (totalEl) totalEl.textContent = mmss(Math.floor(dur));
+  }, 200);
 }
 
 function handleClick(e) {
