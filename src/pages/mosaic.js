@@ -4,12 +4,13 @@
  */
 import { buildMosaic } from '../services/dataService.js';
 import { isFavorite, toggleFavorite, getFavorites } from '../services/favoritesService.js';
-import { playPreview, stopPreview, setCallbacks } from '../components/audioPlayer.js';
+import { playPreview, tryAutoplay, pausePreview, stopPreview, isAudioUnlocked, onAudio } from '../components/audioPlayer.js';
 import { findStation } from '../data/stations.js';
 
 let tracks = [];
 let currentIndex = 0;
 let progressTimer = null;
+let audioUnsub = null;
 
 export function clearFeed() {
   tracks = [];
@@ -30,7 +31,12 @@ export async function renderFeed(container) {
     </div>
   `;
 
-  setCallbacks({ onPlay: () => {}, onStop: () => {} });
+  if (audioUnsub) audioUnsub();
+  audioUnsub = onAudio({
+    onPlay:  (id) => syncSlideState(id, true),
+    onPause: (id) => syncSlideState(id, false),
+    onEnd:   (id) => syncSlideState(id, false),
+  });
 
   if (tracks.length === 0) {
     try {
@@ -55,7 +61,8 @@ export async function renderFeed(container) {
   const scrollEl = container.querySelector('.feed__scroll');
   scrollEl.innerHTML = tracks.map((t, i) => renderSlide(t, i)).join('');
 
-  // intersection observer to sync currentIndex + autoplay
+  // Intersection observer: sync currentIndex + try autoplay (silently no-ops
+  // until the user has tapped at least once to unlock audio).
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting && e.intersectionRatio > 0.6) {
@@ -65,7 +72,8 @@ export async function renderFeed(container) {
           currentIndex = idx;
           startProgressAnim(e.target);
           const t = tracks[idx];
-          if (t?.previewUrl) playPreview(t.previewUrl, t.id);
+          if (t?.previewUrl) tryAutoplay(t.previewUrl, t.id);
+          syncSlideState(t?.id, false); // start with paused-icon until play() resolves
         }
       }
     });
@@ -78,13 +86,18 @@ export async function renderFeed(container) {
     if (target) target.scrollIntoView({ behavior: 'instant' });
   }
 
-  // boot: kick off autoplay + progress for current
+  // Boot: prime the progress UI for the current slide and try autoplay.
+  // First-load autoplay only succeeds if the user has gestured before
+  // (e.g. they tapped Generate). Otherwise the play overlay stays visible
+  // and the user taps the cover to start.
   const firstSlide = scrollEl.querySelector(`.feed-slide[data-index="${currentIndex}"]`);
   if (firstSlide) startProgressAnim(firstSlide);
   const firstTrack = tracks[currentIndex];
-  if (firstTrack?.previewUrl) setTimeout(() => playPreview(firstTrack.previewUrl, firstTrack.id), 300);
+  if (firstTrack?.previewUrl) {
+    setTimeout(() => tryAutoplay(firstTrack.previewUrl, firstTrack.id), 300);
+  }
+  if (!isAudioUnlocked()) showHint(firstSlide, 'TAP COVER TO PLAY');
 
-  // click delegation
   scrollEl.addEventListener('click', handleClick);
 }
 
@@ -115,17 +128,20 @@ function renderSlide(track, i) {
       </div>
 
       <div class="feed-slide__cover-wrap">
-        <div class="feed-slide__cover" ${bg}>
+        <button class="feed-slide__cover" data-action="toggle-play" ${bg} aria-label="Play or pause preview">
           ${track.coverArt ? '' : `
             <div class="feed-slide__cover-placeholder">
               <span class="material-symbols-outlined" style="font-size:48px">music_note</span>
             </div>
           `}
-          <button class="feed-slide__handoff" data-action="handoff" aria-label="Open in Spotify">
+          <span class="feed-slide__play-overlay" data-play-overlay aria-hidden="true">
+            <span class="material-symbols-outlined" data-play-icon>play_arrow</span>
+          </span>
+          <span class="feed-slide__handoff" data-action="handoff" role="button" aria-label="Open in Spotify">
             <span class="material-symbols-outlined" style="font-size:18px">open_in_new</span>
-          </button>
-        </div>
-        <div class="feed-slide__swipe-hint">↑ SWIPE NEXT</div>
+          </span>
+        </button>
+        <div class="feed-slide__swipe-hint" data-hint>↑ SWIPE NEXT</div>
       </div>
 
       <div class="feed-slide__info">
@@ -199,7 +215,19 @@ function handleClick(e) {
 
   e.stopPropagation();
   const action = btn.dataset.action;
-  if (action === 'like') {
+  if (action === 'toggle-play') {
+    if (!track.previewUrl) {
+      toast('No preview available');
+      return;
+    }
+    const audio = document.getElementById('audio-player');
+    const isCurrent = audio && audio.src && audio.src.endsWith(track.previewUrl.split('/').pop());
+    if (isCurrent && audio && !audio.paused) {
+      pausePreview();
+    } else {
+      playPreview(track.previewUrl, track.id);
+    }
+  } else if (action === 'like') {
     const nowFav = toggleFavorite(track);
     btn.classList.toggle('feed-action--active', nowFav);
     const icon = btn.querySelector('.material-symbols-outlined');
@@ -223,6 +251,36 @@ function handleClick(e) {
   } else if (action === 'open-stations') {
     window.location.hash = '/stations';
   }
+}
+
+function syncSlideState(trackId, playing) {
+  if (!trackId) return;
+  document.querySelectorAll('.feed-slide').forEach(slide => {
+    const id = slide.dataset.trackId;
+    const overlay = slide.querySelector('[data-play-overlay]');
+    const icon    = slide.querySelector('[data-play-icon]');
+    if (!overlay || !icon) return;
+    if (id === trackId) {
+      icon.textContent = playing ? 'pause' : 'play_arrow';
+      overlay.classList.toggle('feed-slide__play-overlay--playing', playing);
+    } else {
+      icon.textContent = 'play_arrow';
+      overlay.classList.remove('feed-slide__play-overlay--playing');
+    }
+  });
+  if (playing) hideHint();
+}
+
+function showHint(slideEl, text) {
+  if (!slideEl) return;
+  const hint = slideEl.querySelector('[data-hint]');
+  if (hint) hint.textContent = text;
+}
+
+function hideHint() {
+  document.querySelectorAll('[data-hint]').forEach(h => {
+    if (h.textContent.includes('TAP')) h.textContent = '↑ SWIPE NEXT';
+  });
 }
 
 function updateLikedBadge() {

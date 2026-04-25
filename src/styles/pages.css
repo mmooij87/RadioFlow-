@@ -342,6 +342,29 @@
   position: relative;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.feed-slide__play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+  transition: opacity 200ms ease, background 200ms ease;
+}
+.feed-slide__play-overlay .material-symbols-outlined {
+  font-size: 64px;
+  color: var(--light);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+  font-variation-settings: 'FILL' 1;
+}
+.feed-slide__play-overlay--playing {
+  opacity: 0;
+  background: transparent;
 }
 .feed-slide__cover-placeholder {
   position: absolute; inset: 0;
