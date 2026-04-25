@@ -6,8 +6,15 @@ import { findStation } from '../data/stations.js';
 
 const iTunesCache = new Map();
 
-// Same-origin everywhere: dev → Vite proxy, prod → Vercel rewrite.
-const API_BASE = '';
+// Resolve at runtime so the same build works on Vercel (same-origin via
+// vercel.json rewrite), on GitHub Pages (cross-origin to Render), and in
+// local dev (Vite proxy).
+const API_BASE = (() => {
+  if (typeof window === 'undefined') return '';
+  const h = window.location.hostname;
+  if (!h || h === 'localhost' || h === '127.0.0.1' || h.endsWith('.vercel.app')) return '';
+  return 'https://radioflow-c6zh.onrender.com';
+})();
 
 /**
  * Fetch one station's recent playlist. Returns rows tagged with { stationId, station }.
