@@ -22,20 +22,18 @@ const SCRAPE_LIMIT       = 80;   // candidates pulled before enrichment
 const DEEZER_DELAY_MS    = 130;  // Deezer free tier: 50 req / 5s
 
 const ORB_URLS = {
-  kink:       'https://onlineradiobox.com/nl/kink/playlist/',
-  nporadio2:  'https://onlineradiobox.com/nl/radio2/playlist/',
-  npo3fm:     'https://onlineradiobox.com/nl/npo3fm/playlist/',
-  pinguin:    'https://onlineradiobox.com/nl/pinguinr/playlist/',
-  bbc6:       'https://onlineradiobox.com/uk/bbcradio6/playlist/',
-  nts1:       'https://onlineradiobox.com/uk/nts1/playlist/',
-  fip:        'https://onlineradiobox.com/fr/fip/playlist/',
-  rinsefr:    'https://onlineradiobox.com/fr/rinsefrance/playlist/',
-  fluxfm:     'https://onlineradiobox.com/de/fluxfm1006/playlist/',
-  byte:       'https://onlineradiobox.com/de/bytefm/playlist/',
-  kexp:       'https://onlineradiobox.com/us/kexp/playlist/',
-  kcrw:       'https://onlineradiobox.com/us/kcrw/playlist/',
-  triplej:    'https://onlineradiobox.com/au/triplej/playlist/',
-  radioswiss: 'https://onlineradiobox.com/ch/swissjazz/playlist/',
+  kink:          'https://onlineradiobox.com/nl/kink/playlist/1',
+  nporadio2:     'https://onlineradiobox.com/nl/radio2/playlist/1',
+  pinguin:       'https://onlineradiobox.com/nl/pinguinr/playlist/1',
+  bbc6:          'https://onlineradiobox.com/uk/bbcradio6/playlist/1',
+  fluxfm:        'https://onlineradiobox.com/nl/flux/playlist/1',
+  triplej:       'https://onlineradiobox.com/au/abctriplej/playlist/1',
+  radioswiss:    'https://onlineradiobox.com/ch/radioswissjazz/playlist/1',
+  kexp:          'https://onlineradiobox.com/us/kexpfm/playlist/1',
+  willy:         'https://onlineradiobox.com/be/willy/playlist/1',
+  wxpn:          'https://onlineradiobox.com/us/wxpn/playlist/1',
+  kcrw:          'https://onlineradiobox.com/us/kcrwhd2/playlist/1',
+  radioparadise: 'https://onlineradiobox.com/us/radioparadise/playlist/1',
 };
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
