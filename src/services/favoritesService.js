@@ -85,3 +85,11 @@ export function toggleFavorite(track) {
     return true;
   }
 }
+
+/**
+ * Clear all favorites.
+ */
+export function clearFavorites() {
+  localStorage.removeItem(STORAGE_KEY);
+  notify();
+}
