@@ -8,7 +8,7 @@
     "dev:client": "vite",
     "dev:server": "node server/proxy.js",
     "start": "node server/proxy.js",
-    "build": "vite build",
+    "build": "node node_modules/vite/bin/vite.js build",
     "preview": "vite preview"
   },
   "devDependencies": {

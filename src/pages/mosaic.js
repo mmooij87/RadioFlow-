@@ -1,279 +1,251 @@
 /**
- * Page 2: Sonic Feed — TikTok-style full-screen vertical swipe feed
- * Each track fills the viewport with cover art, large typography, and action buttons
+ * Feed — vertical swipe, Rams aesthetic.
+ * Full-bleed cover art, mono meta, Braun-orange progress, action rail.
  */
 import { buildMosaic } from '../services/dataService.js';
-import { isFavorite, toggleFavorite } from '../services/favoritesService.js';
-import { playPreview, stopPreview, setCallbacks, isPlaying, getCurrentTrackId } from '../components/audioPlayer.js';
+import { isFavorite, toggleFavorite, getFavorites } from '../services/favoritesService.js';
+import { playPreview, stopPreview, setCallbacks } from '../components/audioPlayer.js';
+import { findStation } from '../data/stations.js';
 
-let feedTracks = [];
+let tracks = [];
 let currentIndex = 0;
+let progressTimer = null;
 
 export function clearFeed() {
-  feedTracks = [];
+  tracks = [];
   currentIndex = 0;
 }
 
 export async function renderFeed(container) {
+  container.className = 'app--dark';
   container.innerHTML = `
-    <div class="feed-page" id="feed-container">
-      <!-- Progress bar -->
-      <div class="feed-progress" id="feed-progress">
-        <div class="feed-progress__bar" id="feed-progress-bar"></div>
-      </div>
-      <!-- Loading state -->
-      <div class="feed-slide feed-slide--loading">
-        <div class="feed-slide__loading">
-          <div class="loading-spinner">
-            <div class="loading-spinner__ring"></div>
-            <div class="loading-spinner__ring loading-spinner__ring--active"></div>
-            <div class="loading-spinner__icon">
-              <span class="material-symbols-outlined">graphic_eq</span>
-            </div>
-          </div>
-          <p class="text-label-md color-primary-c" style="margin-top:16px;">Loading Feed...</p>
-        </div>
+    <div class="feed page-enter">
+      <div class="feed__scroll" id="feed-scroll">
+        <section class="feed-slide feed-slide--empty">
+          <span class="material-symbols-outlined">graphic_eq</span>
+          <h2>Loading feed…</h2>
+          <p>Pulling the last 24 hours from your stations.</p>
+        </section>
       </div>
     </div>
   `;
 
-  // Set up audio callbacks
-  setCallbacks({
-    onPlay: (trackId) => {
-      // Update play button icon for current slide
-      const activeSlide = document.querySelector(`.feed-slide[data-track-id="${trackId}"]`);
-      if (activeSlide) {
-        const vizBars = activeSlide.querySelectorAll('.feed-viz-bar');
-        vizBars.forEach(bar => bar.classList.add('feed-viz-bar--active'));
-      }
-    },
-    onStop: (trackId) => {
-      const slide = document.querySelector(`.feed-slide[data-track-id="${trackId}"]`);
-      if (slide) {
-        const vizBars = slide.querySelectorAll('.feed-viz-bar');
-        vizBars.forEach(bar => bar.classList.remove('feed-viz-bar--active'));
-      }
-    },
-  });
+  setCallbacks({ onPlay: () => {}, onStop: () => {} });
 
-  // Load tracks
-  // Load tracks if empty
-  if (feedTracks.length === 0) {
+  if (tracks.length === 0) {
     try {
-      feedTracks = await buildMosaic(30);
+      tracks = await buildMosaic(20);
     } catch (e) {
-      console.error('Failed to build feed:', e);
-      feedTracks = [];
+      console.error('buildMosaic failed', e);
+      tracks = [];
     }
   }
 
-  if (feedTracks.length === 0) {
-    container.innerHTML = `
-      <div class="feed-page" style="display:flex;align-items:center;justify-content:center;height:calc(100dvh - 144px);">
-        <div style="text-align:center;padding:40px;">
-          <span class="material-symbols-outlined" style="font-size:64px;color:rgba(213,228,246,0.2);margin-bottom:16px;">cloud_off</span>
-          <h2 class="text-headline-md" style="margin-bottom:8px;">No Tracks Available</h2>
-          <p class="text-body-md color-on-surface-v">Could not load the feed. Please try again later.</p>
-        </div>
-      </div>
+  if (tracks.length === 0) {
+    container.querySelector('.feed__scroll').innerHTML = `
+      <section class="feed-slide feed-slide--empty">
+        <span class="material-symbols-outlined">cloud_off</span>
+        <h2>No tracks available</h2>
+        <p>Pick at least one station and tap Generate to build a fresh mix.</p>
+      </section>
     `;
     return;
   }
 
-  // Build the feed
-  const feedContainer = document.getElementById('feed-container');
-  feedContainer.innerHTML = `
-    <div class="feed-progress" id="feed-progress">
-      <div class="feed-progress__bar" id="feed-progress-bar"></div>
-    </div>
-    <main class="feed-scroll" id="feed-scroll">
-      ${feedTracks.map((track, i) => renderSlide(track, i)).join('')}
-    </main>
-  `;
+  const scrollEl = container.querySelector('.feed__scroll');
+  scrollEl.innerHTML = tracks.map((t, i) => renderSlide(t, i)).join('');
 
-  updateProgress(currentIndex);
-
-  // Snap scroll observation
-  const scrollEl = document.getElementById('feed-scroll');
-  const slides = scrollEl.querySelectorAll('.feed-slide');
-
-  // Intersection observer to detect current slide
+  // intersection observer to sync currentIndex + autoplay
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-        const idx = parseInt(entry.target.dataset.index, 10);
+    entries.forEach(e => {
+      if (e.isIntersecting && e.intersectionRatio > 0.6) {
+        const idx = parseInt(e.target.dataset.index, 10);
         if (idx !== currentIndex) {
-          // Stop previous track
           stopPreview();
           currentIndex = idx;
-          updateProgress(idx);
-          // Auto-play the new slide's preview
-          const track = feedTracks[idx];
-          if (track?.previewUrl) {
-            playPreview(track.previewUrl, track.id);
-          }
+          startProgressAnim(e.target);
+          const t = tracks[idx];
+          if (t?.previewUrl) playPreview(t.previewUrl, t.id);
         }
       }
     });
   }, { threshold: 0.6, root: scrollEl });
 
-  slides.forEach(slide => observer.observe(slide));
+  scrollEl.querySelectorAll('.feed-slide').forEach(s => observer.observe(s));
 
-  // Restore scroll position
   if (currentIndex > 0) {
-    setTimeout(() => {
-      const slide = scrollEl.querySelector(`.feed-slide[data-index="${currentIndex}"]`);
-      if (slide) {
-        slide.scrollIntoView({ behavior: 'instant' });
-      }
-    }, 0);
+    const target = scrollEl.querySelector(`.feed-slide[data-index="${currentIndex}"]`);
+    if (target) target.scrollIntoView({ behavior: 'instant' });
   }
 
-  // Auto-play current track
-  const currentTrack = feedTracks[currentIndex];
-  if (currentTrack?.previewUrl) {
-    setTimeout(() => {
-      playPreview(currentTrack.previewUrl, currentTrack.id);
-    }, 500);
-  }
+  // boot: kick off autoplay + progress for current
+  const firstSlide = scrollEl.querySelector(`.feed-slide[data-index="${currentIndex}"]`);
+  if (firstSlide) startProgressAnim(firstSlide);
+  const firstTrack = tracks[currentIndex];
+  if (firstTrack?.previewUrl) setTimeout(() => playPreview(firstTrack.previewUrl, firstTrack.id), 300);
 
-  // Event delegation
-  feedContainer.addEventListener('click', handleFeedClick);
+  // click delegation
+  scrollEl.addEventListener('click', handleClick);
 }
 
-function handleFeedClick(e) {
-  // Heart button
-  const heartBtn = e.target.closest('.feed-action--heart');
-  if (heartBtn) {
-    e.stopPropagation();
-    const slide = heartBtn.closest('.feed-slide');
-    const trackId = slide?.dataset.trackId;
-    const track = feedTracks.find(t => t.id === trackId);
-    if (track) {
-      const nowFav = toggleFavorite(track);
-      const icon = heartBtn.querySelector('.material-symbols-outlined');
-      if (icon) {
-        icon.style.fontVariationSettings = nowFav
-          ? "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24"
-          : "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24";
-      }
-      const label = heartBtn.querySelector('.feed-action__label');
-      if (label) label.textContent = nowFav ? 'SAVED' : 'FAVORITE';
-    }
-    return;
-  }
-
-  // Spotify button
-  const spotifyBtn = e.target.closest('.feed-action--spotify');
-  if (spotifyBtn) {
-    e.stopPropagation();
-    const slide = spotifyBtn.closest('.feed-slide');
-    const trackId = slide?.dataset.trackId;
-    const track = feedTracks.find(t => t.id === trackId);
-    if (track) {
-      const query = encodeURIComponent(`${track.artist} ${track.title}`);
-      window.open(`https://open.spotify.com/search/${query}`, '_blank');
-    }
-    return;
-  }
-
-  // Share button
-  const shareBtn = e.target.closest('.feed-action--share');
-  if (shareBtn) {
-    e.stopPropagation();
-    const slide = shareBtn.closest('.feed-slide');
-    const trackId = slide?.dataset.trackId;
-    const track = feedTracks.find(t => t.id === trackId);
-    if (track && navigator.share) {
-      navigator.share({
-        title: `${track.title} — ${track.artist}`,
-        text: `Check out "${track.title}" by ${track.artist} on KINK Radio!`,
-      }).catch(() => {});
-    }
-    return;
-  }
-}
-
-function updateProgress(index) {
-  const bar = document.getElementById('feed-progress-bar');
-  if (bar && feedTracks.length > 0) {
-    const pct = ((index + 1) / feedTracks.length) * 100;
-    bar.style.width = `${pct}%`;
-  }
-}
-
-function renderSlide(track, index) {
+function renderSlide(track, i) {
   const fav = isFavorite(track.id);
-  const stationLabel = track.station ? track.station.toUpperCase() : 'KINK FM';
-
+  const st = findStation(track.stationId) || {};
+  const stationLabel = st.cc ? `${st.cc} ${st.name || track.station || 'Radio'}` : (track.station || 'Radio');
+  const freq = st.freq || '';
+  const duration = track.duration || 210;
+  const bg = track.coverArt
+    ? `style="background-image:url('${escapeAttr(track.coverArt)}')"`
+    : '';
   return `
-    <section class="feed-slide" data-track-id="${track.id}" data-index="${index}">
-      <!-- Full-screen cover art background -->
-      <div class="feed-slide__bg">
-        ${track.coverArt
-          ? `<img class="feed-slide__img" src="${track.coverArt}" alt="${escapeAttr(track.title)}" loading="${index < 3 ? 'eager' : 'lazy'}" />`
-          : `<div class="feed-slide__img feed-slide__img--placeholder"></div>`
-        }
-        <div class="feed-slide__gradient"></div>
+    <section class="feed-slide" data-track-id="${escapeAttr(track.id)}" data-index="${i}" data-duration="${duration}">
+      <div class="feed-slide__topbar">
+        <div class="feed-slide__topbar-left">
+          <span class="mono mono--light">Playlist · 24h window</span>
+          <span class="feed-slide__live">
+            <span class="feed-slide__live-dot"></span>
+            <span>Live mix</span>
+            <span style="opacity:.5">·</span>
+            <span style="opacity:.8">${String(i+1).padStart(2,'0')}/${String(tracks.length).padStart(2,'0')}</span>
+          </span>
+        </div>
+        <button class="feed-slide__stations-btn" data-action="open-stations">
+          <span class="material-symbols-outlined" style="font-size:16px">radio</span>
+          Stations
+        </button>
       </div>
 
-
-      <!-- Bottom content overlay -->
-      <div class="feed-slide__content">
-        <!-- Visualizer + Now Playing -->
-        <div class="feed-now-playing">
-          <div class="feed-viz">
-            <div class="feed-viz-bar" style="height:40%"></div>
-            <div class="feed-viz-bar" style="height:80%"></div>
-            <div class="feed-viz-bar" style="height:100%"></div>
-            <div class="feed-viz-bar" style="height:60%"></div>
-            <div class="feed-viz-bar" style="height:90%"></div>
-          </div>
-          <span class="feed-now-playing__label">Now Playing • ${stationLabel}</span>
-        </div>
-
-        <!-- Artist and Title -->
-        <div class="feed-track-info">
-          <h3 class="feed-track-info__artist">${escapeHtml(track.artist)}</h3>
-          <h2 class="feed-track-info__title">${escapeHtml(track.title)}</h2>
-        </div>
-
-        <!-- Action buttons -->
-        <div class="feed-actions">
-          <button class="feed-action feed-action--heart">
-            <div class="feed-action__circle">
-              <span class="material-symbols-outlined"
-                    style="font-variation-settings: 'FILL' ${fav ? 1 : 0}, 'wght' 400, 'GRAD' 0, 'opsz' 24; font-size:28px;">
-                favorite
-              </span>
+      <div class="feed-slide__cover-wrap">
+        <div class="feed-slide__cover" ${bg}>
+          ${track.coverArt ? '' : `
+            <div class="feed-slide__cover-placeholder">
+              <span class="material-symbols-outlined" style="font-size:48px">music_note</span>
             </div>
-            <span class="feed-action__label">${fav ? 'SAVED' : 'FAVORITE'}</span>
-          </button>
-
-          <button class="feed-action feed-action--spotify">
-            <div class="feed-action__spotify-btn">
-              <span class="feed-action__spotify-text">Open in Spotify</span>
-              <span class="material-symbols-outlined" style="font-size:20px;">open_in_new</span>
-            </div>
-          </button>
-
-          <button class="feed-action feed-action--share">
-            <div class="feed-action__circle feed-action__circle--ghost">
-              <span class="material-symbols-outlined" style="font-size:24px;">share</span>
-            </div>
+          `}
+          <button class="feed-slide__handoff" data-action="handoff" aria-label="Open in Spotify">
+            <span class="material-symbols-outlined" style="font-size:18px">open_in_new</span>
           </button>
         </div>
+        <div class="feed-slide__swipe-hint">↑ SWIPE NEXT</div>
+      </div>
+
+      <div class="feed-slide__info">
+        <div class="feed-slide__meta">
+          <span>${escapeHtml(stationLabel)}</span>
+          ${freq ? `<span class="feed-slide__freq">${escapeHtml(freq)}</span>` : ''}
+        </div>
+        <div class="feed-slide__title">${escapeHtml(track.title)}</div>
+        <div class="feed-slide__artist">${escapeHtml(track.artist)}</div>
+      </div>
+
+      <div class="feed-slide__progress-wrap">
+        <div class="feed-slide__progress">
+          <div class="feed-slide__progress-bar" data-progress></div>
+        </div>
+        <div class="feed-slide__times">
+          <span data-elapsed>0:00</span>
+          <span style="opacity:.6">${track.album ? escapeHtml(track.album).toUpperCase() : escapeHtml((st.genre || '').toUpperCase())}</span>
+          <span>${mmss(duration)}</span>
+        </div>
+      </div>
+
+      <div class="feed-slide__actions">
+        <button class="feed-action ${fav ? 'feed-action--active' : ''}" data-action="like">
+          <span class="material-symbols-outlined" style="font-variation-settings:'FILL' ${fav ? 1 : 0}">favorite</span>
+          <span>${fav ? 'LIKED' : 'LIKE'}</span>
+        </button>
+        <button class="feed-action" data-action="share">
+          <span class="material-symbols-outlined">ios_share</span>
+          <span>SHARE</span>
+        </button>
+        <button class="feed-action" data-action="handoff">
+          <span class="material-symbols-outlined">open_in_new</span>
+          <span>SPOTIFY</span>
+        </button>
       </div>
     </section>
   `;
 }
 
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str || '';
-  return div.innerHTML;
+function startProgressAnim(slideEl) {
+  if (progressTimer) clearInterval(progressTimer);
+  const bar = slideEl.querySelector('[data-progress]');
+  const elapsed = slideEl.querySelector('[data-elapsed]');
+  const duration = parseInt(slideEl.dataset.duration, 10) || 210;
+  // seed at 18–58% like the mock
+  let p = 0.18 + Math.random() * 0.4;
+  if (bar) bar.style.width = `${p * 100}%`;
+  progressTimer = setInterval(() => {
+    p += 0.003;
+    if (p > 1) p = 0;
+    if (bar) bar.style.width = `${p * 100}%`;
+    if (elapsed) elapsed.textContent = mmss(Math.floor(duration * p));
+  }, 120);
 }
 
+function handleClick(e) {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const slide = btn.closest('.feed-slide');
+  if (!slide) return;
+  const trackId = slide.dataset.trackId;
+  const track = tracks.find(t => t.id === trackId);
+  if (!track) return;
+
+  e.stopPropagation();
+  const action = btn.dataset.action;
+  if (action === 'like') {
+    const nowFav = toggleFavorite(track);
+    btn.classList.toggle('feed-action--active', nowFav);
+    const icon = btn.querySelector('.material-symbols-outlined');
+    if (icon) icon.style.fontVariationSettings = `'FILL' ${nowFav ? 1 : 0}`;
+    const label = btn.querySelector('span:last-child');
+    if (label) label.textContent = nowFav ? 'LIKED' : 'LIKE';
+    updateLikedBadge();
+  } else if (action === 'share') {
+    if (navigator.share) {
+      navigator.share({
+        title: `${track.title} — ${track.artist}`,
+        text: `Heard on RadioFlow: "${track.title}" by ${track.artist}`,
+      }).catch(() => {});
+    } else {
+      toast(`Share: ${track.title}`);
+    }
+  } else if (action === 'handoff') {
+    const q = encodeURIComponent(`${track.artist} ${track.title}`);
+    window.open(`https://open.spotify.com/search/${q}`, '_blank');
+    toast(`→ OPENING SPOTIFY: ${track.title}`);
+  } else if (action === 'open-stations') {
+    window.location.hash = '/stations';
+  }
+}
+
+function updateLikedBadge() {
+  const badge = document.getElementById('nav-liked-badge');
+  if (!badge) return;
+  const n = getFavorites().length;
+  if (n > 0) { badge.textContent = String(n); badge.hidden = false; }
+  else { badge.hidden = true; }
+}
+
+function mmss(seconds) {
+  const s = Math.max(0, Math.floor(seconds));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
+
+function toast(text) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = text;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1800);
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
 function escapeAttr(str) {
-  return (str || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(str ?? '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

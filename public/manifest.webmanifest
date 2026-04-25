@@ -1,0 +1,13 @@
+{
+  "name": "RadioFlow",
+  "short_name": "RadioFlow",
+  "description": "Swipeable radio discovery feed.",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0E0E0C",
+  "theme_color": "#0E0E0C",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

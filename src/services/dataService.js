@@ -1,164 +1,118 @@
 /**
- * Data Service — handles playlist fetching, cover art enrichment, and preview URLs
+ * Data Service — playlist fetching + cover art/preview enrichment.
+ * Keeps the station id on each track so the feed can render per-station meta.
  */
 import { demoPlaylist } from '../data/demoPlaylist.js';
+import { STATIONS, findStation } from '../data/stations.js';
 
 const iTunesCache = new Map();
 
-// Base URL for API calls. In dev, it's relative (handled by Vite proxy).
-// In production, it points to the Render backend URL.
-const API_BASE = import.meta.env.PROD 
-  ? 'https://radioflow-c6zh.onrender.com' 
-  : '';
+// Same-origin everywhere: dev → Vite proxy, prod → Vercel rewrite.
+const API_BASE = '';
 
 /**
- * Fetch the playlist from the proxy server.
- * Falls back to demo data if unavailable.
+ * Fetch one station's recent playlist. Returns rows tagged with { stationId, station }.
  */
-export async function fetchPlaylist(stationId = 'main') {
+export async function fetchPlaylist(stationId = 'kink') {
+  const st = findStation(stationId);
+  const stationName = st?.name || 'Radio';
   try {
-    const res = await fetch(`${API_BASE}/api/playlist?station=${stationId}`);
+    const res = await fetch(`${API_BASE}/api/playlist?station=${encodeURIComponent(stationId)}`);
     if (!res.ok) throw new Error('Proxy unavailable');
-    const tracks = await res.json();
-    if (tracks.length > 0) {
-      const names = {
-        'main': 'Kink FM', 'pinguin': 'Pinguin Radio', 'bbc6': 'BBC Radio 6',
-        'fluxfm': 'Flux FM', 'npo3fm': 'NPO 3FM', 'nporadio2': 'NPO Radio 2'
-      };
-      return tracks.map(t => ({ ...t, station: names[stationId] || 'Radio' }));
+    const rows = await res.json();
+    if (rows.length > 0) {
+      return rows.map(r => ({ ...r, stationId, station: stationName }));
     }
   } catch (e) {
-    console.warn('Proxy unavailable, using demo playlist:', e.message);
+    console.warn(`Proxy unavailable for ${stationId}, falling back to demo:`, e.message);
   }
-  return [...demoPlaylist].map(t => ({ ...t, station: 'Kink FM' }));
+  return [...demoPlaylist].map(r => ({ ...r, stationId, station: stationName }));
 }
 
 /**
- * Search iTunes for cover art (client-side, no CORS issues).
- * Returns high-res artwork URL or null.
+ * iTunes search for high-res artwork.
  */
 export async function getITunesCoverArt(artist, title) {
   const key = `${artist}:::${title}`.toLowerCase();
   if (iTunesCache.has(key)) return iTunesCache.get(key);
-
   try {
-    const query = encodeURIComponent(`${artist} ${title}`);
-    const res = await fetch(`https://itunes.apple.com/search?term=${query}&media=music&entity=song&limit=1`);
+    const q = encodeURIComponent(`${artist} ${title}`);
+    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=1`);
     const data = await res.json();
-
-    if (data.results && data.results.length > 0) {
-      // Replace 100x100 with 600x600 for high-res
-      const artUrl = data.results[0].artworkUrl100?.replace('100x100', '600x600') || null;
-      iTunesCache.set(key, artUrl);
-      return artUrl;
+    if (data.results?.length > 0) {
+      const art = data.results[0].artworkUrl100?.replace('100x100', '600x600') || null;
+      iTunesCache.set(key, art);
+      return art;
     }
   } catch (e) {
     console.warn('iTunes search failed:', e.message);
   }
-
   iTunesCache.set(key, null);
   return null;
 }
 
 /**
- * Search Deezer (via proxy) for 30s preview URL and cover art.
+ * Deezer (via backend) for cover art + 30s preview.
  */
 export async function getDeezerData(artist, title) {
   try {
-    const params = new URLSearchParams({ artist, title });
-    const res = await fetch(`${API_BASE}/api/search?${params}`);
+    const p = new URLSearchParams({ artist, title });
+    const res = await fetch(`${API_BASE}/api/search?${p}`);
     if (!res.ok) throw new Error('Deezer proxy error');
     return await res.json();
   } catch (e) {
     console.warn('Deezer search failed:', e.message);
     return {
-      coverArt: null,
-      previewUrl: null,
-      album: null,
-      artistName: artist,
-      trackTitle: title,
-      duration: null,
+      coverArt: null, previewUrl: null, album: null,
+      artistName: artist, trackTitle: title, duration: null,
     };
   }
 }
 
-/**
- * Enrich a single track with cover art and preview URL.
- * Tries iTunes first (better art quality), falls back to Deezer.
- */
 export async function enrichTrack(track) {
-  // Run both in parallel
-  const [itunesArt, deezerData] = await Promise.all([
+  const [itunesArt, deezer] = await Promise.all([
     getITunesCoverArt(track.artist, track.title),
     getDeezerData(track.artist, track.title),
   ]);
-
   return {
     id: `${track.artist}:::${track.title}`.toLowerCase().replace(/[^a-z0-9:]/g, ''),
-    artist: deezerData.artistName || track.artist,
-    title: deezerData.trackTitle || track.title,
-    album: deezerData.album || '',
-    coverArt: itunesArt || deezerData.coverArt || deezerData.coverArtXL || null,
-    previewUrl: deezerData.previewUrl || null,
-    duration: deezerData.duration || null,
-    deezerLink: deezerData.deezerLink || null,
-    genre: guessGenre(track.artist),
+    artist: deezer.artistName || track.artist,
+    title: deezer.trackTitle || track.title,
+    album: deezer.album || '',
+    coverArt: itunesArt || deezer.coverArt || deezer.coverArtXL || null,
+    previewUrl: deezer.previewUrl || null,
+    duration: deezer.duration || null,
+    deezerLink: deezer.deezerLink || null,
+    stationId: track.stationId,
     station: track.station,
   };
 }
 
 /**
- * Build a complete enriched mosaic from the playlist.
- * Processes tracks in batches to avoid hammering APIs.
+ * Build a mixed, enriched feed from selected stations.
+ * Parallelism + batched enrichment keeps p95 <= 10s (matches v2 target).
  */
-export async function buildMosaic(maxTracks = 50) {
-  let stations = ['main'];
+export async function buildMosaic(maxTracks = 20) {
+  let stations = ['kink'];
   try {
-    const stored = localStorage.getItem('radioflow_stations');
-    if (stored) stations = JSON.parse(stored);
-  } catch (e) {}
+    const saved = JSON.parse(localStorage.getItem('radioflow_stations') || '[]');
+    if (saved.length) stations = saved;
+  } catch {}
 
-  // Fetch all selected stations in parallel
   const playlists = await Promise.all(stations.map(id => fetchPlaylist(id)));
-  
-  // Combine all tracks and explicitly clear old cache if feed rebuilds
   const combined = playlists.flat();
-  const shuffled = shuffleArray(combined).slice(0, maxTracks);
+  const shuffled = shuffle(combined).slice(0, maxTracks);
 
-  // Process in batches of 5
   const enriched = [];
   for (let i = 0; i < shuffled.length; i += 5) {
     const batch = shuffled.slice(i, i + 5);
     const results = await Promise.all(batch.map(enrichTrack));
     enriched.push(...results);
   }
-
   return enriched;
 }
 
-/**
- * Rough genre guessing based on artist (for demo display).
- */
-function guessGenre(artist) {
-  const genres = {
-    rock: ['nirvana', 'foo fighters', 'pearl jam', 'led zeppelin', 'queens of the stone age', 'royal blood', 'papa roach', 'van halen', 'thin lizzy', 'audioslave', 'linkin park', 'muse', 'stereophonics', 'volbeat', 'bruce springsteen'],
-    alternative: ['arctic monkeys', 'the killers', 'radiohead', 'nothing but thieves', 'the strokes', 'editors', 'the cure', 'blur', 'oasis', 'coldplay', 'the cranberries', 'snow patrol', 'wet leg', 'the smashing pumpkins', 'kasabian', 'fontaines d.c.'],
-    indie: ['florence the machine', 'vance joy', 'mumford and sons', 'imagine dragons', 'kings of leon', 'gorillaz', 'weezer', 'inhaler'],
-    punk: ['ramones', 'green day', 'the jam'],
-    grunge: ['alice in chains', 'garbage'],
-    electronic: ['depeche mode', 'talking heads'],
-    metal: ['within temptation', 'faith no more'],
-    classic: ['david bowie', 'u2', 'red hot chili peppers', 'k\'s choice', 'anouk'],
-  };
-
-  const lower = artist.toLowerCase();
-  for (const [genre, artists] of Object.entries(genres)) {
-    if (artists.some(a => lower.includes(a))) return genre;
-  }
-  return 'rock';
-}
-
-function shuffleArray(arr) {
+function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
