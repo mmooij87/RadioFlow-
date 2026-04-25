@@ -1,106 +1,36 @@
 /**
- * Data Service — playlist fetching + cover art/preview enrichment.
- * Each track keeps its source stationId so the feed UI shows real station meta.
+ * Data Service — reads pre-built playlists.json (refreshed daily by GH Action).
+ *
+ * No live network calls per Generate: feed is sourced from a single static
+ * JSON the workflow already enriched with cover + preview + Spotify link.
+ * Tracks missing any of those were filtered out at build time so anything
+ * the UI sees is guaranteed playable + viewable + handoff-able.
  */
 import { findStation } from '../data/stations.js';
 
-const iTunesCache = new Map();
+const FEED_MAX = 60;
 
-// Resolve at runtime so the same build works on Vercel (same-origin via
-// vercel.json rewrite), on GitHub Pages (cross-origin to Render), and in
-// local dev (Vite proxy).
-const API_BASE = (() => {
-  if (typeof window === 'undefined') return '';
-  const h = window.location.hostname;
-  if (!h || h === 'localhost' || h === '127.0.0.1' || h.endsWith('.vercel.app')) return '';
-  return 'https://radioflow-c6zh.onrender.com';
-})();
+let cachePromise = null;
 
-/**
- * Fetch one station's recent playlist. Returns rows tagged with { stationId, station }.
- * Returns [] if the station's source is unavailable — never contaminates with foreign tracks.
- */
-export async function fetchPlaylist(stationId) {
-  const st = findStation(stationId);
-  const stationName = st?.name || 'Radio';
-  try {
-    const res = await fetch(`${API_BASE}/api/playlist?station=${encodeURIComponent(stationId)}`);
-    if (!res.ok) return [];
-    const rows = await res.json();
-    return rows.map(r => ({ ...r, stationId, station: stationName }));
-  } catch (e) {
-    console.warn(`[${stationId}] fetchPlaylist failed:`, e.message);
-    return [];
+function loadPlaylists() {
+  if (!cachePromise) {
+    // Resolve relative to the page (works under Vercel's `/` base and
+    // GitHub Pages' `/RadioFlow-/` base alike since vite uses `base: './'`).
+    cachePromise = fetch(new URL('./data/playlists.json', document.baseURI))
+      .then(r => {
+        if (!r.ok) throw new Error(`playlists.json HTTP ${r.status}`);
+        return r.json();
+      })
+      .catch(err => {
+        console.error('Failed to load playlists.json:', err);
+        return { generatedAt: null, stations: {} };
+      });
   }
+  return cachePromise;
 }
 
-export async function getITunesCoverArt(artist, title) {
-  const key = `${artist}:::${title}`.toLowerCase();
-  if (iTunesCache.has(key)) return iTunesCache.get(key);
-  try {
-    const q = encodeURIComponent(`${artist} ${title}`);
-    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=1`);
-    const data = await res.json();
-    if (data.results?.length > 0) {
-      const art = data.results[0].artworkUrl100?.replace('100x100', '600x600') || null;
-      iTunesCache.set(key, art);
-      return art;
-    }
-  } catch (e) {
-    console.warn('iTunes search failed:', e.message);
-  }
-  iTunesCache.set(key, null);
-  return null;
-}
-
-export async function getDeezerData(artist, title) {
-  try {
-    const p = new URLSearchParams({ artist, title });
-    const res = await fetch(`${API_BASE}/api/search?${p}`);
-    if (!res.ok) throw new Error('Deezer proxy error');
-    return await res.json();
-  } catch (e) {
-    console.warn('Deezer search failed:', e.message);
-    return {
-      coverArt: null, previewUrl: null, album: null,
-      artistName: artist, trackTitle: title, duration: null,
-    };
-  }
-}
-
-export async function enrichTrack(track) {
-  const [itunesArt, deezer] = await Promise.all([
-    getITunesCoverArt(track.artist, track.title),
-    getDeezerData(track.artist, track.title),
-  ]);
-  return {
-    id: `${track.stationId}:${track.artist}:${track.title}`.toLowerCase().replace(/[^a-z0-9:]/g, ''),
-    artist: deezer.artistName || track.artist,
-    title:  deezer.trackTitle  || track.title,
-    album:  deezer.album       || '',
-    coverArt:   itunesArt || deezer.coverArt || deezer.coverArtXL || null,
-    previewUrl: deezer.previewUrl || null,
-    duration:   deezer.duration   || null,
-    deezerLink: deezer.deezerLink || null,
-    stationId:  track.stationId,
-    station:    track.station,
-  };
-}
-
-/**
- * Round-robin merge: pull one track from each station's queue in turn so
- * the final feed is a balanced mix instead of being dominated by whichever
- * station happens to have the longest playlist.
- */
-function roundRobin(perStation, max) {
-  const queues = perStation.filter(q => q.length > 0).map(q => [...q]);
-  const out = [];
-  while (out.length < max && queues.some(q => q.length)) {
-    for (const q of queues) {
-      if (q.length && out.length < max) out.push(q.shift());
-    }
-  }
-  return out;
+export function clearPlaylistCache() {
+  cachePromise = null;
 }
 
 function shuffle(arr) {
@@ -113,49 +43,63 @@ function shuffle(arr) {
 }
 
 /**
- * Build a mixed, enriched feed from the user's selected stations.
- * - Fetches each station in parallel
- * - Round-robins across stations so each one is represented
- * - Lightly randomizes the start position so successive Generates differ
- * - Dedups by artist+title (cross-station) before enrichment
+ * Build the feed: pull random tracks from each selected station, evenly
+ * distributed, up to FEED_MAX (60) total.
  */
-export async function buildMosaic(maxTracks = 20) {
-  let stations = ['kink'];
+export async function buildMosaic(maxTracks = FEED_MAX) {
+  const cap = Math.min(maxTracks || FEED_MAX, FEED_MAX);
+
+  let selected = [];
   try {
-    const saved = JSON.parse(localStorage.getItem('radioflow_stations') || '[]');
-    if (saved.length) stations = saved;
+    selected = JSON.parse(localStorage.getItem('radioflow_stations') || '[]');
   } catch {}
+  if (!selected.length) selected = ['kink'];
 
-  const playlists = await Promise.all(stations.map(id => fetchPlaylist(id)));
+  const all = await loadPlaylists();
 
-  // Random offset per station so consecutive generations don't feel identical.
-  const offsetPerStation = playlists.map(p => {
-    if (p.length <= 3) return p;
-    const start = Math.floor(Math.random() * Math.min(p.length, 10));
-    return [...p.slice(start), ...p.slice(0, start)];
-  });
+  // For each selected station: shuffle its tracks (so each Generate differs)
+  // and tag with station meta so the feed UI can show country / freq / name.
+  const queues = selected
+    .map(id => {
+      const tracks = all.stations?.[id] || [];
+      const station = findStation(id);
+      const tagged = tracks.map(t => ({
+        ...t,
+        stationId: id,
+        station: station?.name || 'Radio',
+      }));
+      return { id, queue: shuffle(tagged) };
+    })
+    .filter(s => s.queue.length > 0);
 
-  const mixed = roundRobin(offsetPerStation, maxTracks * 2);
+  if (!queues.length) return [];
 
-  // Cross-station dedup (same song on two stations → keep first occurrence)
-  const seen = new Set();
-  const deduped = [];
-  for (const t of mixed) {
-    const key = `${t.artist}:::${t.title}`.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    deduped.push(t);
+  // Round-robin pull across stations until we hit the cap.
+  const picked = [];
+  while (picked.length < cap) {
+    let progressed = false;
+    for (const s of queues) {
+      if (s.queue.length === 0) continue;
+      picked.push(s.queue.shift());
+      progressed = true;
+      if (picked.length >= cap) break;
+    }
+    if (!progressed) break;
   }
 
-  // Light shuffle within the deduped set so the feed isn't always
-  // station-A-station-B-station-A-station-B order.
-  const final = shuffle(deduped).slice(0, maxTracks);
+  // Final shuffle so the feed order isn't strict A-B-A-B-A-B station alternation.
+  return shuffle(picked);
+}
 
-  const enriched = [];
-  for (let i = 0; i < final.length; i += 5) {
-    const batch = final.slice(i, i + 5);
-    const results = await Promise.all(batch.map(enrichTrack));
-    enriched.push(...results);
-  }
-  return enriched;
+/**
+ * Diagnostic: how many tracks are loaded per selected station.
+ */
+export async function feedDiagnostics() {
+  const all = await loadPlaylists();
+  return {
+    generatedAt: all.generatedAt,
+    counts: Object.fromEntries(
+      Object.entries(all.stations || {}).map(([id, arr]) => [id, arr.length])
+    ),
+  };
 }
