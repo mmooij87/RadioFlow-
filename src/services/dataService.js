@@ -14,9 +14,14 @@ let cachePromise = null;
 
 function loadPlaylists() {
   if (!cachePromise) {
-    // Resolve relative to the page (works under Vercel's `/` base and
-    // GitHub Pages' `/RadioFlow-/` base alike since vite uses `base: './'`).
-    cachePromise = fetch(new URL('./data/playlists.json', document.baseURI))
+    // Cache-bust with a daily-rotating query param so installed PWAs and
+    // mobile browsers don't keep serving yesterday's JSON (which may
+    // contain audio URLs from a now-overwritten build). The workflow
+    // refreshes once per day, so a YYYY-MM-DD stamp is the right cadence.
+    // `cache: 'no-cache'` forces a conditional GET on top of that.
+    const day = new Date().toISOString().slice(0, 10);
+    const url = new URL(`./data/playlists.json?v=${day}`, document.baseURI);
+    cachePromise = fetch(url, { cache: 'no-cache' })
       .then(r => {
         if (!r.ok) throw new Error(`playlists.json HTTP ${r.status}`);
         return r.json();
