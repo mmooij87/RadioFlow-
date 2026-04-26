@@ -3,6 +3,7 @@
  * Built to match RadioFlow v2 Dieter Rams design.
  */
 import { STATIONS, filterStations } from '../data/stations.js';
+import { primeAudio } from '../components/audioPlayer.js';
 
 const SELECTED_KEY = 'radioflow_stations';
 const VARIANT_KEY  = 'radioflow_stations_variant';
@@ -17,8 +18,8 @@ export function renderStations(container, onGenerate) {
   // load persisted selection + variant
   try {
     const saved = JSON.parse(localStorage.getItem(SELECTED_KEY) || '[]');
-    state.selected = new Set(saved.length ? saved : ['kink']);
-  } catch { state.selected = new Set(['kink']); }
+    state.selected = new Set(saved);
+  } catch { state.selected = new Set(); }
   state.variant = localStorage.getItem(VARIANT_KEY) || 'grid';
   state.search = '';
 
@@ -49,7 +50,7 @@ export function renderStations(container, onGenerate) {
         <button class="cta-generate" id="generate-btn" ${state.selected.size ? '' : 'disabled'}>
           <span>Generate playlist</span>
           <span class="cta-generate__hint" id="generate-hint">
-            ${state.selected.size ? `${state.selected.size} st · ~8s` : 'Pick a station'}
+            ${state.selected.size ? `${state.selected.size} st · ${state.selected.size * 40} tracks` : 'Pick a station'}
           </span>
         </button>
       </div>
@@ -92,6 +93,10 @@ export function renderStations(container, onGenerate) {
   // generate
   container.querySelector('#generate-btn').addEventListener('click', () => {
     if (!state.selected.size) return;
+    // Consume the click as a user gesture to unlock audio for the page
+    // session — otherwise iOS / Android silently block the autoplay
+    // that fires when the feed's IntersectionObserver kicks in.
+    primeAudio();
     if (onGenerate) onGenerate([...state.selected]);
   });
 }
@@ -106,7 +111,7 @@ function refreshPickedChrome() {
   const btn = document.getElementById('generate-btn');
   if (picked) picked.textContent = `${state.selected.size} picked`;
   if (hint) hint.textContent = state.selected.size
-    ? `${state.selected.size} st · ~8s`
+    ? `${state.selected.size} st · ${state.selected.size * 40} tracks`
     : 'Pick a station';
   if (btn) {
     if (state.selected.size) btn.removeAttribute('disabled');

@@ -1,10 +1,13 @@
 /**
  * Feed — vertical swipe, Rams aesthetic.
  * Full-bleed cover art, mono meta, Braun-orange progress, action rail.
+ * Audio autoplay is driven by the IntersectionObserver. The audio element
+ * is primed with a user gesture by the Generate button before this view
+ * mounts, so successive .play() calls on swipe work without user taps.
  */
 import { buildMosaic } from '../services/dataService.js';
 import { isFavorite, toggleFavorite, getFavorites } from '../services/favoritesService.js';
-import { playPreview, tryAutoplay, pausePreview, stopPreview, isAudioUnlocked, onAudio } from '../components/audioPlayer.js';
+import { playPreview, stopPreview, onAudio } from '../components/audioPlayer.js';
 import { findStation } from '../data/stations.js';
 
 let tracks = [];
@@ -33,14 +36,14 @@ export async function renderFeed(container) {
 
   if (audioUnsub) audioUnsub();
   audioUnsub = onAudio({
-    onPlay:  (id) => syncSlideState(id, true),
-    onPause: (id) => syncSlideState(id, false),
-    onEnd:   (id) => syncSlideState(id, false),
+    onError: ({ message }) => {
+      if (message) toast(`Audio: ${message}`);
+    },
   });
 
   if (tracks.length === 0) {
     try {
-      tracks = await buildMosaic(60);
+      tracks = await buildMosaic();
     } catch (e) {
       console.error('buildMosaic failed', e);
       tracks = [];
@@ -61,19 +64,17 @@ export async function renderFeed(container) {
   const scrollEl = container.querySelector('.feed__scroll');
   scrollEl.innerHTML = tracks.map((t, i) => renderSlide(t, i)).join('');
 
-  // Intersection observer: sync currentIndex + try autoplay (silently no-ops
-  // until the user has tapped at least once to unlock audio).
+  // Intersection observer drives autoplay: when a slide becomes the active
+  // (≥60% visible) one, swap the audio source and call play().
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting && e.intersectionRatio > 0.6) {
         const idx = parseInt(e.target.dataset.index, 10);
         if (idx !== currentIndex) {
-          stopPreview();
           currentIndex = idx;
           startProgressAnim(e.target);
           const t = tracks[idx];
-          if (t?.previewUrl) tryAutoplay(t.previewUrl, t.id);
-          syncSlideState(t?.id, false); // start with paused-icon until play() resolves
+          if (t?.previewUrl) playPreview(t.previewUrl, t.id);
         }
       }
     });
@@ -86,17 +87,15 @@ export async function renderFeed(container) {
     if (target) target.scrollIntoView({ behavior: 'instant' });
   }
 
-  // Boot: prime the progress UI for the current slide and try autoplay.
-  // First-load autoplay only succeeds if the user has gestured before
-  // (e.g. they tapped Generate). Otherwise the play overlay stays visible
-  // and the user taps the cover to start.
+  // Boot: prime progress UI + start playing the current slide. Audio was
+  // already unlocked by the Generate button click before navigation, so
+  // this play() succeeds without a tap.
   const firstSlide = scrollEl.querySelector(`.feed-slide[data-index="${currentIndex}"]`);
   if (firstSlide) startProgressAnim(firstSlide);
   const firstTrack = tracks[currentIndex];
   if (firstTrack?.previewUrl) {
-    setTimeout(() => tryAutoplay(firstTrack.previewUrl, firstTrack.id), 300);
+    setTimeout(() => playPreview(firstTrack.previewUrl, firstTrack.id), 200);
   }
-  if (!isAudioUnlocked()) showHint(firstSlide, 'TAP COVER TO PLAY');
 
   scrollEl.addEventListener('click', handleClick);
 }
@@ -128,20 +127,17 @@ function renderSlide(track, i) {
       </div>
 
       <div class="feed-slide__cover-wrap">
-        <button class="feed-slide__cover" data-action="toggle-play" ${bg} aria-label="Play or pause preview">
+        <div class="feed-slide__cover" ${bg}>
           ${track.coverArt ? '' : `
             <div class="feed-slide__cover-placeholder">
               <span class="material-symbols-outlined" style="font-size:48px">music_note</span>
             </div>
           `}
-          <span class="feed-slide__play-overlay" data-play-overlay aria-hidden="true">
-            <span class="material-symbols-outlined" data-play-icon>play_arrow</span>
-          </span>
-          <span class="feed-slide__handoff" data-action="handoff" role="button" aria-label="Open in Spotify">
+          <button class="feed-slide__handoff" data-action="handoff" aria-label="Open in Spotify">
             <span class="material-symbols-outlined" style="font-size:18px">open_in_new</span>
-          </span>
-        </button>
-        <div class="feed-slide__swipe-hint" data-hint>↑ SWIPE NEXT</div>
+          </button>
+        </div>
+        <div class="feed-slide__swipe-hint">↑ SWIPE NEXT</div>
       </div>
 
       <div class="feed-slide__info">
@@ -192,7 +188,6 @@ function startProgressAnim(slideEl) {
   if (elapsed) elapsed.textContent = '0:00';
   if (!audio) return;
 
-  // Drive the bar from real audio playback. Fallback to "0:30" until metadata loads.
   progressTimer = setInterval(() => {
     const dur = audio.duration;
     if (!dur || isNaN(dur) || !isFinite(dur)) return;
@@ -215,19 +210,7 @@ function handleClick(e) {
 
   e.stopPropagation();
   const action = btn.dataset.action;
-  if (action === 'toggle-play') {
-    if (!track.previewUrl) {
-      toast('No preview available');
-      return;
-    }
-    const audio = document.getElementById('audio-player');
-    const isCurrent = audio && audio.src && audio.src.endsWith(track.previewUrl.split('/').pop());
-    if (isCurrent && audio && !audio.paused) {
-      pausePreview();
-    } else {
-      playPreview(track.previewUrl, track.id);
-    }
-  } else if (action === 'like') {
+  if (action === 'like') {
     const nowFav = toggleFavorite(track);
     btn.classList.toggle('feed-action--active', nowFav);
     const icon = btn.querySelector('.material-symbols-outlined');
@@ -251,36 +234,6 @@ function handleClick(e) {
   } else if (action === 'open-stations') {
     window.location.hash = '/stations';
   }
-}
-
-function syncSlideState(trackId, playing) {
-  if (!trackId) return;
-  document.querySelectorAll('.feed-slide').forEach(slide => {
-    const id = slide.dataset.trackId;
-    const overlay = slide.querySelector('[data-play-overlay]');
-    const icon    = slide.querySelector('[data-play-icon]');
-    if (!overlay || !icon) return;
-    if (id === trackId) {
-      icon.textContent = playing ? 'pause' : 'play_arrow';
-      overlay.classList.toggle('feed-slide__play-overlay--playing', playing);
-    } else {
-      icon.textContent = 'play_arrow';
-      overlay.classList.remove('feed-slide__play-overlay--playing');
-    }
-  });
-  if (playing) hideHint();
-}
-
-function showHint(slideEl, text) {
-  if (!slideEl) return;
-  const hint = slideEl.querySelector('[data-hint]');
-  if (hint) hint.textContent = text;
-}
-
-function hideHint() {
-  document.querySelectorAll('[data-hint]').forEach(h => {
-    if (h.textContent.includes('TAP')) h.textContent = '↑ SWIPE NEXT';
-  });
 }
 
 function updateLikedBadge() {
