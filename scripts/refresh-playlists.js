@@ -19,7 +19,7 @@ import { parse } from 'node-html-parser';
 
 const TARGET_PER_STATION = 40;
 const SCRAPE_LIMIT       = 80;   // candidates pulled before enrichment
-const DEEZER_DELAY_MS    = 130;  // Deezer free tier: 50 req / 5s
+const ITUNES_DELAY_MS    = 220;  // be polite to iTunes Search (~5 req/s)
 
 const ORB_URLS = {
   kink:          'https://onlineradiobox.com/nl/kink/playlist/1',
@@ -85,40 +85,61 @@ async function scrape(stationId, url) {
   return out;
 }
 
-async function enrich(stationId, artist, title) {
-  const q = encodeURIComponent(`artist:"${artist}" track:"${title}"`);
-  let res, data;
+/**
+ * Look up the track on iTunes Search API.
+ * iTunes returns stable, non-expiring 30-second .m4a preview URLs and
+ * 100x100 artwork that we upscale to 1000x1000bb. Both URLs are static,
+ * which is exactly what we need for a once-a-day prebuild — Deezer's
+ * preview URLs are signed (`hdnea=exp=...`) and expire ~35 min after
+ * issue, so they're useless for a daily snapshot.
+ */
+async function lookupITunes(artist, title) {
+  const q = encodeURIComponent(`${artist} ${title}`);
+  const url = `https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=1`;
   try {
-    res = await fetch(`https://api.deezer.com/search?q=${q}&limit=1`, {
-      headers: { 'User-Agent': UA, 'Accept': 'application/json' },
-    });
-    data = await res.json();
-  } catch (e) {
+    const res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'application/json' } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const t = data?.results?.[0];
+    if (!t || !t.previewUrl) return null;
+    const art = t.artworkUrl100
+      ? t.artworkUrl100.replace(/\/\d+x\d+(bb)?\.(jpg|png)$/i, '/1000x1000bb.jpg')
+      : null;
+    if (!art) return null;
+    return {
+      artist:     t.artistName    || artist,
+      title:      t.trackName     || title,
+      album:      t.collectionName || '',
+      coverArt:   art,
+      previewUrl: t.previewUrl,
+      duration:   t.trackTimeMillis ? Math.round(t.trackTimeMillis / 1000) : null,
+      trackViewUrl: t.trackViewUrl || null,
+    };
+  } catch {
     return null;
   }
-  const t = data?.data?.[0];
-  if (!t) return null;
+}
 
-  const coverArt   = t.album?.cover_xl || t.album?.cover_big || t.album?.cover_medium || null;
-  const previewUrl = t.preview || null;
-  if (!coverArt || !previewUrl) return null; // drop incomplete tracks
+async function enrich(stationId, artist, title) {
+  const lookup = await lookupITunes(artist, title);
+  if (!lookup) return null;
 
-  const finalArtist = t.artist?.name || artist;
-  const finalTitle  = t.title || title;
+  const finalArtist = lookup.artist;
+  const finalTitle  = lookup.title;
   const id = `${stationId}:${finalArtist}:${finalTitle}`
     .toLowerCase()
     .replace(/[^a-z0-9:]/g, '');
 
   return {
     id,
-    artist:      finalArtist,
-    title:       finalTitle,
-    album:       t.album?.title || '',
-    coverArt,
-    previewUrl,
-    duration:    t.duration || null,
-    deezerLink:  t.link || null,
-    spotifyLink: `https://open.spotify.com/search/${encodeURIComponent(`${finalArtist} ${finalTitle}`)}`,
+    artist:       finalArtist,
+    title:        finalTitle,
+    album:        lookup.album,
+    coverArt:     lookup.coverArt,
+    previewUrl:   lookup.previewUrl,
+    duration:     lookup.duration,
+    appleLink:    lookup.trackViewUrl,
+    spotifyLink:  `https://open.spotify.com/search/${encodeURIComponent(`${finalArtist} ${finalTitle}`)}`,
     stationId,
   };
 }
@@ -139,7 +160,7 @@ async function refreshStation(stationId, url) {
     if (enriched.length >= TARGET_PER_STATION) break;
     const e = await enrich(stationId, c.artist, c.title);
     if (e) enriched.push(e);
-    await sleep(DEEZER_DELAY_MS);
+    await sleep(ITUNES_DELAY_MS);
   }
   console.log(`[${stationId}] ${enriched.length} kept`);
   return enriched;
