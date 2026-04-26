@@ -6,11 +6,13 @@
 import { findStation } from '../data/stations.js';
 import { buildMosaic } from '../services/dataService.js';
 
-const FEED_MAX     = 60;
-const TARGET_MS    = 1500;   // minimum visible time so it doesn't flash
-const COUNT_STEP_MS = 18;
+const PER_STATION   = 40;
+const TARGET_MS     = 1500;  // minimum visible time so it doesn't flash
+const COUNT_STEP_MS = 12;
 
 export function runGenerate(selectedIds, onDone, onCancel) {
+  const expected = selectedIds.length * PER_STATION;
+
   const root = document.createElement('div');
   root.className = 'generate';
   root.innerHTML = `
@@ -26,7 +28,7 @@ export function runGenerate(selectedIds, onDone, onCancel) {
 
     <div class="generate__body">
       <div>
-        <span class="generate__count" id="gen-count">00</span><span class="generate__count-total"> / ${FEED_MAX}</span>
+        <span class="generate__count" id="gen-count">00</span><span class="generate__count-total"> / ${expected}</span>
       </div>
       <div class="generate__status" id="gen-status">Picking random tracks across your stations.</div>
     </div>
@@ -56,7 +58,7 @@ export function runGenerate(selectedIds, onDone, onCancel) {
 
   document.body.appendChild(root);
 
-  const buildPromise = buildMosaic(FEED_MAX).catch(err => {
+  const buildPromise = buildMosaic().catch(err => {
     console.error('buildMosaic failed', err);
     return [];
   });
@@ -64,7 +66,7 @@ export function runGenerate(selectedIds, onDone, onCancel) {
   // Animate the count up to whatever buildMosaic returns.
   const countEl = root.querySelector('#gen-count');
   let displayed = 0;
-  let target = FEED_MAX;
+  let target = expected;
   const counter = setInterval(() => {
     if (displayed >= target) { clearInterval(counter); return; }
     displayed++;

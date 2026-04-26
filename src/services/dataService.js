@@ -8,7 +8,7 @@
  */
 import { findStation } from '../data/stations.js';
 
-const FEED_MAX = 60;
+const PER_STATION = 40;
 
 let cachePromise = null;
 
@@ -43,22 +43,24 @@ function shuffle(arr) {
 }
 
 /**
- * Build the feed: pull random tracks from each selected station, evenly
- * distributed, up to FEED_MAX (60) total.
+ * Build the feed.
+ *
+ * For each selected station, take up to PER_STATION (40) random tracks.
+ * Round-robin across stations so they're evenly distributed in the result,
+ * then final-shuffle so the feed isn't strict A-B-A-B-A-B alternation.
+ *
+ * Returns [] if no stations are selected. The feed grows linearly with
+ * selection: 1 station → 40 tracks, 3 stations → 120, 12 stations → 480.
  */
-export async function buildMosaic(maxTracks = FEED_MAX) {
-  const cap = Math.min(maxTracks || FEED_MAX, FEED_MAX);
-
+export async function buildMosaic() {
   let selected = [];
   try {
     selected = JSON.parse(localStorage.getItem('radioflow_stations') || '[]');
   } catch {}
-  if (!selected.length) selected = ['kink'];
+  if (!selected.length) return [];
 
   const all = await loadPlaylists();
 
-  // For each selected station: shuffle its tracks (so each Generate differs)
-  // and tag with station meta so the feed UI can show country / freq / name.
   const queues = selected
     .map(id => {
       const tracks = all.stations?.[id] || [];
@@ -68,26 +70,21 @@ export async function buildMosaic(maxTracks = FEED_MAX) {
         stationId: id,
         station: station?.name || 'Radio',
       }));
-      return { id, queue: shuffle(tagged) };
+      // Take up to PER_STATION at random.
+      return { id, queue: shuffle(tagged).slice(0, PER_STATION) };
     })
     .filter(s => s.queue.length > 0);
 
   if (!queues.length) return [];
 
-  // Round-robin pull across stations until we hit the cap.
+  // Round-robin pull across stations.
   const picked = [];
-  while (picked.length < cap) {
-    let progressed = false;
+  while (queues.some(s => s.queue.length)) {
     for (const s of queues) {
-      if (s.queue.length === 0) continue;
-      picked.push(s.queue.shift());
-      progressed = true;
-      if (picked.length >= cap) break;
+      if (s.queue.length) picked.push(s.queue.shift());
     }
-    if (!progressed) break;
   }
 
-  // Final shuffle so the feed order isn't strict A-B-A-B-A-B station alternation.
   return shuffle(picked);
 }
 
