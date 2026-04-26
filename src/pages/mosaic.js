@@ -36,8 +36,9 @@ export async function renderFeed(container) {
 
   if (audioUnsub) audioUnsub();
   audioUnsub = onAudio({
-    onError: ({ message }) => {
-      if (message) toast(`Audio: ${message}`);
+    onError: ({ message, code }) => {
+      const text = message || (code ? `Audio code ${code}` : 'Audio failed');
+      toast(text);
     },
   });
 
