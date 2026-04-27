@@ -2,16 +2,19 @@
  * Daily playlist refresh.
  *
  * For each station:
- *   1. Scrape onlineradiobox.com — pages /playlist/1, /2, /3 — gathering
- *      up to ~150 candidate plays.
- *   2. Look each candidate up on iTunes Search (stable URLs, no expiry).
- *   3. Drop tracks that iTunes can't fully match (no preview or no art).
+ *   1. Scrape onlineradiobox.com — pages /playlist/1, /2, /3.
+ *   2. For each candidate, consult the persistent track-cache; only call
+ *      iTunes Search for cache misses (or expired entries).
+ *   3. Drop tracks that iTunes never matched.
  *   4. Keep up to 40 fully-functional tracks per station.
- *   5. Always attach a Spotify search URL.
  *
- * Output: public/data/playlists.json — read directly by the SPA at runtime.
+ * Outputs (both committed by the workflow):
+ *   - public/data/playlists.json    — read by the SPA at runtime
+ *   - data/track-cache.json         — iTunes lookup cache, persisted
  *
- * Designed to run from a GitHub Action once a day. No backend at runtime.
+ * The cache is the key to staying under iTunes' ~20 req/min rate limit.
+ * After the first build, subsequent daily runs only lookup the day's
+ * new tracks (typically tens, not hundreds).
  */
 
 import fs from 'node:fs/promises';
@@ -19,12 +22,17 @@ import path from 'node:path';
 import { parse } from 'node-html-parser';
 
 const TARGET_PER_STATION = 40;
-const SCRAPE_PAGES       = [1, 2, 3];   // /playlist/1, /2, /3
-const SCRAPE_LIMIT       = 200;         // hard cap on candidates per station
-const ITUNES_DELAY_MS    = 600;         // ~100 req/min, under iTunes' rate limit
-const ITUNES_MAX_PER_STN = 100;         // don't waste budget on stations that won't match
-const ITUNES_ABORT_STREAK = 6;          // consecutive non-OK responses → assume rate-limited
+const SCRAPE_PAGES       = [1, 2, 3];
+const SCRAPE_LIMIT       = 200;
+const ITUNES_DELAY_MS    = 1500;        // 40 req/min — safer for iTunes
+const ITUNES_MAX_PER_STN = 80;          // hard cap on iTunes calls per station per run
+const ITUNES_ABORT_STREAK = 5;          // consecutive non-OK → assume rate-limited
 const PAGE_DELAY_MS      = 400;
+
+// Cache TTL: re-validate "no match" entries weekly so misspellings or
+// late-added tracks get a second chance, but successful matches never expire.
+const CACHE_NEGATIVE_TTL_MS = 7 * 24 * 3600 * 1000;
+const CACHE_PATH = 'data/track-cache.json';
 
 // Each entry is the *base* URL — pages are appended as `/playlist/N`.
 const ORB_BASES = {
@@ -177,48 +185,86 @@ async function lookupITunes(artist, title) {
   };
 }
 
-async function enrich(stationId, artist, title) {
-  const r = await lookupITunes(artist, title);
-  if (!r.ok || !r.data) return { track: null, status: r.status };
-  const lookup = r.data;
+function cacheKey(artist, title) {
+  return `${artist}|||${title}`.toLowerCase().replace(/\s+/g, ' ').trim();
+}
 
+async function loadCache() {
+  try {
+    const raw = await fs.readFile(CACHE_PATH, 'utf8');
+    const data = JSON.parse(raw);
+    const entries = Object.keys(data.entries || {}).length;
+    console.log(`Loaded ${entries} cached lookups from ${CACHE_PATH}`);
+    return data;
+  } catch {
+    console.log(`No existing cache at ${CACHE_PATH}; starting fresh`);
+    return { updated: null, entries: {} };
+  }
+}
+
+async function saveCache(cache) {
+  cache.updated = new Date().toISOString();
+  await fs.mkdir(path.dirname(CACHE_PATH), { recursive: true });
+  await fs.writeFile(CACHE_PATH, JSON.stringify(cache, null, 2));
+}
+
+/**
+ * Look the candidate up — preferring the persistent cache. Returns
+ *   { lookup, status, source }
+ *   - lookup === iTunes data | null (no match) | undefined (cache miss handled by caller)
+ *   - status === 200 always for cached entries; HTTP code for fresh calls
+ *   - source === 'cache' | 'cache-neg' | 'fresh'
+ */
+async function getEnrichment(cache, artist, title) {
+  const key = cacheKey(artist, title);
+  const hit = cache.entries[key];
+  if (hit) {
+    if (hit.data) return { lookup: hit.data, status: 200, source: 'cache' };
+    // Negative cache: skip unless old enough to retry.
+    if (Date.now() - (hit.ts || 0) < CACHE_NEGATIVE_TTL_MS) {
+      return { lookup: null, status: 200, source: 'cache-neg' };
+    }
+  }
+  const r = await lookupITunes(artist, title);
+  if (!r.ok) return { lookup: null, status: r.status, source: 'fresh' };
+  cache.entries[key] = { ts: Date.now(), data: r.data || null };
+  return { lookup: r.data, status: 200, source: 'fresh' };
+}
+
+function buildTrack(stationId, lookup) {
+  if (!lookup) return null;
   const finalArtist = lookup.artist;
   const finalTitle  = lookup.title;
   const id = `${stationId}:${finalArtist}:${finalTitle}`
     .toLowerCase()
     .replace(/[^a-z0-9:]/g, '');
-
   return {
-    track: {
-      id,
-      artist:       finalArtist,
-      title:        finalTitle,
-      album:        lookup.album,
-      coverArt:     lookup.coverArt,
-      previewUrl:   lookup.previewUrl,
-      duration:     lookup.duration,
-      appleLink:    lookup.trackViewUrl,
-      spotifyLink:  `https://open.spotify.com/search/${encodeURIComponent(`${finalArtist} ${finalTitle}`)}`,
-      stationId,
-    },
-    status: 200,
+    id,
+    artist:       finalArtist,
+    title:        finalTitle,
+    album:        lookup.album,
+    coverArt:     lookup.coverArt,
+    previewUrl:   lookup.previewUrl,
+    duration:     lookup.duration,
+    appleLink:    lookup.trackViewUrl,
+    spotifyLink:  `https://open.spotify.com/search/${encodeURIComponent(`${finalArtist} ${finalTitle}`)}`,
+    stationId,
   };
 }
 
-async function refreshStation(stationId, baseUrl) {
+async function refreshStation(stationId, baseUrl, cache) {
   const candidates = await scrapeStation(stationId, baseUrl);
   console.log(`[${stationId}] ${candidates.length} candidates total → enriching…`);
 
   const enriched = [];
-  let dropped = 0;
-  let attempts = 0;
+  let cached = 0, fresh = 0, freshDropped = 0, cachedNeg = 0;
   let consecutiveFailures = 0;
   const statusCounts = {};
 
   for (const c of candidates) {
     if (enriched.length >= TARGET_PER_STATION) break;
-    if (attempts >= ITUNES_MAX_PER_STN) {
-      console.log(`[${stationId}] hit ITUNES_MAX_PER_STN (${ITUNES_MAX_PER_STN}); stopping early`);
+    if (fresh >= ITUNES_MAX_PER_STN) {
+      console.log(`[${stationId}] hit ITUNES_MAX_PER_STN (${ITUNES_MAX_PER_STN}) fresh calls; stopping early`);
       break;
     }
     if (consecutiveFailures >= ITUNES_ABORT_STREAK) {
@@ -226,28 +272,31 @@ async function refreshStation(stationId, baseUrl) {
       break;
     }
 
-    attempts++;
-    const { track, status } = await enrich(stationId, c.artist, c.title);
-    statusCounts[status] = (statusCounts[status] || 0) + 1;
+    const { lookup, status, source } = await getEnrichment(cache, c.artist, c.title);
+    statusCounts[`${source}/${status}`] = (statusCounts[`${source}/${status}`] || 0) + 1;
 
+    const track = buildTrack(stationId, lookup);
     if (track) {
       enriched.push(track);
       consecutiveFailures = 0;
     } else {
-      dropped++;
-      // Treat any non-200 as a failure for the streak counter; 200-with-no-match
-      // is normal "track not on iTunes" and shouldn't trigger abort.
-      if (status !== 200) consecutiveFailures++;
+      if (source === 'cache-neg') cachedNeg++;
+      else if (source === 'cache') {/* shouldn't happen — null cache + null data */}
+      else freshDropped++;
+      if (source === 'fresh' && status !== 200) consecutiveFailures++;
       else consecutiveFailures = 0;
     }
-    await sleep(ITUNES_DELAY_MS);
+
+    if (source === 'cache' || source === 'cache-neg') cached++;
+    else { fresh++; await sleep(ITUNES_DELAY_MS); }
   }
   const breakdown = Object.entries(statusCounts).map(([s, n]) => `${s}:${n}`).join(' ');
-  console.log(`[${stationId}] ${enriched.length} kept, ${dropped} dropped of ${attempts} attempts (status ${breakdown})`);
+  console.log(`[${stationId}] ${enriched.length} kept · ${cached} from cache · ${fresh} fresh (${freshDropped} dropped) · neg ${cachedNeg} · ${breakdown}`);
   return enriched;
 }
 
 async function main() {
+  const cache = await loadCache();
   const out = {
     generatedAt: new Date().toISOString(),
     stations: {},
@@ -255,7 +304,9 @@ async function main() {
 
   for (const [id, baseUrl] of Object.entries(ORB_BASES)) {
     console.log(`\n=== ${id} ===`);
-    out.stations[id] = await refreshStation(id, baseUrl);
+    out.stations[id] = await refreshStation(id, baseUrl, cache);
+    // Save cache after each station so a mid-run abort still preserves progress.
+    await saveCache(cache);
     // Pause between stations so iTunes' per-IP rate window gets a chance to reset.
     await sleep(2000);
   }
@@ -269,6 +320,9 @@ async function main() {
   await fs.mkdir(path.dirname(target), { recursive: true });
   await fs.writeFile(target, JSON.stringify(out, null, 2));
   console.log(`\nWrote ${target}`);
+
+  const cacheEntries = Object.keys(cache.entries).length;
+  console.log(`Cache: ${cacheEntries} total entries (committed at ${CACHE_PATH})`);
 }
 
 main().catch(err => {
