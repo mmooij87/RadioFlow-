@@ -21,8 +21,10 @@ import { parse } from 'node-html-parser';
 const TARGET_PER_STATION = 40;
 const SCRAPE_PAGES       = [1, 2, 3];   // /playlist/1, /2, /3
 const SCRAPE_LIMIT       = 200;         // hard cap on candidates per station
-const ITUNES_DELAY_MS    = 220;         // ~5 req/s, polite to iTunes
-const PAGE_DELAY_MS      = 400;         // between pages of the same station
+const ITUNES_DELAY_MS    = 600;         // ~100 req/min, under iTunes' rate limit
+const ITUNES_MAX_PER_STN = 100;         // don't waste budget on stations that won't match
+const ITUNES_ABORT_STREAK = 6;          // consecutive non-OK responses → assume rate-limited
+const PAGE_DELAY_MS      = 400;
 
 // Each entry is the *base* URL — pages are appended as `/playlist/N`.
 const ORB_BASES = {
@@ -137,21 +139,33 @@ async function scrapeStation(stationId, baseUrl) {
 
 /**
  * iTunes Search: stable preview + 1000x1000 art.
+ *
+ * Returns { ok, status, data } so the caller can distinguish "no match"
+ * (200 with empty results) from "rate-limited" (4xx/5xx). The latter
+ * triggers the abort-streak so we stop wasting calls on a closed door.
  */
 async function lookupITunes(artist, title) {
   const q = encodeURIComponent(`${artist} ${title}`);
   const url = `https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=1`;
+  let res;
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'application/json' } });
-    if (!res.ok) return null;
-    const data = await res.json();
-    const t = data?.results?.[0];
-    if (!t || !t.previewUrl) return null;
-    const art = t.artworkUrl100
-      ? t.artworkUrl100.replace(/\/\d+x\d+(bb)?\.(jpg|png)$/i, '/1000x1000bb.jpg')
-      : null;
-    if (!art) return null;
-    return {
+    res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'application/json' } });
+  } catch (e) {
+    return { ok: false, status: 0, err: e.message };
+  }
+  if (!res.ok) return { ok: false, status: res.status };
+
+  let data;
+  try { data = await res.json(); } catch { return { ok: false, status: res.status, err: 'json' }; }
+  const t = data?.results?.[0];
+  if (!t || !t.previewUrl) return { ok: true, status: 200, data: null };
+  const art = t.artworkUrl100
+    ? t.artworkUrl100.replace(/\/\d+x\d+(bb)?\.(jpg|png)$/i, '/1000x1000bb.jpg')
+    : null;
+  if (!art) return { ok: true, status: 200, data: null };
+  return {
+    ok: true, status: 200,
+    data: {
       artist:       t.artistName    || artist,
       title:        t.trackName     || title,
       album:        t.collectionName || '',
@@ -159,15 +173,14 @@ async function lookupITunes(artist, title) {
       previewUrl:   t.previewUrl,
       duration:     t.trackTimeMillis ? Math.round(t.trackTimeMillis / 1000) : null,
       trackViewUrl: t.trackViewUrl || null,
-    };
-  } catch {
-    return null;
-  }
+    },
+  };
 }
 
 async function enrich(stationId, artist, title) {
-  const lookup = await lookupITunes(artist, title);
-  if (!lookup) return null;
+  const r = await lookupITunes(artist, title);
+  if (!r.ok || !r.data) return { track: null, status: r.status };
+  const lookup = r.data;
 
   const finalArtist = lookup.artist;
   const finalTitle  = lookup.title;
@@ -176,16 +189,19 @@ async function enrich(stationId, artist, title) {
     .replace(/[^a-z0-9:]/g, '');
 
   return {
-    id,
-    artist:       finalArtist,
-    title:        finalTitle,
-    album:        lookup.album,
-    coverArt:     lookup.coverArt,
-    previewUrl:   lookup.previewUrl,
-    duration:     lookup.duration,
-    appleLink:    lookup.trackViewUrl,
-    spotifyLink:  `https://open.spotify.com/search/${encodeURIComponent(`${finalArtist} ${finalTitle}`)}`,
-    stationId,
+    track: {
+      id,
+      artist:       finalArtist,
+      title:        finalTitle,
+      album:        lookup.album,
+      coverArt:     lookup.coverArt,
+      previewUrl:   lookup.previewUrl,
+      duration:     lookup.duration,
+      appleLink:    lookup.trackViewUrl,
+      spotifyLink:  `https://open.spotify.com/search/${encodeURIComponent(`${finalArtist} ${finalTitle}`)}`,
+      stationId,
+    },
+    status: 200,
   };
 }
 
@@ -195,14 +211,39 @@ async function refreshStation(stationId, baseUrl) {
 
   const enriched = [];
   let dropped = 0;
+  let attempts = 0;
+  let consecutiveFailures = 0;
+  const statusCounts = {};
+
   for (const c of candidates) {
     if (enriched.length >= TARGET_PER_STATION) break;
-    const e = await enrich(stationId, c.artist, c.title);
-    if (e) enriched.push(e);
-    else dropped++;
+    if (attempts >= ITUNES_MAX_PER_STN) {
+      console.log(`[${stationId}] hit ITUNES_MAX_PER_STN (${ITUNES_MAX_PER_STN}); stopping early`);
+      break;
+    }
+    if (consecutiveFailures >= ITUNES_ABORT_STREAK) {
+      console.warn(`[${stationId}] aborting: ${ITUNES_ABORT_STREAK} consecutive iTunes failures (likely rate-limited)`);
+      break;
+    }
+
+    attempts++;
+    const { track, status } = await enrich(stationId, c.artist, c.title);
+    statusCounts[status] = (statusCounts[status] || 0) + 1;
+
+    if (track) {
+      enriched.push(track);
+      consecutiveFailures = 0;
+    } else {
+      dropped++;
+      // Treat any non-200 as a failure for the streak counter; 200-with-no-match
+      // is normal "track not on iTunes" and shouldn't trigger abort.
+      if (status !== 200) consecutiveFailures++;
+      else consecutiveFailures = 0;
+    }
     await sleep(ITUNES_DELAY_MS);
   }
-  console.log(`[${stationId}] ${enriched.length} kept, ${dropped} dropped (no iTunes match)`);
+  const breakdown = Object.entries(statusCounts).map(([s, n]) => `${s}:${n}`).join(' ');
+  console.log(`[${stationId}] ${enriched.length} kept, ${dropped} dropped of ${attempts} attempts (status ${breakdown})`);
   return enriched;
 }
 
@@ -215,6 +256,8 @@ async function main() {
   for (const [id, baseUrl] of Object.entries(ORB_BASES)) {
     console.log(`\n=== ${id} ===`);
     out.stations[id] = await refreshStation(id, baseUrl);
+    // Pause between stations so iTunes' per-IP rate window gets a chance to reset.
+    await sleep(2000);
   }
 
   console.log('\n=== Summary ===');
