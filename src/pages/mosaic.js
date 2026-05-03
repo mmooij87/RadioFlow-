@@ -1,19 +1,23 @@
 /**
  * Feed — vertical swipe, Rams aesthetic.
- * Full-bleed cover art, mono meta, Braun-orange progress, action rail.
- * Audio autoplay is driven by the IntersectionObserver. The audio element
- * is primed with a user gesture by the Generate button before this view
- * mounts, so successive .play() calls on swipe work without user taps.
+ *
+ * Tracks come back from buildMosaic() with just artist+title+stationId;
+ * cover art and the 30-second preview URL are fetched on demand from
+ * Deezer the moment a slide enters view, with the next two slides
+ * pre-fetched in parallel so swipes feel instant.
  */
-import { buildMosaic } from '../services/dataService.js';
+import { buildMosaic, enrichTrack } from '../services/dataService.js';
 import { isFavorite, toggleFavorite, getFavorites } from '../services/favoritesService.js';
 import { playPreview, stopPreview, onAudio } from '../components/audioPlayer.js';
 import { findStation } from '../data/stations.js';
+
+const PREFETCH_AHEAD = 3;
 
 let tracks = [];
 let currentIndex = 0;
 let progressTimer = null;
 let audioUnsub = null;
+let scrollEl = null;
 
 export function clearFeed() {
   tracks = [];
@@ -62,20 +66,16 @@ export async function renderFeed(container) {
     return;
   }
 
-  const scrollEl = container.querySelector('.feed__scroll');
+  scrollEl = container.querySelector('.feed__scroll');
   scrollEl.innerHTML = tracks.map((t, i) => renderSlide(t, i)).join('');
 
-  // Intersection observer drives autoplay: when a slide becomes the active
-  // (≥60% visible) one, swap the audio source and call play().
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting && e.intersectionRatio > 0.6) {
         const idx = parseInt(e.target.dataset.index, 10);
         if (idx !== currentIndex) {
           currentIndex = idx;
-          startProgressAnim(e.target);
-          const t = tracks[idx];
-          if (t?.previewUrl) playPreview(t.previewUrl, t.id);
+          activateSlide(idx);
         }
       }
     });
@@ -88,17 +88,67 @@ export async function renderFeed(container) {
     if (target) target.scrollIntoView({ behavior: 'instant' });
   }
 
-  // Boot: prime progress UI + start playing the current slide. Audio was
-  // already unlocked by the Generate button click before navigation, so
-  // this play() succeeds without a tap.
-  const firstSlide = scrollEl.querySelector(`.feed-slide[data-index="${currentIndex}"]`);
-  if (firstSlide) startProgressAnim(firstSlide);
-  const firstTrack = tracks[currentIndex];
-  if (firstTrack?.previewUrl) {
-    setTimeout(() => playPreview(firstTrack.previewUrl, firstTrack.id), 200);
-  }
+  // Boot: kick off the first slide and pre-fetch a few ahead.
+  activateSlide(currentIndex);
 
   scrollEl.addEventListener('click', handleClick);
+}
+
+/**
+ * Make slide `idx` the playing one: enrich it (cover + preview), start
+ * audio, kick off prefetch for the next slides.
+ */
+async function activateSlide(idx) {
+  const slideEl = scrollEl?.querySelector(`.feed-slide[data-index="${idx}"]`);
+  if (slideEl) startProgressAnim(slideEl);
+
+  const t = await ensureEnriched(idx);
+
+  // The user may have swiped on while we were waiting.
+  if (idx !== currentIndex) return;
+
+  if (t?.previewUrl) {
+    playPreview(t.previewUrl, t.id);
+  } else {
+    // No preview available — keep audio paused, surface a quiet hint.
+    stopPreview();
+    if (t) toast(`No preview: ${t.title}`);
+  }
+
+  // Pre-fetch ahead so the next swipes are instant.
+  for (let j = 1; j <= PREFETCH_AHEAD; j++) ensureEnriched(idx + j);
+}
+
+async function ensureEnriched(idx) {
+  if (idx < 0 || idx >= tracks.length) return null;
+  const t = tracks[idx];
+  if (!t || t._enriched) return t;
+  const enriched = await enrichTrack(t);
+  enriched._enriched = true;
+  tracks[idx] = enriched;
+  applyEnrichmentToDom(idx, enriched);
+  return enriched;
+}
+
+function applyEnrichmentToDom(idx, t) {
+  const slideEl = scrollEl?.querySelector(`.feed-slide[data-index="${idx}"]`);
+  if (!slideEl) return;
+  const cover = slideEl.querySelector('.feed-slide__cover');
+  if (cover) {
+    if (t.coverArt) {
+      cover.style.backgroundImage = `url('${cssUrl(t.coverArt)}')`;
+      cover.classList.remove('feed-slide__cover--loading');
+      const ph = slideEl.querySelector('.feed-slide__cover-placeholder');
+      if (ph) ph.remove();
+    } else {
+      cover.classList.remove('feed-slide__cover--loading');
+      cover.classList.add('feed-slide__cover--missing');
+    }
+  }
+  if (t.album) {
+    const albumEl = slideEl.querySelector('[data-album]');
+    if (albumEl) albumEl.textContent = t.album.toUpperCase();
+  }
 }
 
 function renderSlide(track, i) {
@@ -106,9 +156,9 @@ function renderSlide(track, i) {
   const st = findStation(track.stationId) || {};
   const stationLabel = st.cc ? `${st.cc} ${st.name || track.station || 'Radio'}` : (track.station || 'Radio');
   const freq = st.freq || '';
-  const bg = track.coverArt
-    ? `style="background-image:url('${escapeAttr(track.coverArt)}')"`
-    : '';
+  const hasArt = !!track.coverArt;
+  const bg = hasArt ? `style="background-image:url('${cssUrl(track.coverArt)}')"` : '';
+  const coverClass = `feed-slide__cover${hasArt ? '' : ' feed-slide__cover--loading'}`;
   return `
     <section class="feed-slide" data-track-id="${escapeAttr(track.id)}" data-index="${i}">
       <div class="feed-slide__topbar">
@@ -128,8 +178,8 @@ function renderSlide(track, i) {
       </div>
 
       <div class="feed-slide__cover-wrap">
-        <div class="feed-slide__cover" ${bg}>
-          ${track.coverArt ? '' : `
+        <div class="${coverClass}" ${bg}>
+          ${hasArt ? '' : `
             <div class="feed-slide__cover-placeholder">
               <span class="material-symbols-outlined" style="font-size:48px">music_note</span>
             </div>
@@ -156,7 +206,7 @@ function renderSlide(track, i) {
         </div>
         <div class="feed-slide__times">
           <span data-elapsed>0:00</span>
-          <span style="opacity:.6">${track.album ? escapeHtml(track.album).toUpperCase() : escapeHtml((st.genre || '').toUpperCase())}</span>
+          <span style="opacity:.6" data-album>${track.album ? escapeHtml(track.album).toUpperCase() : escapeHtml((st.genre || '').toUpperCase())}</span>
           <span data-total>0:30</span>
         </div>
       </div>
@@ -265,4 +315,7 @@ function escapeHtml(str) {
 }
 function escapeAttr(str) {
   return String(str ?? '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function cssUrl(str) {
+  return String(str ?? '').replace(/'/g, "\\'");
 }

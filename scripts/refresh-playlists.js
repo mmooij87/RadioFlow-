@@ -1,32 +1,29 @@
 /**
- * Daily playlist refresh.
+ * Daily ORB scrape.
  *
  * For each station:
- *   1. Scrape onlineradiobox.com — pages /playlist/1, /2, /3 — gathering
- *      up to ~150 candidate plays.
- *   2. Look each candidate up on iTunes Search (stable URLs, no expiry).
- *   3. Drop tracks that iTunes can't fully match (no preview or no art).
- *   4. Keep up to 40 fully-functional tracks per station.
- *   5. Always attach a Spotify search URL.
+ *   1. Scrape onlineradiobox.com pages /playlist/1, /2, /3.
+ *   2. Dedupe across pages.
+ *   3. Keep up to 80 candidate {artist, title} pairs per station.
  *
- * Output: public/data/playlists.json — read directly by the SPA at runtime.
+ * Output: public/data/playlists.json — read by the SPA at runtime.
  *
- * Designed to run from a GitHub Action once a day. No backend at runtime.
+ * Audio previews + cover art are now resolved client-side via Deezer's
+ * public API (CORS-friendly, fast, fresh URLs every visit) so this script
+ * no longer talks to iTunes / Deezer at build time. That removes the
+ * server-side rate-limit problem entirely: each user's browser has its
+ * own quota with Deezer.
  */
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parse } from 'node-html-parser';
 
-const TARGET_PER_STATION = 40;
-const SCRAPE_PAGES       = [1, 2, 3];   // /playlist/1, /2, /3
-const SCRAPE_LIMIT       = 200;         // hard cap on candidates per station
-const ITUNES_DELAY_MS    = 600;         // ~100 req/min, under iTunes' rate limit
-const ITUNES_MAX_PER_STN = 100;         // don't waste budget on stations that won't match
-const ITUNES_ABORT_STREAK = 6;          // consecutive non-OK responses → assume rate-limited
-const PAGE_DELAY_MS      = 400;
+const PER_STATION   = 80;
+const PAGES         = [1, 2, 3];
+const PAGE_DELAY_MS = 400;
+const STATION_DELAY_MS = 1500;
 
-// Each entry is the *base* URL — pages are appended as `/playlist/N`.
 const ORB_BASES = {
   kink:          'https://onlineradiobox.com/nl/kink',
   nporadio2:     'https://onlineradiobox.com/nl/radio2',
@@ -47,9 +44,15 @@ const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5) AppleWebKit/537.36 (KHT
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 const clean = (s) => String(s || '').replace(/\s+/g, ' ').trim();
 
-/**
- * Pull tracks out of a single ORB page. Returns { ok, status, html, tracks }.
- */
+const SCOPES = [
+  'table.tablelist-schedule a[href*="/track/"]',
+  'table.tablelist a[href*="/track/"]',
+  '.station__playlist a[href*="/track/"]',
+  '#playlist a[href*="/track/"]',
+  'main a[href*="/track/"]',
+  'a[href*="/track/"]',
+];
+
 async function scrapePage(stationId, url) {
   let res;
   try {
@@ -62,26 +65,15 @@ async function scrapePage(stationId, url) {
       redirect: 'follow',
     });
   } catch (e) {
-    return { ok: false, status: 0, htmlLen: 0, tracks: [], err: e.message };
+    return { ok: false, status: 0, tracks: [], err: e.message };
   }
-  if (!res.ok) {
-    return { ok: false, status: res.status, htmlLen: 0, tracks: [] };
-  }
+  if (!res.ok) return { ok: false, status: res.status, tracks: [] };
   const html = await res.text();
   const root = parse(html);
 
-  // Try the most specific selector first; fall back to wider scopes.
-  const scopes = [
-    'table.tablelist-schedule a[href*="/track/"]',
-    'table.tablelist a[href*="/track/"]',
-    '.station__playlist a[href*="/track/"]',
-    '#playlist a[href*="/track/"]',
-    'main a[href*="/track/"]',
-    'a[href*="/track/"]',  // last resort: every track link on the page
-  ];
   let links = [];
   let usedScope = null;
-  for (const sel of scopes) {
+  for (const sel of SCOPES) {
     const found = root.querySelectorAll(sel);
     if (found.length) { links = found; usedScope = sel; break; }
   }
@@ -100,164 +92,48 @@ async function scrapePage(stationId, url) {
     seen.add(key);
     tracks.push({ artist, title });
   }
-  return { ok: true, status: res.status, htmlLen: html.length, scope: usedScope, tracks };
+  return { ok: true, status: res.status, tracks, scope: usedScope, htmlLen: html.length };
 }
 
-/**
- * Scrape multiple pages for one station, deduping across pages.
- */
-async function scrapeStation(stationId, baseUrl) {
+async function scrapeStation(id, baseUrl) {
   const all = [];
   const seen = new Set();
   let lastReport = null;
-  for (const page of SCRAPE_PAGES) {
-    if (all.length >= SCRAPE_LIMIT) break;
+  for (const page of PAGES) {
+    if (all.length >= PER_STATION) break;
     const url = `${baseUrl}/playlist/${page}`;
-    const r = await scrapePage(stationId, url);
+    const r = await scrapePage(id, url);
     lastReport = r;
     if (!r.ok) {
-      console.warn(`[${stationId}] page ${page}: HTTP ${r.status}${r.err ? ' (' + r.err + ')' : ''}`);
+      console.warn(`[${id}] page ${page}: HTTP ${r.status}${r.err ? ' (' + r.err + ')' : ''}`);
       continue;
     }
     let added = 0;
     for (const t of r.tracks) {
-      const key = `${t.artist}:::${t.title}`.toLowerCase();
-      if (seen.has(key)) continue;
-      seen.add(key);
+      const k = `${t.artist}:::${t.title}`.toLowerCase();
+      if (seen.has(k)) continue;
+      seen.add(k);
       all.push(t);
       added++;
-      if (all.length >= SCRAPE_LIMIT) break;
+      if (all.length >= PER_STATION) break;
     }
-    console.log(`[${stationId}] page ${page}: html ${(r.htmlLen/1024).toFixed(0)}kB, ${r.tracks.length} parsed, +${added} new (scope=${r.scope || 'none'})`);
+    console.log(`[${id}] page ${page}: html ${(r.htmlLen/1024).toFixed(0)}kB, ${r.tracks.length} parsed, +${added} new (scope=${r.scope || 'none'})`);
     await sleep(PAGE_DELAY_MS);
   }
   if (!all.length) {
-    console.warn(`[${stationId}] WARNING: zero candidates after all pages. Last status=${lastReport?.status}, scope=${lastReport?.scope}`);
+    console.warn(`[${id}] WARNING: zero candidates. Last status=${lastReport?.status}`);
   }
   return all;
 }
 
-/**
- * iTunes Search: stable preview + 1000x1000 art.
- *
- * Returns { ok, status, data } so the caller can distinguish "no match"
- * (200 with empty results) from "rate-limited" (4xx/5xx). The latter
- * triggers the abort-streak so we stop wasting calls on a closed door.
- */
-async function lookupITunes(artist, title) {
-  const q = encodeURIComponent(`${artist} ${title}`);
-  const url = `https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=1`;
-  let res;
-  try {
-    res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'application/json' } });
-  } catch (e) {
-    return { ok: false, status: 0, err: e.message };
-  }
-  if (!res.ok) return { ok: false, status: res.status };
-
-  let data;
-  try { data = await res.json(); } catch { return { ok: false, status: res.status, err: 'json' }; }
-  const t = data?.results?.[0];
-  if (!t || !t.previewUrl) return { ok: true, status: 200, data: null };
-  const art = t.artworkUrl100
-    ? t.artworkUrl100.replace(/\/\d+x\d+(bb)?\.(jpg|png)$/i, '/1000x1000bb.jpg')
-    : null;
-  if (!art) return { ok: true, status: 200, data: null };
-  return {
-    ok: true, status: 200,
-    data: {
-      artist:       t.artistName    || artist,
-      title:        t.trackName     || title,
-      album:        t.collectionName || '',
-      coverArt:     art,
-      previewUrl:   t.previewUrl,
-      duration:     t.trackTimeMillis ? Math.round(t.trackTimeMillis / 1000) : null,
-      trackViewUrl: t.trackViewUrl || null,
-    },
-  };
-}
-
-async function enrich(stationId, artist, title) {
-  const r = await lookupITunes(artist, title);
-  if (!r.ok || !r.data) return { track: null, status: r.status };
-  const lookup = r.data;
-
-  const finalArtist = lookup.artist;
-  const finalTitle  = lookup.title;
-  const id = `${stationId}:${finalArtist}:${finalTitle}`
-    .toLowerCase()
-    .replace(/[^a-z0-9:]/g, '');
-
-  return {
-    track: {
-      id,
-      artist:       finalArtist,
-      title:        finalTitle,
-      album:        lookup.album,
-      coverArt:     lookup.coverArt,
-      previewUrl:   lookup.previewUrl,
-      duration:     lookup.duration,
-      appleLink:    lookup.trackViewUrl,
-      spotifyLink:  `https://open.spotify.com/search/${encodeURIComponent(`${finalArtist} ${finalTitle}`)}`,
-      stationId,
-    },
-    status: 200,
-  };
-}
-
-async function refreshStation(stationId, baseUrl) {
-  const candidates = await scrapeStation(stationId, baseUrl);
-  console.log(`[${stationId}] ${candidates.length} candidates total → enriching…`);
-
-  const enriched = [];
-  let dropped = 0;
-  let attempts = 0;
-  let consecutiveFailures = 0;
-  const statusCounts = {};
-
-  for (const c of candidates) {
-    if (enriched.length >= TARGET_PER_STATION) break;
-    if (attempts >= ITUNES_MAX_PER_STN) {
-      console.log(`[${stationId}] hit ITUNES_MAX_PER_STN (${ITUNES_MAX_PER_STN}); stopping early`);
-      break;
-    }
-    if (consecutiveFailures >= ITUNES_ABORT_STREAK) {
-      console.warn(`[${stationId}] aborting: ${ITUNES_ABORT_STREAK} consecutive iTunes failures (likely rate-limited)`);
-      break;
-    }
-
-    attempts++;
-    const { track, status } = await enrich(stationId, c.artist, c.title);
-    statusCounts[status] = (statusCounts[status] || 0) + 1;
-
-    if (track) {
-      enriched.push(track);
-      consecutiveFailures = 0;
-    } else {
-      dropped++;
-      // Treat any non-200 as a failure for the streak counter; 200-with-no-match
-      // is normal "track not on iTunes" and shouldn't trigger abort.
-      if (status !== 200) consecutiveFailures++;
-      else consecutiveFailures = 0;
-    }
-    await sleep(ITUNES_DELAY_MS);
-  }
-  const breakdown = Object.entries(statusCounts).map(([s, n]) => `${s}:${n}`).join(' ');
-  console.log(`[${stationId}] ${enriched.length} kept, ${dropped} dropped of ${attempts} attempts (status ${breakdown})`);
-  return enriched;
-}
-
 async function main() {
-  const out = {
-    generatedAt: new Date().toISOString(),
-    stations: {},
-  };
+  const out = { generatedAt: new Date().toISOString(), stations: {} };
 
-  for (const [id, baseUrl] of Object.entries(ORB_BASES)) {
+  for (const [id, base] of Object.entries(ORB_BASES)) {
     console.log(`\n=== ${id} ===`);
-    out.stations[id] = await refreshStation(id, baseUrl);
-    // Pause between stations so iTunes' per-IP rate window gets a chance to reset.
-    await sleep(2000);
+    out.stations[id] = await scrapeStation(id, base);
+    console.log(`[${id}] kept ${out.stations[id].length}`);
+    await sleep(STATION_DELAY_MS);
   }
 
   console.log('\n=== Summary ===');

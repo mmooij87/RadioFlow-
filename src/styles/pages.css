@@ -342,6 +342,20 @@
   position: relative;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+  transition: opacity 220ms ease, background-image 220ms ease;
+}
+.feed-slide__cover--loading {
+  background: linear-gradient(110deg,
+    var(--bg-3) 8%, var(--bg-2) 18%, var(--bg-3) 33%);
+  background-size: 200% 100%;
+  animation: feed-skeleton 1.4s ease-in-out infinite;
+}
+.feed-slide__cover--missing {
+  background: var(--bg-3);
+}
+@keyframes feed-skeleton {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
 }
 .feed-slide__cover-placeholder {
   position: absolute; inset: 0;
