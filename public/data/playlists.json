@@ -1,3556 +1,3564 @@
 {
-  "generatedAt": "2026-07-09T04:33:26.960Z",
+  "generatedAt": "2026-07-10T04:35:07.966Z",
   "stations": {
     "kink": [
       {
-        "artist": "De Staat",
-        "title": "The Fire"
+        "artist": "Muse",
+        "title": "Sunburn"
       },
       {
-        "artist": "Alanis Morissette",
-        "title": "Head Over Feet"
-      },
-      {
-        "artist": "Queens Of The Stone Age",
-        "title": "I Sat By The Ocean"
-      },
-      {
-        "artist": "Maxim & Skin",
-        "title": "Carmen Queasy"
-      },
-      {
-        "artist": "ALEXSUCKS",
-        "title": "Autopilot"
-      },
-      {
-        "artist": "Live",
-        "title": "The Dolphins Cry"
-      },
-      {
-        "artist": "The Clash",
-        "title": "London Calling"
-      },
-      {
-        "artist": "The Gaslight Anthem",
-        "title": "Old White Lincoln"
-      },
-      {
-        "artist": "Turnstile",
-        "title": "Seein' Stars"
-      },
-      {
-        "artist": "Nirvana",
-        "title": "In Bloom"
-      },
-      {
-        "artist": "Nothing But Thieves",
-        "title": "Evolution"
-      },
-      {
-        "artist": "The Waterboys",
-        "title": "Whole of the Moon"
-      },
-      {
-        "artist": "Johan",
-        "title": "Tumble and Fall"
-      },
-      {
-        "artist": "Connells",
-        "title": "'74-'75"
-      },
-      {
-        "artist": "Arctic Monkeys",
-        "title": "R U Mine"
-      },
-      {
-        "artist": "Nada Surf",
-        "title": "Popular"
-      },
-      {
-        "artist": "Honey I'm Home",
-        "title": "Pretty"
-      },
-      {
-        "artist": "Neil Young",
-        "title": "Rockin' In The Free World"
-      },
-      {
-        "artist": "Novastar",
-        "title": "Because"
-      },
-      {
-        "artist": "Violet Grohl",
-        "title": "Bug In The Cake"
-      },
-      {
-        "artist": "Stone Temple Pilots",
-        "title": "Interstate Love Song"
-      },
-      {
-        "artist": "Razorlight",
-        "title": "America"
-      },
-      {
-        "artist": "The Presidents of The USA",
-        "title": "Peaches"
-      },
-      {
-        "artist": "Kings of Leon",
-        "title": "The Bandit"
-      },
-      {
-        "artist": "Talk Talk",
-        "title": "Such A Shame"
-      },
-      {
-        "artist": "The White Stripes",
-        "title": "Seven Nation Army"
-      },
-      {
-        "artist": "The Pretty Reckless",
-        "title": "About You"
-      },
-      {
-        "artist": "Oasis",
-        "title": "Roll With It"
-      },
-      {
-        "artist": "Beastie Boys",
-        "title": "Fight For Your Right (To Party)"
-      },
-      {
-        "artist": "Deftones",
-        "title": "Infinite Source"
-      },
-      {
-        "artist": "Vance Joy",
-        "title": "Riptide"
-      },
-      {
-        "artist": "The Hives",
-        "title": "Hate To Say I Told You So"
-      },
-      {
-        "artist": "The Haunted Youth",
-        "title": "forget me"
-      },
-      {
-        "artist": "Manic Street Preachers",
-        "title": "Kevin Carter"
-      },
-      {
-        "artist": "Fleetwood Mac",
-        "title": "Go Your Own Way"
-      },
-      {
-        "artist": "Incubus",
-        "title": "Wish You Were Here"
-      },
-      {
-        "artist": "White Lies",
-        "title": "Tokyo"
-      },
-      {
-        "artist": "Temple Of The Dog",
-        "title": "Hunger Strike"
-      },
-      {
-        "artist": "Imagine Dragons",
-        "title": "Demons"
-      },
-      {
-        "artist": "POM",
-        "title": "Hi"
-      },
-      {
-        "artist": "The Killers",
-        "title": "All These Things That I've Done"
-      },
-      {
-        "artist": "Bruce Springsteen",
-        "title": "Glory Days"
-      },
-      {
-        "artist": "Gorillaz",
-        "title": "Orange County"
-      },
-      {
-        "artist": "Alice In Chains",
-        "title": "Them Bones"
-      },
-      {
-        "artist": "M83",
-        "title": "Midnight City"
-      },
-      {
-        "artist": "Linkin' Park",
-        "title": "Breaking the Habit"
-      },
-      {
-        "artist": "Spin Doctors",
-        "title": "Two Princes"
-      },
-      {
-        "artist": "Big Country",
-        "title": "In A Big Country"
+        "artist": "Madness",
+        "title": "Our House"
       },
       {
         "artist": "Florence Road",
         "title": "Hanging Out To Dry"
       },
       {
-        "artist": "Snow Patrol",
-        "title": "Shut Your Eyes"
-      },
-      {
-        "artist": "Lenny Kravitz",
-        "title": "American Woman"
-      },
-      {
-        "artist": "Fontaines D.C.",
-        "title": "In The Modern World"
-      },
-      {
-        "artist": "LEAP",
-        "title": "Sinking Feeling"
-      },
-      {
-        "artist": "Garbage",
-        "title": "Stupid Girl"
-      },
-      {
-        "artist": "Midnight Oil",
-        "title": "Beds Are Burning"
-      },
-      {
-        "artist": "Florence The Machine",
-        "title": "Dog Days Are Over"
-      },
-      {
-        "artist": "Bad Religion",
-        "title": "21 Century (Digital Boy)"
-      },
-      {
-        "artist": "Yungblud",
-        "title": "Zombie"
-      },
-      {
-        "artist": "Iron Maiden",
-        "title": "Can I Play With Madness"
-      },
-      {
-        "artist": "Coldplay",
-        "title": "Don't Panic"
-      },
-      {
-        "artist": "Alanis Morissette",
-        "title": "You Oughta Know"
-      },
-      {
-        "artist": "Live",
-        "title": "Selling The Drama"
-      },
-      {
-        "artist": "Pixies",
-        "title": "Monkey Gone to Heaven"
-      },
-      {
-        "artist": "Ist Ist",
-        "title": "I Am The Fear"
-      },
-      {
-        "artist": "Counting Crows",
-        "title": "Mr. Jones"
-      },
-      {
-        "artist": "Gossip",
-        "title": "Standing In The Way Of Control"
-      },
-      {
-        "artist": "Arctic Monkeys",
-        "title": "Opening Night"
-      },
-      {
-        "artist": "Suede",
-        "title": "Beautiful Ones"
-      },
-      {
-        "artist": "Talking Heads",
-        "title": "Once in a Lifetime"
-      },
-      {
-        "artist": "Rammstein",
-        "title": "Keine Lust"
-      },
-      {
-        "artist": "The Boxer Rebellion",
-        "title": "Diamonds"
-      },
-      {
-        "artist": "Bloodhound Gang",
-        "title": "The Bad Touch"
-      },
-      {
-        "artist": "Foo Fighters",
-        "title": "Window"
-      },
-      {
-        "artist": "The Cult",
-        "title": "Edie (Ciao Baby)"
-      },
-      {
-        "artist": "Wolfmother",
-        "title": "Joker & The Thief"
-      },
-      {
-        "artist": "Aerosmith",
-        "title": "Pink"
-      },
-      {
-        "artist": "The War On Drugs",
-        "title": "Under The Pressure"
-      },
-      {
-        "artist": "Pearl Jam",
-        "title": "Porch"
-      },
-      {
-        "artist": "Enter Shikari",
-        "title": "Find Out the Hard Way"
-      },
-      {
-        "artist": "Depeche Mode",
-        "title": "Personal Jesus"
-      }
-    ],
-    "nporadio2": [
-      {
-        "artist": "Yves Larock",
-        "title": "Rise Up"
-      },
-      {
-        "artist": "Survivor",
-        "title": "Eye of the tiger"
-      },
-      {
-        "artist": "Al Jarreau",
-        "title": "Mornin'"
-      },
-      {
-        "artist": "Alanis Morissette",
-        "title": "You Oughta Know"
-      },
-      {
-        "artist": "Di-Rect",
-        "title": "Won't Fall"
-      },
-      {
-        "artist": "Ed Sheeran",
-        "title": "Bad habits"
-      },
-      {
-        "artist": "U2",
-        "title": "Where the streets have no name"
-      },
-      {
-        "artist": "Tina Turner",
-        "title": "We Don't Need Another Hero (Thunderdome)"
-      },
-      {
-        "artist": "Kate Bush",
-        "title": "Wuthering heights"
-      },
-      {
-        "artist": "Imagine Dragons",
-        "title": "Enemy"
-      },
-      {
-        "artist": "Mn8",
-        "title": "I've Got A Little Something For You"
-      },
-      {
-        "artist": "Plain White T's",
-        "title": "Hey there Delilah"
-      },
-      {
-        "artist": "Fleetwood Mac",
-        "title": "Monday Morning"
-      },
-      {
-        "artist": "Pharrell Williams",
-        "title": "Happy"
-      },
-      {
-        "artist": "Madonna",
-        "title": "Material girl"
-      },
-      {
-        "artist": "Paul Weller",
-        "title": "You do something to me"
-      },
-      {
-        "artist": "ANOTR ft. 54 Ultra",
-        "title": "Talk To You"
-      },
-      {
-        "artist": "Propaganda",
-        "title": "p:Machinery"
-      },
-      {
-        "artist": "Foo Fighters",
-        "title": "Wheels"
-      },
-      {
-        "artist": "George Michael",
-        "title": "Father Figure"
-      },
-      {
-        "artist": "Nik Kershaw",
-        "title": "The Riddle"
+        "artist": "Stereophonics",
+        "title": "Maybe Tomorrow"
       },
       {
         "artist": "Guns N' Roses",
         "title": "Yesterdays"
       },
       {
-        "artist": "James Brown",
-        "title": "I got you (I feel good)"
-      },
-      {
-        "artist": "Lady Gaga & Bradley Cooper",
-        "title": "Shallow"
-      },
-      {
-        "artist": "Van Halen",
-        "title": "Can't Stop Lovin' You"
-      },
-      {
-        "artist": "Sam Fender & Olivia Dean",
-        "title": "Rein Me In"
-      },
-      {
-        "artist": "Bad English",
-        "title": "Straight To Your Heart"
-      },
-      {
-        "artist": "Bruno Mars",
-        "title": "24K Magic"
-      },
-      {
-        "artist": "Steve Winwood",
-        "title": "Valerie"
-      },
-      {
-        "artist": "Vangelis",
-        "title": "Conquest Of Paradise"
-      },
-      {
-        "artist": "Hannah Mae",
-        "title": "Waterdicht"
-      },
-      {
-        "artist": "Michael Kiwanuka",
-        "title": "Home Again"
-      },
-      {
-        "artist": "John Farnham",
-        "title": "You're the voice"
-      },
-      {
-        "artist": "2 Brothers On The Fourth Floor",
-        "title": "Dreams"
-      },
-      {
-        "artist": "Scorpions",
-        "title": "Send Me An Angel"
-      },
-      {
-        "artist": "Blur",
-        "title": "Song 2"
-      },
-      {
-        "artist": "Ed Sheeran",
-        "title": "Shape of you"
-      },
-      {
-        "artist": "Joy Division",
-        "title": "Love Will Tear Us Apart"
-      },
-      {
-        "artist": "Klein Orkest",
-        "title": "Over De Muur"
-      },
-      {
-        "artist": "Boney M",
-        "title": "Rasputin"
-      },
-      {
-        "artist": "Green Day",
-        "title": "Good Riddance (Time Of Your Life)"
-      },
-      {
-        "artist": "Elton John",
-        "title": "Your song"
-      },
-      {
-        "artist": "The Beach Boys",
-        "title": "Sloop John B"
-      },
-      {
-        "artist": "Queen",
-        "title": "I Want It All"
-      },
-      {
-        "artist": "The Smiths",
-        "title": "How Soon Is Now?"
-      },
-      {
-        "artist": "Blondie",
-        "title": "Denis"
-      },
-      {
-        "artist": "Supertramp",
-        "title": "Take the long way home"
-      },
-      {
-        "artist": "Coldplay",
-        "title": "We Pray"
-      },
-      {
-        "artist": "Tom Petty And The Heartbreakers",
-        "title": "Learning To Fly"
-      },
-      {
-        "artist": "Chef'special",
-        "title": "In your arms"
-      },
-      {
-        "artist": "Whitney Houston",
-        "title": "One Moment In Time"
-      },
-      {
-        "artist": "U2",
-        "title": "New year's day"
-      },
-      {
-        "artist": "Imagine Dragons",
-        "title": "Whatever it takes"
-      },
-      {
-        "artist": "Teskey Brothers",
-        "title": "Hold me"
-      },
-      {
-        "artist": "Boudewijn de Groot",
-        "title": "Jimmy"
-      },
-      {
-        "artist": "Joe Cocker",
-        "title": "With a little help from my friends"
-      },
-      {
-        "artist": "Evanescence",
-        "title": "Bring Me To Life"
-      },
-      {
-        "artist": "David Bowie & Mick Jagger",
-        "title": "Dancing in the street"
-      },
-      {
-        "artist": "The Sugarhill Gang",
-        "title": "Rapper's delight"
-      },
-      {
-        "artist": "R.E.M.",
-        "title": "Nightswimming"
-      },
-      {
-        "artist": "Alex Warren",
-        "title": "Carry You Home"
-      },
-      {
-        "artist": "Creedence Clearwater Revival",
-        "title": "I heard it through the grapevine"
-      },
-      {
-        "artist": "Eddie Vedder",
-        "title": "Guaranteed"
-      },
-      {
-        "artist": "Racoon",
-        "title": "Nickel for goodbye"
-      },
-      {
-        "artist": "Hall & Oates",
-        "title": "Maneater"
-      },
-      {
-        "artist": "Henk Westbroek",
-        "title": "Zelfs Je Naam Is Mooi"
-      },
-      {
-        "artist": "Mark Knopfler",
-        "title": "Going home (theme of the Local Hero)"
-      },
-      {
-        "artist": "Extreme",
-        "title": "More Than Words"
-      },
-      {
-        "artist": "Gorillaz",
-        "title": "Feel Good Inc"
-      },
-      {
-        "artist": "Teddy Swims",
-        "title": "Lose control"
-      },
-      {
-        "artist": "Europe",
-        "title": "The Final Countdown"
-      },
-      {
-        "artist": "Damien Rice",
-        "title": "9 Crimes"
-      },
-      {
-        "artist": "Ike & Tina Turner",
-        "title": "Proud Mary"
-      },
-      {
-        "artist": "Police",
-        "title": "Walking on the moon"
-      },
-      {
-        "artist": "Armand",
-        "title": "Ben Ik Te Min"
-      },
-      {
-        "artist": "Madness",
-        "title": "Baggy trousers"
-      },
-      {
-        "artist": "Abba",
-        "title": "Thank You For The Music"
-      },
-      {
-        "artist": "Michael Jackson",
-        "title": "Thriller"
-      },
-      {
-        "artist": "The Goo Goo Dolls",
-        "title": "Iris"
-      },
-      {
-        "artist": "Eminem",
-        "title": "Without Me"
-      }
-    ],
-    "pinguin": [
-      {
-        "artist": "Okkervil River",
-        "title": "Lost Coastlines"
-      },
-      {
-        "artist": "Kurt Vile",
-        "title": "Zoom 97"
-      },
-      {
-        "artist": "Propaganda",
-        "title": "Dr. Mabuse (The First Life of...)"
-      },
-      {
-        "artist": "Snarls",
-        "title": "One Wish"
-      },
-      {
-        "artist": "Widowspeak",
-        "title": "No Driver"
-      },
-      {
-        "artist": "Sharon Van Etten",
-        "title": "Jupiter 4"
-      },
-      {
-        "artist": "Ventures",
-        "title": "Walk Don't Run"
-      },
-      {
-        "artist": "Bleech 9 3",
-        "title": "No Surprise"
-      },
-      {
-        "artist": "Still Blank",
-        "title": "love guilt"
-      },
-      {
-        "artist": "Soundgarden",
-        "title": "Pretty Noose"
-      },
-      {
-        "artist": "Opus Kink",
-        "title": "The Sweet Goodbye"
-      },
-      {
-        "artist": "HIQPY",
-        "title": "Bowie’s Pressure"
-      },
-      {
-        "artist": "bdrmm",
-        "title": "Be Careful"
-      },
-      {
-        "artist": "The Sound",
-        "title": "Missiles"
-      },
-      {
-        "artist": "The Afghan Whigs",
-        "title": "Duvateen"
-      },
-      {
-        "artist": "A.A.Williams",
-        "title": "Hold It Together"
-      },
-      {
-        "artist": "RIP Magic",
-        "title": "Screwdark"
-      },
-      {
-        "artist": "Frank Zappa",
-        "title": "Joe's Garage"
-      },
-      {
-        "artist": "Pigeon",
-        "title": "Black James Dean"
-      },
-      {
-        "artist": "Blur",
-        "title": "Charmless Man"
-      },
-      {
-        "artist": "Radiohead",
-        "title": "2 2 = 5 (The Lukewarm)"
-      },
-      {
-        "artist": "feeble little horse",
-        "title": "Dior"
-      },
-      {
-        "artist": "Plains",
-        "title": "Problem With It (feat. Waxahatchee & Jess Williamson)"
-      },
-      {
-        "artist": "Elvis Costello",
-        "title": "Watching The Detectives"
-      },
-      {
-        "artist": "Marlon Funaki",
-        "title": "Skin"
-      },
-      {
-        "artist": "Roxy Music",
-        "title": "Virginia Plain"
-      },
-      {
-        "artist": "The Drums",
-        "title": "Let's Go Surfing"
-      },
-      {
-        "artist": "The Slow Country",
-        "title": "In The Mud"
-      },
-      {
-        "artist": "Killing Joke",
-        "title": "Eighties"
-      },
-      {
-        "artist": "Beck",
-        "title": "Dreams"
-      },
-      {
-        "artist": "Clutter",
-        "title": "Grease Baby"
-      },
-      {
-        "artist": "Placebo",
-        "title": "Pure Morning"
-      },
-      {
-        "artist": "Library Card",
-        "title": "Out of Context"
-      },
-      {
-        "artist": "dEUS",
-        "title": "Little Arithmetics"
-      },
-      {
-        "artist": "SOFIA ISELLA",
-        "title": "Above the Neck"
-      },
-      {
-        "artist": "Demob Happy",
-        "title": "Power Games"
-      },
-      {
-        "artist": "Courtney Barnett",
-        "title": "Nameless, Faceless"
-      },
-      {
-        "artist": "Swapmeet",
-        "title": "I Know!"
-      },
-      {
-        "artist": "Rage Against the Machine",
-        "title": "Bullet in the Head"
-      },
-      {
-        "artist": "Fit",
-        "title": "Rewrite History"
-      },
-      {
-        "artist": "Highly Suspect",
-        "title": "Wasted"
-      },
-      {
-        "artist": "Altered Images",
-        "title": "Happy Birthday"
-      },
-      {
-        "artist": "BIG SPECIAL",
-        "title": "ONLY FREE WHEN SLEEPING"
-      },
-      {
-        "artist": "Pearl Jam",
-        "title": "Alive"
-      },
-      {
-        "artist": "PJ Harvey",
-        "title": "You Said Something"
-      },
-      {
-        "artist": "Getdown Services",
-        "title": "The Radiator"
-      },
-      {
-        "artist": "Miles Kane",
-        "title": "Loaded"
-      },
-      {
-        "artist": "Stevie Nicks",
-        "title": "Edge of Seventeen"
-      },
-      {
-        "artist": "Florentenes",
-        "title": "Undiscovered Colours"
-      },
-      {
-        "artist": "Blondie",
-        "title": "One Way Or Another"
-      },
-      {
-        "artist": "Ruti",
-        "title": "I'LL BE YOUR FRIEND"
-      },
-      {
-        "artist": "Best Coast",
-        "title": "California Nights"
-      },
-      {
-        "artist": "Go Go's",
-        "title": "Our Lips Are Sealed"
-      },
-      {
-        "artist": "Slow Fiction",
-        "title": "junior year"
-      },
-      {
-        "artist": "Mên An Tol",
-        "title": "Not Ideal"
-      },
-      {
-        "artist": "Suzanne Vega",
-        "title": "Marlene On The Wall"
-      },
-      {
-        "artist": "Tooth",
-        "title": "Restless in Bloom"
-      },
-      {
-        "artist": "Khruangbin",
-        "title": "The Number 4"
-      },
-      {
-        "artist": "Neil Young",
-        "title": "Ohio"
-      },
-      {
-        "artist": "The Reytons",
-        "title": "Jukebox"
-      },
-      {
-        "artist": "The Stone Roses",
-        "title": "Waterfall"
-      },
-      {
-        "artist": "Florence Road",
-        "title": "Hanging Out To Dry"
-      },
-      {
-        "artist": "The Haunted Youth",
-        "title": "wake up"
-      },
-      {
-        "artist": "Loupe",
-        "title": "My Hands"
-      },
-      {
-        "artist": "Snarls",
-        "title": "No Lock, No Prayer"
-      },
-      {
-        "artist": "Sonic Youth",
-        "title": "Incinerate"
-      },
-      {
-        "artist": "Marmozets",
-        "title": "New York"
-      },
-      {
-        "artist": "Madness",
-        "title": "Michael Caine"
-      },
-      {
-        "artist": "David Bowie",
-        "title": "The Man Who Sold The World"
-      },
-      {
-        "artist": "Graham Coxon",
-        "title": "Billy Says"
-      },
-      {
-        "artist": "Talking Heads",
-        "title": "Take Me To The River"
-      },
-      {
-        "artist": "Muse",
-        "title": "Sing For Absolution"
-      },
-      {
-        "artist": "Members",
-        "title": "The Sound of the Suburbs"
-      },
-      {
-        "artist": "Chanel Beads",
-        "title": "Song for the Messenger"
-      },
-      {
-        "artist": "Snail Mail",
-        "title": "Dead End"
-      },
-      {
-        "artist": "Grauzone",
-        "title": "Eisbar"
-      },
-      {
-        "artist": "Lime Garden",
-        "title": "Cross My Heart"
-      },
-      {
-        "artist": "Arctic Monkeys",
-        "title": "From the Ritz to the Rubble"
-      },
-      {
-        "artist": "Rikas",
-        "title": "Raindance"
-      },
-      {
-        "artist": "Yard Act",
-        "title": "Redeemer"
-      }
-    ],
-    "bbc6": [
-      {
-        "artist": "John Martyn",
-        "title": "Glory Box"
-      },
-      {
-        "artist": "Ezra Collective",
-        "title": "Life Goes On (feat. Sampa the Great)"
-      },
-      {
-        "artist": "The Fall",
-        "title": "Hit The North"
-      },
-      {
-        "artist": "Mitski",
-        "title": "Bug Like An Angel (6 Music Session, 1 Nov 2023)"
-      },
-      {
-        "artist": "Wookie",
-        "title": "Battle (feat. Lain)"
-      },
-      {
-        "artist": "Blumi",
-        "title": "Jaguar"
-      },
-      {
-        "artist": "Marlena Shaw",
-        "title": "California Soul"
-      },
-      {
-        "artist": "The Strokes",
-        "title": "Juicebox"
-      },
-      {
-        "artist": "Kurt Vile",
-        "title": "Zoom 97"
-      },
-      {
-        "artist": "The Durutti Column",
-        "title": "Liars"
-      },
-      {
-        "artist": "mary in the junkyard",
-        "title": "New Muscles"
-      },
-      {
-        "artist": "Robyn",
-        "title": "Sucker For Love"
-      },
-      {
-        "artist": "Gene Vincent",
-        "title": "Say Mama"
-      },
-      {
-        "artist": "Larry Williams",
-        "title": "Bony Moronie"
-      },
-      {
-        "artist": "Silver Jews",
-        "title": "Random Rules"
-      },
-      {
-        "artist": "Mac DeMarco",
-        "title": "Out Of My Head"
-      },
-      {
-        "artist": "Japanese Breakfast",
-        "title": "Kokomo, IN"
-      },
-      {
-        "artist": "Big Thief",
-        "title": "Vampire Empire"
-      },
-      {
-        "artist": "Lambchop",
-        "title": "Up With People"
-      },
-      {
-        "artist": "Meat Puppets",
-        "title": "Up on the Sun"
-      },
-      {
-        "artist": "CMAT",
-        "title": "I Wanna Be a Cowboy, Baby!"
-      },
-      {
-        "artist": "Wilco & Billy Bragg",
-        "title": "California Stars"
-      },
-      {
-        "artist": "The Shins",
-        "title": "Gone For Good"
-      },
-      {
-        "artist": "Alabama Shakes",
-        "title": "Hold On"
-      },
-      {
-        "artist": "MJ Lenderman",
-        "title": "Wristwatch (6 Music Session, 10 Dec 2024)"
-      },
-      {
-        "artist": "Pavement",
-        "title": "Father To A Sister Of Thought"
-      },
-      {
-        "artist": "Wednesday",
-        "title": "Elderberry Wine"
-      },
-      {
-        "artist": "Beck",
-        "title": "Sissyneck"
-      },
-      {
-        "artist": "Kings of Leon",
-        "title": "California Waiting"
-      },
-      {
-        "artist": "Kelsey Lu",
-        "title": "Portrait Of A Lady On Fire"
-      },
-      {
-        "artist": "Khatia Buniatishvili",
-        "title": "Ständchen, S. 560 (Trans. from Schwanengesang No. 4, D. 957)"
-      },
-      {
-        "artist": "Kate Bush",
-        "title": "Running Up That Hill (A Deal With God)"
-      },
-      {
-        "artist": "Maxwell",
-        "title": "Whenever Wherever Whatever"
-      },
-      {
-        "artist": "Jill Scott",
-        "title": "The Way"
-      },
-      {
-        "artist": "Sonic Youth",
-        "title": "Shadow of a Doubt"
-      },
-      {
-        "artist": "Prince",
-        "title": "Adore"
-      },
-      {
-        "artist": "Prince",
-        "title": "The Beautiful Ones"
-      },
-      {
-        "artist": "Stevie Wonder",
-        "title": "Ordinary Pain"
-      },
-      {
-        "artist": "The Cranberries",
-        "title": "Sunday"
-      },
-      {
-        "artist": "Jeff Buckley",
-        "title": "Lover, You Should've Come Over"
-      },
-      {
-        "artist": "Paramore",
-        "title": "All I Wanted"
-      },
-      {
-        "artist": "Radiohead",
-        "title": "All I Need"
-      },
-      {
-        "artist": "Deftones",
-        "title": "Sextape"
-      },
-      {
-        "artist": "The Rezillos",
-        "title": "(My Baby Does) Good Sculptures"
-      },
-      {
-        "artist": "Conny & the Bellhops",
-        "title": "Shot Rod"
-      },
-      {
-        "artist": "Hollow Hand",
-        "title": "Here Are The Tulips"
-      },
-      {
-        "artist": "Don Redman",
-        "title": "Reefer Man"
-      },
-      {
-        "artist": "Lande Hekt",
-        "title": "Favourite Pair of Shoes"
-      },
-      {
-        "artist": "Neu!",
-        "title": "Lila Engel (Lilac Angel)"
-      },
-      {
-        "artist": "Scud Mountain Boys",
-        "title": "(She Took His) Picture"
-      },
-      {
-        "artist": "Don Ray",
-        "title": "Born A Loser"
-      },
-      {
-        "artist": "Magazine",
-        "title": "A Song From Under The Floorboards"
-      },
-      {
-        "artist": "Ann Peebles",
-        "title": "I Can't Stand The Rain (Radio 1 Session, 9 Oct 1974)"
-      },
-      {
-        "artist": "Richard & Linda Thompson",
-        "title": "I Want To See The Bright Lights"
-      },
-      {
-        "artist": "Sex Pistols",
-        "title": "Anarchy In The UK"
-      },
-      {
-        "artist": "Y0GA",
-        "title": "You Can't Have Everything"
-      },
-      {
-        "artist": "Buraka Som Sistema",
-        "title": "Kalemba (Wegue Wegue) (feat. Pongolove)"
-      },
-      {
-        "artist": "Wu-Lu & Poison Anna",
-        "title": "King Kong"
-      },
-      {
-        "artist": "Tara Clerkin Trio",
-        "title": "Silently"
-      },
-      {
-        "artist": "Tame Impala",
-        "title": "'Cause I'm A Man"
-      },
-      {
-        "artist": "Gerry Rafferty",
-        "title": "Right Down The Line"
-      },
-      {
-        "artist": "alt‐J",
-        "title": "Dissolve Me"
-      },
-      {
-        "artist": "CSS",
-        "title": "Let's Make Love And Listen To Death From Above"
-      },
-      {
-        "artist": "mary in the junkyard",
-        "title": "Candelabra"
-      },
-      {
-        "artist": "Nuyorican Soul",
-        "title": "I Am The Black Gold Of The Sun (4 Hero mix)"
-      },
-      {
-        "artist": "Inner City",
-        "title": "Good Life"
-      },
-      {
-        "artist": "Weezer",
-        "title": "Pork And Beans"
-      },
-      {
-        "artist": "Way Dynamic",
-        "title": "Miffed It"
-      },
-      {
-        "artist": "Warpaint",
-        "title": "Stevie"
-      },
-      {
-        "artist": "Eric B. & Rakim",
-        "title": "Paid In Full"
-      },
-      {
-        "artist": "Honey Dijon",
-        "title": "I Like It Hot (feat. Greentea Peng)"
-      },
-      {
-        "artist": "U2",
-        "title": "Even Better Than The Real Thing (Perfecto Mix)"
-      },
-      {
-        "artist": "Confidence Man",
-        "title": "Boyfriend"
-      },
-      {
-        "artist": "Happy Mondays",
-        "title": "Kinky Afro"
-      },
-      {
-        "artist": "Missy Elliott",
-        "title": "Get Ur Freak On"
-      },
-      {
-        "artist": "Crashland",
-        "title": "New Perfume"
-      },
-      {
-        "artist": "James Blake",
-        "title": "I Had a Dream She Took My Hand"
-      },
-      {
-        "artist": "Susan Cadogan",
-        "title": "Do It Baby"
-      },
-      {
-        "artist": "Nilüfer Yanya",
-        "title": "Stabilise"
-      },
-      {
-        "artist": "Gossip",
-        "title": "Heavy Cross"
-      }
-    ],
-    "fluxfm": [
-      {
-        "artist": "De Heikrekels",
-        "title": "Waarom Heb Jij Me Laten Staan?"
-      },
-      {
-        "artist": "Koos en Antoinette",
-        "title": "Het leven is zo mooi"
-      },
-      {
-        "artist": "De Willyjo's",
-        "title": "'t Is weer zover"
-      },
-      {
-        "artist": "Benny Neyman",
-        "title": "Waarom Fluister Ik Je Naam Nog"
-      },
-      {
-        "artist": "Jan Boezeroen",
-        "title": "Oei Oei"
-      },
-      {
-        "artist": "Johan en Henk",
-        "title": "Wij Zijn Het Duo Johan & Henk"
-      },
-      {
-        "artist": "A La Carte",
-        "title": "Viva Torero"
-      },
-      {
-        "artist": "Het Noorder Bar trio",
-        "title": "Mooi Drenthe"
-      },
-      {
-        "artist": "The Sunshines",
-        "title": "Kijk Ik In Je Blauwe Ogen"
-      },
-      {
-        "artist": "JTJ Trio",
-        "title": "Als dat geen liefde is"
-      },
-      {
-        "artist": "Jannes",
-        "title": "Ga Maar Weg"
-      },
-      {
-        "artist": "Frank, Mirella",
-        "title": "De Deur Staat Altijd Open"
-      },
-      {
-        "artist": "De Havenzangers",
-        "title": "Vogeltje Wat Zing Je Vroeg - Medley"
-      },
-      {
-        "artist": "De Marlets",
-        "title": "Ik heb 'n tic van ellentrik"
-      },
-      {
-        "artist": "New Four",
-        "title": "Zo Is Het Leven"
-      },
-      {
-        "artist": "Annelies de Graaf",
-        "title": "Kom Bij Mij"
-      },
-      {
-        "artist": "jan en zwaan",
-        "title": "Oost-West"
-      },
-      {
-        "artist": "Duo Nationaal",
-        "title": "Ogen als lichtende sterren"
-      },
-      {
-        "artist": "The Inventions",
-        "title": "Dromen Is Dromen Van Jou"
-      },
-      {
-        "artist": "Texas Cowboys",
-        "title": "Cowboy En Indianen"
-      },
-      {
-        "artist": "Duo Onbekend",
-        "title": "Bij Het Ruisen Van Wind En Palmen"
-      },
-      {
-        "artist": "Wuko\"s",
-        "title": "De IJsbeer"
-      },
-      {
-        "artist": "Koos Alberts",
-        "title": "In De Zon"
-      },
-      {
-        "artist": "Rob Zorn",
-        "title": "Nou En...?"
-      },
-      {
-        "artist": "De Makkers",
-        "title": "Wintertijd"
-      },
-      {
-        "artist": "The Magic Boys",
-        "title": "Ik Ben Verliefd Op Rosalie"
-      },
-      {
-        "artist": "Lucas & Gea",
-        "title": "Net Dat Kleine Beetje Meer"
-      },
-      {
-        "artist": "Highway",
-        "title": "I've had it"
-      },
-      {
-        "artist": "De Four Tak",
-        "title": "Maar Toch Zijn Wij Elkander Trouw Gebleven"
-      },
-      {
-        "artist": "The Starfighters",
-        "title": "Samen Met Jou"
-      },
-      {
-        "artist": "Andy Borg",
-        "title": "Adios Amor (Neuaufnahme)"
-      },
-      {
-        "artist": "Harjan",
-        "title": "Een huisje op de heide"
-      },
-      {
-        "artist": "Henk Wijngaard",
-        "title": "Zo Zoals Je Bent"
-      },
-      {
-        "artist": "Het Radi Ensemble",
-        "title": "Jij Alleen Magdalena"
-      },
-      {
-        "artist": "Cocktail Trio",
-        "title": "Hup, hup, hup"
-      },
-      {
-        "artist": "Solidair",
-        "title": "Bye Bye Bella Signorita"
-      },
-      {
-        "artist": "Mieke",
-        "title": "Als ik jou niet had"
-      },
-      {
-        "artist": "Sylvia",
-        "title": "Geen tijd voor verdriet"
-      },
-      {
-        "artist": "Wim En Margriet",
-        "title": "Het Is Voorgoed Voorbij"
-      },
-      {
-        "artist": "Gerard Schoonebeek",
-        "title": "Iedere weg"
-      },
-      {
-        "artist": "Els En De Arona Stars",
-        "title": "De Blinde En Z'n Hond"
-      },
-      {
-        "artist": "Wipe Outs",
-        "title": "Aan De Rand Van Het Groene Woud"
-      },
-      {
-        "artist": "Sandy",
-        "title": "Tot Ziens Teddybeer"
-      },
-      {
-        "artist": "Theo Diepenbrock",
-        "title": "Als 'N Lading Dynamiet"
-      },
-      {
-        "artist": "The Rapsodie's",
-        "title": "Dit is liefde"
-      },
-      {
-        "artist": "Alle Vijf",
-        "title": "Mas Palomas"
-      },
-      {
-        "artist": "De Piratenboys",
-        "title": "Rijzende Zon"
-      },
-      {
-        "artist": "De Rainaldo's",
-        "title": "Als jij zou weten"
-      },
-      {
-        "artist": "Normaal",
-        "title": "Mamma, woar is mien pils"
-      },
-      {
-        "artist": "Frank & Mirella",
-        "title": "Op Dat Plein"
-      },
-      {
-        "artist": "The Sunstreams",
-        "title": "Mijn Allerbeste Vriend"
-      },
-      {
-        "artist": "Danny Cardo",
-        "title": "Spreek Je Ook Hollands"
-      },
-      {
-        "artist": "De Heikrekels",
-        "title": "Ik Wil Alleen Maar Van Je Houden"
-      },
-      {
-        "artist": "William W",
-        "title": "De herder"
-      },
-      {
-        "artist": "Vulcano",
-        "title": "Als Je Haar Maar Goed Zit"
-      },
-      {
-        "artist": "Arona Stars",
-        "title": "Veronica"
-      },
-      {
-        "artist": "Het Kamiki Trio",
-        "title": "Kamiki mars"
-      },
-      {
-        "artist": "Duo X",
-        "title": "In Gedachten Zie Ik Het Kerkje Weer"
-      },
-      {
-        "artist": "Arne Jansen",
-        "title": "Zeven Brieven"
-      },
-      {
-        "artist": "De Four Tak",
-        "title": "Doe Maar Wat Je Wilt"
-      },
-      {
-        "artist": "Les Amis",
-        "title": "Als Het Om De Liefde Gaat"
-      },
-      {
-        "artist": "De Evening Stars",
-        "title": "Zet Je Zorgen Aan De Kant"
-      },
-      {
-        "artist": "Trio Varianto",
-        "title": "Als je schoonpa maar rijk is"
-      },
-      {
-        "artist": "Tony Bass",
-        "title": "Ik Ben Met Jou Niet Getrouwd"
-      },
-      {
-        "artist": "Mariette",
-        "title": "Denk je altijd nog aan haar"
-      },
-      {
-        "artist": "The Cats",
-        "title": "Be My Day"
-      },
-      {
-        "artist": "Duo-S",
-        "title": "Je bent zo oud als je je voelt"
-      },
-      {
-        "artist": "Corry Konings",
-        "title": "Adios Amor"
-      },
-      {
-        "artist": "Henk Wijngaard",
-        "title": "Kijk Uit Hier Ben Ik"
-      },
-      {
-        "artist": "Johan & Henk",
-        "title": "Een Gele Ballon"
-      },
-      {
-        "artist": "Yara",
-        "title": "Vissen zijn precies als jij"
-      },
-      {
-        "artist": "The Boatnicks",
-        "title": "He Jantien"
-      },
-      {
-        "artist": "Luc Bral",
-        "title": "Hallo, Hier Ben Ik Dan"
-      },
-      {
-        "artist": "Jan & Zwaan",
-        "title": "Marianka"
-      },
-      {
-        "artist": "Harten 10",
-        "title": "Wat is mooier"
-      },
-      {
-        "artist": "De Toendras",
-        "title": "Maandagmorgen"
-      },
-      {
-        "artist": "De Lenco\"s",
-        "title": "Esmeralda"
-      },
-      {
-        "artist": "Orion Combo",
-        "title": "Marianne"
-      },
-      {
-        "artist": "Het Sneeuwbal Trio",
-        "title": "Gudrun En Harald"
-      },
-      {
-        "artist": "Jannes",
-        "title": "De Mooiste Ster"
-      }
-    ],
-    "triplej": [
-      {
-        "artist": "Khalid",
-        "title": "Young Dumb & Broke"
-      },
-      {
-        "artist": "Teether",
-        "title": "banter era (prod. Society)"
-      },
-      {
-        "artist": "The Wombats",
-        "title": "If You Ever Leave, I'm Coming With You"
-      },
-      {
-        "artist": "Mid Drift",
-        "title": "Whiplash"
-      },
-      {
-        "artist": "Jungle",
-        "title": "The Wave"
-      },
-      {
-        "artist": "No Doubt",
-        "title": "Just A Girl"
-      },
-      {
-        "artist": "Kiz",
-        "title": "Big Deal"
-      },
-      {
-        "artist": "Peach PRC",
-        "title": "Oasis"
-      },
-      {
-        "artist": "jigitz & Charlotte Plank",
-        "title": "car crash"
-      },
-      {
-        "artist": "The Rions",
-        "title": "Night Light"
-      },
-      {
-        "artist": "Maisie Peters",
-        "title": "Questions"
-      },
-      {
-        "artist": "underscores",
-        "title": "Tell Me (U Want It)"
-      },
-      {
-        "artist": "FRIDAY*",
-        "title": "skins"
-      },
-      {
-        "artist": "Dominic Fike",
-        "title": "3 Nights"
-      },
-      {
-        "artist": "horsegiirL",
-        "title": "earth is turning"
-      },
-      {
-        "artist": "Kali Uchis",
-        "title": "Muévelo"
-      },
-      {
-        "artist": "Genesis Owusu",
-        "title": "BIG DOG"
-      },
-      {
-        "artist": "Drapht",
-        "title": "Jimmy Recard"
-      },
-      {
-        "artist": "Olivia Rodrigo",
-        "title": "the cure"
-      },
-      {
-        "artist": "KETTAMA",
-        "title": "Fade Away (It's a Feeling)"
-      },
-      {
-        "artist": "leecerti",
-        "title": "purr"
-      },
-      {
-        "artist": "Ashnikko",
-        "title": "Smoochie Girl"
-      },
-      {
-        "artist": "Chanel Loren",
-        "title": "Growing Pains"
-      },
-      {
-        "artist": "Tame Impala",
-        "title": "Loser"
-      },
-      {
-        "artist": "EGOISM",
-        "title": "Summer Again, Sung to the End"
-      },
-      {
-        "artist": "Alison Wonderland & Ninajirachi",
-        "title": "Heaven"
-      },
-      {
-        "artist": "beabadoobee",
-        "title": "Sun Has Set"
-      },
-      {
-        "artist": "JK-47",
-        "title": "The Recipe"
-      },
-      {
-        "artist": "Becca Hatch",
-        "title": "Think Of You"
-      },
-      {
-        "artist": "Yothu Yindi",
-        "title": "Tribal Voice"
-      },
-      {
-        "artist": "Miss Kaninna",
-        "title": "Blak Britney"
-      },
-      {
-        "artist": "Budjerah",
-        "title": "Higher"
-      },
-      {
-        "artist": "Angine de Poitrine",
-        "title": "Mata Zyklek"
-      },
-      {
-        "artist": "Dizzy Days",
-        "title": "Over & Over"
-      },
-      {
-        "artist": "Aminé",
-        "title": "Vacay"
-      },
-      {
-        "artist": "Laufey",
-        "title": "Madwoman"
-      },
-      {
-        "artist": "Armand Van Helden",
-        "title": "My My My"
-      },
-      {
-        "artist": "YNG Martyr",
-        "title": "GIRLS!"
-      },
-      {
-        "artist": "Matt Corby",
-        "title": "Stained"
-      },
-      {
-        "artist": "Doja Cat",
-        "title": "Gorgeous"
-      },
-      {
-        "artist": "The Chats",
-        "title": "Pub Feed"
-      },
-      {
-        "artist": "DEVAURA & B Wise",
-        "title": "EVERYTHING IS CORNY"
-      },
-      {
-        "artist": "South Summit",
-        "title": "NEW WORLD"
-      },
-      {
-        "artist": "Fred again.. & SOAK",
-        "title": "just stand there"
-      },
-      {
-        "artist": "Gordon's Grandson",
-        "title": "I Wanted To Kiss You"
-      },
-      {
-        "artist": "Courtney Barnett",
-        "title": "Stay In Your Lane"
-      },
-      {
-        "artist": "Baby Keem",
-        "title": "Ca$ino"
-      },
-      {
-        "artist": "Dune Rats",
-        "title": "Scott Green"
-      },
-      {
-        "artist": "underscores",
-        "title": "Music"
-      },
-      {
-        "artist": "Sam Fender",
-        "title": "Talk to You"
-      },
-      {
-        "artist": "Spiderbait",
-        "title": "Calypso"
-      },
-      {
-        "artist": "Harry Hayes",
-        "title": "I Did You Wrong"
-      },
-      {
-        "artist": "Julia Wolf",
-        "title": "Deep End"
-      },
-      {
-        "artist": "Darcie Haven",
-        "title": "Burner Account"
-      },
-      {
-        "artist": "Ruel",
-        "title": "Only Ever"
-      },
-      {
-        "artist": "Parcels",
-        "title": "Sorry"
-      },
-      {
-        "artist": "Charli xcx",
-        "title": "Rock Music"
-      },
-      {
-        "artist": "BOY SODA",
-        "title": "Elements"
-      },
-      {
-        "artist": "Emma Louise & Flume",
-        "title": "Monsoon"
-      },
-      {
-        "artist": "Miss Kaninna",
-        "title": "MOB TIES"
-      },
-      {
-        "artist": "Frank Ocean",
-        "title": "Lost"
-      },
-      {
-        "artist": "Jem Cassar-Daley",
-        "title": "Speak Now"
-      },
-      {
-        "artist": "Dom Dolla & Tiga",
-        "title": "Don't Worry Baby"
-      },
-      {
-        "artist": "Kyla Belle",
-        "title": "Took A Turn"
-      },
-      {
-        "artist": "Wolf Alice",
-        "title": "The Sofa"
-      },
-      {
-        "artist": "JAY Z",
-        "title": "Empire State Of Mind"
-      },
-      {
-        "artist": "Mansionair",
-        "title": "Wicked Game"
-      },
-      {
-        "artist": "Bad Bunny",
-        "title": "MONACO"
-      },
-      {
-        "artist": "Nia Archives",
-        "title": "Baianá"
-      },
-      {
-        "artist": "Barkaa",
-        "title": "Blak Matriarchy"
-      },
-      {
-        "artist": "Christine Anu",
-        "title": "Island Home"
-      },
-      {
-        "artist": "Doechii",
-        "title": "DENIAL IS A RIVER"
-      },
-      {
-        "artist": "The Dreggs",
-        "title": "Heading Home"
-      },
-      {
-        "artist": "MADEN LANE",
-        "title": "TELL ME"
-      },
-      {
-        "artist": "Ecca Vandal",
-        "title": "VERTICAL WORLDS"
-      },
-      {
-        "artist": "Kendrick Lamar",
-        "title": "King Kunta"
-      },
-      {
-        "artist": "RAYE",
-        "title": "Winter Woman."
-      },
-      {
-        "artist": "The Rions",
-        "title": "How to Breathe"
-      },
-      {
-        "artist": "MAY-A",
-        "title": "Claws"
-      },
-      {
-        "artist": "fakemink",
-        "title": "Blow The Speaker ."
-      }
-    ],
-    "radioswiss": [
-      {
-        "artist": "Sarah McKenzie",
-        "title": "Paris In The Rain"
-      },
-      {
-        "artist": "Gerry Wiggins Trio",
-        "title": "Alexander's Ragtime Band"
-      },
-      {
-        "artist": "Eric Alexander",
-        "title": "She's Out of My Life"
-      },
-      {
-        "artist": "Gregory Porter",
-        "title": "Brown Grass"
-      },
-      {
-        "artist": "Jazzpearls",
-        "title": "You Can Depend On Me"
-      },
-      {
-        "artist": "Vikki Carr",
-        "title": "Time After Time"
-      },
-      {
-        "artist": "Melvin Rhyne Trio",
-        "title": "Stompin' At The Savoy"
-      },
-      {
-        "artist": "Jools Holland; Marc Almond; Rhythm & Blues Orchestra",
-        "title": "Workhouse Blues"
-      },
-      {
-        "artist": "Chet Baker & Zoot Sims",
-        "title": "Thank Heaven For Little Girls"
-      },
-      {
-        "artist": "Mark Soskin",
-        "title": "Sunday Cruise"
-      },
-      {
-        "artist": "Blue Goat Quartet",
-        "title": "Outro"
-      },
-      {
-        "artist": "Andy Root's Dixie Jazzband",
-        "title": "Kansas City Man Blues"
-      },
-      {
-        "artist": "Günther Brück & Julian Argüelles & Roberto Koch & Alberto Lovison & Roberto Quintero",
-        "title": "A la Antigua"
-      },
-      {
-        "artist": "Lilly Thornton",
-        "title": "Ain't Nobody's Business"
-      },
-      {
-        "artist": "Talk About Us",
-        "title": "Flying South"
-      },
-      {
-        "artist": "Joe & Dave",
-        "title": "From The Bottom Of Your Soul"
-      },
-      {
-        "artist": "JCT All Stars",
-        "title": "Moten Swing"
-      },
-      {
-        "artist": "Nicole Johänntgen",
-        "title": "Oh Yes My Friend"
-      },
-      {
-        "artist": "Anny Weiler",
-        "title": "Beautiful Love"
-      },
-      {
-        "artist": "QuerbeaT",
-        "title": "Musette Manouche"
-      },
-      {
-        "artist": "Peter Candiotto Quartet",
-        "title": "Come Rain Or Come Shine"
-      },
-      {
-        "artist": "Suite 5",
-        "title": "Soflty, As A Morning Sunrise"
-      },
-      {
-        "artist": "Dave Ruosch",
-        "title": "Confessin' The Blues"
-      },
-      {
-        "artist": "Kiattons",
-        "title": "Spaghetti Blues"
-      },
-      {
-        "artist": "Amaury Faivre",
-        "title": "It's Time For Me"
-      },
-      {
-        "artist": "Togg Seven Jazz Band",
-        "title": "Mercy, Mercy, Mercy"
-      },
-      {
-        "artist": "Mike Goetz",
-        "title": "Walla Walla"
-      },
-      {
-        "artist": "Poffet Trio",
-        "title": "All Blues"
-      },
-      {
-        "artist": "Asia Lisiak",
-        "title": "I'm Old Fashioned"
-      },
-      {
-        "artist": "Jochro Trio",
-        "title": "When The Story Ends"
-      },
-      {
-        "artist": "George Nussbaumer",
-        "title": "Nice price"
-      },
-      {
-        "artist": "Tian Long Li & Marco Schudel & Dominik Schürmann",
-        "title": "Relaxin' With Niggi"
-      },
-      {
-        "artist": "Nico Brina",
-        "title": "Blues With A Feeling"
-      },
-      {
-        "artist": "Dani Felber Big Band",
-        "title": "Blues In Hoss' Flat"
-      },
-      {
-        "artist": "Gio Mongodi Quartet",
-        "title": "Second Shot"
-      },
-      {
-        "artist": "Andreas Baer Trio Plus One",
-        "title": "It's Still There"
-      },
-      {
-        "artist": "Andy Egert Blues Band",
-        "title": "The Thrill Is Gone"
-      },
-      {
-        "artist": "Henri Chaix Trio",
-        "title": "The Moon Is Low"
-      },
-      {
-        "artist": "Michael Neff Group Featuring Marie Malou",
-        "title": "Too Many Questions"
-      },
-      {
-        "artist": "Lilly Martin",
-        "title": "Before You Love Me"
-      },
-      {
-        "artist": "George Scheibel Big Band",
-        "title": "Coral Reef"
-      },
-      {
-        "artist": "Double Talk",
-        "title": "Meeting"
-      },
-      {
-        "artist": "Karima",
-        "title": "What The World Needs Now Is Love"
-      },
-      {
-        "artist": "Mark Brooks",
-        "title": "How Come You Do Me Like You Do"
-      },
-      {
-        "artist": "KonFusion",
-        "title": "I Wish"
-      },
-      {
-        "artist": "Daniel Humair",
-        "title": "Line For Lyons"
-      },
-      {
-        "artist": "Yvonne Moore",
-        "title": "That's How Strong My Love Is"
-      },
-      {
-        "artist": "Swing Big Band",
-        "title": "Caught In The Act"
-      },
-      {
-        "artist": "Zut / Eliane Cueni & Susanne Müller",
-        "title": "Casa Pantrovà"
-      },
-      {
-        "artist": "Sandy Patton & Sandro Schneebeli Group",
-        "title": "Gonna try"
-      },
-      {
-        "artist": "Fernando Fantini",
-        "title": "In A Sentimental Mood"
-      },
-      {
-        "artist": "Triaxis",
-        "title": "Thinkin' On You"
-      },
-      {
-        "artist": "Raphael Jost Standards Trio",
-        "title": "Love You Madly"
-      },
-      {
-        "artist": "Sam Burckhardt",
-        "title": "I Will See You"
-      },
-      {
-        "artist": "Sabine Fiegl",
-        "title": "Corriendo Sin Llegar"
-      },
-      {
-        "artist": "Swiss Army Big Band",
-        "title": "Cute"
-      },
-      {
-        "artist": "Andy Lüscher",
-        "title": "The Cat's Shuffle"
-      },
-      {
-        "artist": "Sarah Peng Trio & Davide Brillante",
-        "title": "You And The Night And The Music"
-      },
-      {
-        "artist": "Tympanic Jazzband",
-        "title": "Mo' Better Blues"
-      },
-      {
-        "artist": "In Mission Of Tradition",
-        "title": "Heartbreak Hotel"
-      },
-      {
-        "artist": "The Bouncing Bits",
-        "title": "Lazy Afternoon"
-      },
-      {
-        "artist": "Journeys",
-        "title": "New Destinations"
-      },
-      {
-        "artist": "Eva Christina",
-        "title": "Mack The Knife"
-      },
-      {
-        "artist": "Old Riverton Jazzband",
-        "title": "Satin Doll"
-      },
-      {
-        "artist": "Oscar Klein",
-        "title": "Oscar's Blues"
-      },
-      {
-        "artist": "Swiss Jazz Orchestra",
-        "title": "Polka Dots And Moonbeams"
-      },
-      {
-        "artist": "Christina Jaccard",
-        "title": "Wade In The Water"
-      },
-      {
-        "artist": "Spherio",
-        "title": "Siwi"
-      },
-      {
-        "artist": "Dan Barrett and His Jazz Bears",
-        "title": "The Isle of Capri"
-      },
-      {
-        "artist": "Terry Gibbs",
-        "title": "Wednesday At Two"
-      },
-      {
-        "artist": "Daryl Sherman",
-        "title": "Guess Who's In Town"
-      },
-      {
-        "artist": "Bobby Shew",
-        "title": "I Couldn't Have Loved You More"
-      },
-      {
-        "artist": "Joscho Stephan feat. Tommy Emmanuel, Bireli Lagrene, Stochelo Rosenberg: Guitar Heroes",
-        "title": "Swing 42"
-      },
-      {
-        "artist": "Georgie Fame",
-        "title": "I Ain't Got Nothin' But The Blues"
-      },
-      {
-        "artist": "David Sanborn",
-        "title": "Please Send Me Someone To Love"
-      },
-      {
-        "artist": "Luisa Sobral",
-        "title": "Cuantas veces"
-      },
-      {
-        "artist": "Rossano Sportiello",
-        "title": "Take, O Take Those Lips Away"
-      },
-      {
-        "artist": "Jay Leonhart Trio",
-        "title": "C Jam Blues"
-      },
-      {
-        "artist": "Michael Bublé",
-        "title": "The Best Is Yet To Come"
-      },
-      {
-        "artist": "Stan Getz",
-        "title": "Sweet Lorraine"
-      }
-    ],
-    "kexp": [
-      {
-        "artist": "ESG",
-        "title": "Dance"
-      },
-      {
-        "artist": "No Fixed Address, Us Mob",
-        "title": "We Have Survived"
-      },
-      {
-        "artist": "Goanna",
-        "title": "Stand Yr' Ground"
-      },
-      {
-        "artist": "Cameo",
-        "title": "Be Yourself"
-      },
-      {
-        "artist": "Grace Jones",
-        "title": "Nipple To The Bottle"
-      },
-      {
-        "artist": "Plunky and the Oneness of Juju",
-        "title": "Every Way but Loose"
-      },
-      {
-        "artist": "Lizzy Mercier Descloux",
-        "title": "Funky Stuff"
-      },
-      {
-        "artist": "George Clinton",
-        "title": "Atomic Dog"
-      },
-      {
-        "artist": "Junior Mendes",
-        "title": "Copacabana sadia"
-      },
-      {
-        "artist": "Elza Soares",
-        "title": "Som, amor, trabalho e progresso"
-      },
-      {
-        "artist": "Tim Maia",
-        "title": "A festa"
-      },
-      {
-        "artist": "Juluka",
-        "title": "Umfazi omdala"
-      },
-      {
-        "artist": "Steve Monite",
-        "title": "Only You"
-      },
-      {
-        "artist": "William Onyeabor",
-        "title": "Body and Soul"
-      },
-      {
-        "artist": "Bappi Lahiri",
-        "title": "Yaad aa raha hai"
-      },
-      {
-        "artist": "Rupa",
-        "title": "Moja bhari moja"
-      },
-      {
-        "artist": "Indeep",
-        "title": "Last Night A D.J. Saved My Life"
-      },
-      {
-        "artist": "Yellow Magic Orchestra",
-        "title": "Pure Jam"
-      },
-      {
-        "artist": "Charanjit Singh",
-        "title": "Raga Kalavati"
-      },
-      {
-        "artist": "Kraftwerk",
-        "title": "The Model"
-      },
-      {
-        "artist": "Francis Bebey",
-        "title": "New Track"
-      },
-      {
-        "artist": "Grandmaster Flash & The Furious Five",
-        "title": "The Message"
-      },
-      {
-        "artist": "Warp 9",
-        "title": "Nunk (New Wave Funk)"
-      },
-      {
-        "artist": "Beside",
-        "title": "Change the Beat - Aka Une Sale Histoire"
-      },
-      {
-        "artist": "Musical Youth",
-        "title": "Pass the Dutchie"
-      },
-      {
-        "artist": "Doves",
-        "title": "There Goes the Fear"
-      },
-      {
-        "artist": "Erykah Badu",
-        "title": "Honey"
-      },
-      {
-        "artist": "Isaiah Rashad feat. SZA",
-        "title": "BOY IN RED"
-      },
-      {
-        "artist": "Station Model Violence",
-        "title": "Heat"
-      },
-      {
-        "artist": "Telehealth",
-        "title": "The Telehealth Shuffle"
-      },
-      {
-        "artist": "A Flock of Seagulls",
-        "title": "Modern Love Is Automatic"
-      },
-      {
-        "artist": "Caroline Polachek",
-        "title": "Spring Is Coming With a Strawberry in the Mouth"
-      },
-      {
-        "artist": "Nice & Smooth",
-        "title": "Funky for You"
-      },
-      {
-        "artist": "Blondie",
-        "title": "Rapture"
-      },
-      {
-        "artist": "Packaging",
-        "title": "In Your Pocket"
-      },
-      {
-        "artist": "The Stone Roses",
-        "title": "Don't Stop"
-      },
-      {
-        "artist": "Karen O & Danger Mouse",
-        "title": "Leopard's Tongue"
-      },
-      {
-        "artist": "Delvon Lamarr Organ Trio",
-        "title": "Chicken Leg"
-      },
-      {
-        "artist": "Goat",
-        "title": "Goatfuzz"
-      },
-      {
-        "artist": "Wolfmother",
-        "title": "White Unicorn"
-      },
-      {
-        "artist": "Kelsey Lu",
-        "title": "Running to Pain"
-      },
-      {
-        "artist": "Japanese Breakfast",
-        "title": "Posing for Cars"
-      },
-      {
-        "artist": "Proun",
-        "title": "Miracles"
-      },
-      {
-        "artist": "Pinback",
-        "title": "Penelope"
-      },
-      {
-        "artist": "Pearl Jam",
-        "title": "Alive"
-      },
-      {
-        "artist": "Dead Pioneers",
-        "title": "Animals That Roam the Earth"
-      },
-      {
-        "artist": "Fat Dog",
-        "title": "Cancel Me (I'm Tired)"
-      },
-      {
-        "artist": "Siouxsie and the Banshees",
-        "title": "Happy House"
-      },
-      {
-        "artist": "Slowdive",
-        "title": "alife"
-      },
-      {
-        "artist": "Lou Tides",
-        "title": "Autostatic!"
-      },
-      {
-        "artist": "Dead Pioneers",
-        "title": "Zealots"
-      },
-      {
-        "artist": "KNEECAP feat. Killer Mike",
-        "title": "Smugglers & Scholars"
-      },
-      {
-        "artist": "Iceage",
-        "title": "No Fear"
-      },
-      {
-        "artist": "The Clash",
-        "title": "Rebel Waltz"
-      },
-      {
-        "artist": "Stevie Wonder",
-        "title": "Higher Ground"
-      },
-      {
-        "artist": "Little Dragon feat. Damon Albarn",
-        "title": "Glow"
-      },
-      {
-        "artist": "Heavy Bloom",
-        "title": "Woke Up"
-      },
-      {
-        "artist": "Heavy Bloom",
-        "title": "Space"
-      },
-      {
-        "artist": "Heavy Bloom",
-        "title": "CRASH"
-      },
-      {
-        "artist": "Hiatus Kaiyote",
-        "title": "Chivalry Is Not Dead"
-      },
-      {
-        "artist": "A Certain Ratio",
-        "title": "Lucinda (EM)"
-      },
-      {
-        "artist": "The Style Council",
-        "title": "Speak Like a Child"
-      },
-      {
-        "artist": "Culture Club",
-        "title": "Church of the Poison Mind"
-      },
-      {
-        "artist": "Fela Kuti",
-        "title": "Zombie (edit)"
-      },
-      {
-        "artist": "Jimmy Cliff",
-        "title": "Sitting in Limbo"
-      },
-      {
-        "artist": "The Gits",
-        "title": "Precious Blood"
-      },
-      {
-        "artist": "Thin Lizzy",
-        "title": "Cold Sweat"
-      },
-      {
-        "artist": "Queen",
-        "title": "The Miracle"
-      },
-      {
-        "artist": "BCUC",
-        "title": "Higher vibes"
-      },
-      {
-        "artist": "Vince Staples",
-        "title": "White Flag"
-      },
-      {
-        "artist": "aja monet",
-        "title": "hollyweird"
-      },
-      {
-        "artist": "Silversun Pickups",
-        "title": "Melatonin"
-      },
-      {
-        "artist": "44go",
-        "title": "perfect timing"
-      },
-      {
-        "artist": "Rico, The Specials",
-        "title": "Easter Island"
-      },
-      {
-        "artist": "The Specials",
-        "title": "Easter Island"
-      },
-      {
-        "artist": "Peter Tosh",
-        "title": "Stepping Razor"
-      },
-      {
-        "artist": "The Fall",
-        "title": "Victoria"
-      },
-      {
-        "artist": "The Kinks",
-        "title": "Monica"
-      },
-      {
-        "artist": "Belle and Sebastian",
-        "title": "Another Sunny Day"
-      },
-      {
-        "artist": "Talking Heads",
-        "title": "(Nothing but) Flowers"
-      }
-    ],
-    "willy": [
-      {
-        "artist": "TRIGGERFINGER",
-        "title": "Come Clean"
-      },
-      {
-        "artist": "SOULWAX",
-        "title": "Conversation Intercom"
-      },
-      {
-        "artist": "MANDO DIAO",
-        "title": "Dance With Somebody"
-      },
-      {
-        "artist": "POLICE",
-        "title": "Roxanne"
-      },
-      {
-        "artist": "TRÖCKENER KECKS",
-        "title": "Als De Rook Om Je Hoofd Is Verdwenen"
-      },
-      {
-        "artist": "RED ZEBRA",
-        "title": "I Can't Live In A Living Room"
-      },
-      {
-        "artist": "WEEN",
-        "title": "Gabrielle"
-      },
-      {
-        "artist": "PORTISHEAD",
-        "title": "Glory Box"
-      },
-      {
-        "artist": "TALKING HEADS",
-        "title": "Psycho Killer"
-      },
-      {
-        "artist": "PHOENIX",
-        "title": "Too Young"
-      },
-      {
-        "artist": "NEIL YOUNG",
-        "title": "Rockin' In The Free World"
-      },
-      {
-        "artist": "LENNY KRAVITZ",
-        "title": "t Ain't Over 'Til It's Over"
-      },
-      {
-        "artist": "NOORDKAAP",
-        "title": "Arme Joe"
-      },
-      {
-        "artist": "DAS POP",
-        "title": "Different Class"
-      },
-      {
-        "artist": "LIVE",
-        "title": "Run To The Water"
-      },
-      {
-        "artist": "SMASHING PUMPKINS",
-        "title": "Cherub Rock"
-      },
-      {
-        "artist": "INXS",
-        "title": "New Sensation"
-      },
-      {
-        "artist": "SMITHEREENS",
-        "title": "Top of the Pops"
-      },
-      {
-        "artist": "BLINK-182",
-        "title": "All the Small Things"
-      },
-      {
-        "artist": "ROYAL BLOOD",
-        "title": "Oblivion"
-      },
-      {
-        "artist": "FIRST AID KIT",
-        "title": "My Silver Lining"
-      },
-      {
-        "artist": "DAFT PUNK",
-        "title": "Around The World"
-      },
-      {
-        "artist": "PELICAN DEALER",
-        "title": "Fever Season"
-      },
-      {
-        "artist": "BRYAN FERRY",
-        "title": "Slave To Love"
-      },
-      {
-        "artist": "FOO FIGHTERS",
-        "title": "Window"
-      },
-      {
-        "artist": "LINKIN PARK and JAY-Z",
-        "title": "Numb/Encore"
-      },
-      {
-        "artist": "WET LEG",
-        "title": "Angelica"
-      },
-      {
-        "artist": "PULP",
-        "title": "Disco 2000"
-      },
-      {
-        "artist": "ABSYNTHE MINDED",
-        "title": "Easy"
-      },
-      {
-        "artist": "ELECTRIC SIX",
-        "title": "Danger! High Voltage"
-      },
-      {
-        "artist": "SUPERGRASS",
-        "title": "Pumping On Your Stereo"
-      },
-      {
-        "artist": "ERIC CLAPTON",
-        "title": "I Shot The Sheriff"
-      },
-      {
-        "artist": "NOTHING BUT THIEVES",
-        "title": "Evolution"
-      },
-      {
-        "artist": "RAGE AGAINST THE MACHINE",
-        "title": "Bombtrack"
-      },
-      {
-        "artist": "EELS",
-        "title": "That Look You Give That Guy"
-      },
-      {
-        "artist": "BECK",
-        "title": "Mixed Bizness"
-      },
-      {
-        "artist": "DRESSED LIKE BOYS",
-        "title": "Pinnacles"
-      },
-      {
-        "artist": "ARCTIC MONKEYS",
-        "title": "When The Sun Goes Down"
-      },
-      {
-        "artist": "TALK TALK",
-        "title": "Living In Another World"
-      },
-      {
-        "artist": "KASABIAN",
-        "title": "Great Pretender"
-      },
-      {
-        "artist": "INTERGALACTIC LOVERS",
-        "title": "Shewolf"
-      },
-      {
-        "artist": "CHEMICAL BROTHERS",
-        "title": "Leave Home"
-      },
-      {
-        "artist": "VITO",
-        "title": "Fivers"
-      },
-      {
-        "artist": "BLONDIE",
-        "title": "Atomic"
-      },
-      {
-        "artist": "COLDPLAY",
-        "title": "The Scientist"
-      },
-      {
-        "artist": "METAL MOLLY",
-        "title": "Orange"
-      },
-      {
-        "artist": "ADMIRAL FREEBEE",
-        "title": "Future Fathers of Utopia"
-      },
-      {
-        "artist": "THE KNACK",
-        "title": "My Sharona"
-      },
-      {
-        "artist": "BEN HOWARD",
-        "title": "The Fear"
-      },
-      {
-        "artist": "NEW FAST AUTOMATIC DAFFODILS",
-        "title": "Stockholm"
-      },
-      {
-        "artist": "BEATLES",
-        "title": "Get Back"
-      },
-      {
-        "artist": "THE HIVES",
-        "title": "Hate To Say I Told You So"
-      },
-      {
-        "artist": "DE MENS",
-        "title": "Dit Is Mijn Huis"
-      },
-      {
-        "artist": "THE WAR ON DRUGS",
-        "title": "I Don't Live Here Anymore"
-      },
-      {
-        "artist": "BLACK KEYS",
-        "title": "Go"
-      },
-      {
-        "artist": "AC/DC",
-        "title": "Thunderstruck"
-      },
-      {
-        "artist": "PORTLAND",
-        "title": "Forever"
-      },
-      {
-        "artist": "PRINCE",
-        "title": "Sign 'O' The Times"
-      },
-      {
-        "artist": "TAME IMPALA",
-        "title": "Let It Happen"
-      },
-      {
-        "artist": "QUEEN",
-        "title": "I Want It All"
-      },
-      {
-        "artist": "SAM FENDER",
-        "title": "All Is On My Side"
-      },
-      {
-        "artist": "GORKI",
-        "title": "Soms Vraagt Een Mens Zich Af"
-      },
-      {
-        "artist": "THE HAUNTED YOUTH",
-        "title": "Coming Home"
-      },
-      {
-        "artist": "SOULWAX",
-        "title": "E Talking"
-      },
-      {
-        "artist": "U2",
-        "title": "Even Better Than The Real Thing"
-      },
-      {
-        "artist": "TALKING HEADS",
-        "title": "Burning Down The House"
-      },
-      {
-        "artist": "LOLA YOUNG",
-        "title": "From Down Here"
-      },
-      {
-        "artist": "ELASTICA",
-        "title": "Waking Up"
-      },
-      {
-        "artist": "GREEN DAY",
-        "title": "Holiday"
-      },
-      {
-        "artist": "THE VERVE",
-        "title": "Bitter Sweet Symphony"
-      },
-      {
-        "artist": "RAMKOT",
-        "title": "Algorithmic Kings"
-      },
-      {
-        "artist": "RED HOT CHILI PEPPERS",
-        "title": "By The Way"
-      },
-      {
-        "artist": "ROLLING STONES",
-        "title": "Sympathy For The Devil"
-      },
-      {
-        "artist": "SNOW PATROL",
-        "title": "In The End"
-      },
-      {
-        "artist": "SCABS",
-        "title": "Don't You Know"
-      },
-      {
-        "artist": "GRETA VAN FLEET",
-        "title": "My Way Soon"
-      },
-      {
-        "artist": "LENNY KRAVITZ",
-        "title": "Let Love Rule"
-      },
-      {
-        "artist": "BLACK BOX REVELATION",
-        "title": "Set Your Head on Fire"
-      },
-      {
-        "artist": "FAITHLESS",
-        "title": "Insomnia"
-      },
-      {
-        "artist": "T REX",
-        "title": "Get It On"
-      }
-    ],
-    "wxpn": [
-      {
-        "artist": "Mort Garson",
-        "title": "Plantasia"
-      },
-      {
-        "artist": "Syd Barrett",
-        "title": "Baby Lemonade"
-      },
-      {
-        "artist": "Ian Sweet",
-        "title": "Criminal Kissing"
-      },
-      {
-        "artist": "Dummy",
-        "title": "Daffodils"
-      },
-      {
-        "artist": "Khruangbin",
-        "title": "So We Won't Forget"
-      },
-      {
-        "artist": "Lael Neale",
-        "title": "Wild Waters"
-      },
-      {
-        "artist": "Beck",
-        "title": "Gamma Ray"
-      },
-      {
-        "artist": "Hannah Cohen",
-        "title": "Draggin'"
-      },
-      {
-        "artist": "Alan Sparhawk",
-        "title": "Stranger"
-      },
-      {
-        "artist": "Winter",
-        "title": "Just Like a Flower"
-      },
-      {
-        "artist": "Primal Scream",
-        "title": "Star"
-      },
-      {
-        "artist": "TV on the Radio",
-        "title": "Province"
-      },
-      {
-        "artist": "Big Thief",
-        "title": "Shark Smile"
-      },
-      {
-        "artist": "Endearments",
-        "title": "Real Deal"
-      },
-      {
-        "artist": "Mac McCaughan",
-        "title": "Dawn Bends"
-      },
-      {
-        "artist": "Stereolab",
-        "title": "French Disko"
-      },
-      {
-        "artist": "Built To Spill",
-        "title": "Trimmed and Burning"
-      },
-      {
-        "artist": "Snocaps",
-        "title": "Brand New City"
-      },
-      {
-        "artist": "Velocity Girl",
-        "title": "Forgotten Favorite"
-      },
-      {
-        "artist": "Greg Mendez",
-        "title": "No Evil"
-      },
-      {
-        "artist": "Caring Less",
-        "title": "I Think He Knows"
-      },
-      {
-        "artist": "Son Little",
-        "title": "The River"
-      },
-      {
-        "artist": "Brittany Ann Tranbaugh",
-        "title": "Lucky Broke Girl"
-      },
-      {
-        "artist": "Hurry",
-        "title": "Zoned Out"
-      },
-      {
-        "artist": "Speedy Ortiz",
-        "title": "Plus One"
-      },
-      {
-        "artist": "Slaughter Beach, Dog",
-        "title": "Strange Weather"
-      },
-      {
-        "artist": "Eliza Hardy Jones",
-        "title": "This is the Year"
-      },
-      {
-        "artist": "The Hooters",
-        "title": "And We Danced"
-      },
-      {
-        "artist": "Suzanne Sheer",
-        "title": "Ain't That Somethin"
-      },
-      {
-        "artist": "Andrei Radu",
-        "title": "Nasty Thumper"
-      },
-      {
-        "artist": "Don McCloskey",
-        "title": "I IV V"
-      },
-      {
-        "artist": "Orion Sun",
-        "title": "Coffee For Dinner"
-      },
-      {
-        "artist": "Low Cut Connie",
-        "title": "Oh Yeah"
-      },
-      {
-        "artist": "King Crimson",
-        "title": "Frame By Frame"
-      },
-      {
-        "artist": "Arlo Parks",
-        "title": "2Sided"
-      },
-      {
-        "artist": "Kurt Vile",
-        "title": "You don't know cuz it's my life"
-      },
-      {
-        "artist": "James Brown",
-        "title": "Please Please Please"
-      },
-      {
-        "artist": "Grace Cummings",
-        "title": "I'm Not Crazy"
-      },
-      {
-        "artist": "Bright Eyes",
-        "title": "Bells and Whistles"
-      },
-      {
-        "artist": "Suki Waterhouse",
-        "title": "Back In Love"
-      },
-      {
-        "artist": "Talking Heads",
-        "title": "Crosseyed and Painless"
-      },
-      {
-        "artist": "Silk Sonic",
-        "title": "Leave The Door Open"
-      },
-      {
-        "artist": "Midnight Oil",
-        "title": "Beds Are Burning"
-      },
-      {
-        "artist": "KELS",
-        "title": "Gone"
-      },
-      {
-        "artist": "Muddy Waters",
-        "title": "Crosseyed Cat"
-      },
-      {
-        "artist": "Fabulous Poodles",
-        "title": "Mirror Star"
-      },
-      {
-        "artist": "Weather Report",
-        "title": "Birdland"
-      },
-      {
-        "artist": "Faces",
-        "title": "Glad And Sorry"
-      },
-      {
-        "artist": "Nick Drake",
-        "title": "Poor Boy"
-      },
-      {
-        "artist": "Jimmy Cliff",
-        "title": "You Can Get It If You Really Want"
-      },
-      {
-        "artist": "Jimmy Cliff",
-        "title": "The Harder They Come"
-      },
-      {
-        "artist": "The Stooges",
-        "title": "Loose"
-      },
-      {
-        "artist": "The Stooges",
-        "title": "Down On The Street"
-      },
-      {
-        "artist": "The J. Geils Band",
-        "title": "Give It To Me"
-      },
-      {
-        "artist": "Led Zeppelin",
-        "title": "Out On The Tiles"
-      },
-      {
-        "artist": "Billy Preston",
-        "title": "Will It Go Round In Circles"
-      },
-      {
-        "artist": "Ringo Starr",
-        "title": "Back Off Boogaloo"
-      },
-      {
-        "artist": "Ringo Starr",
-        "title": "I'm The Greatest"
-      },
-      {
-        "artist": "Queens of the Stone Age",
-        "title": "3's & 7's"
-      },
-      {
-        "artist": "Rostam",
-        "title": "Back of a Truck"
-      },
-      {
-        "artist": "Los Lobos",
-        "title": "Revolution"
-      },
-      {
-        "artist": "Kim Gordon",
-        "title": "NOT TODAY"
-      },
-      {
-        "artist": "Hozier",
-        "title": "Nobody's Soldier"
-      },
-      {
-        "artist": "The Strokes",
-        "title": "Going Shopping"
-      },
-      {
-        "artist": "Jeff Beck",
-        "title": "Beck's Bolero"
-      },
-      {
-        "artist": "Father John Misty",
-        "title": "The Payoff"
-      },
-      {
-        "artist": "Kevin Morby",
-        "title": "100,000"
-      },
-      {
-        "artist": "Maggie Rogers",
-        "title": "Light On"
-      },
-      {
-        "artist": "The Clash",
-        "title": "The Call Up"
-      },
-      {
-        "artist": "The Moody Blues",
-        "title": "Peak Hour"
-      },
-      {
-        "artist": "New Radicals",
-        "title": "Mother We Just Can't Get Enough"
-      },
-      {
-        "artist": "Pete Yorn",
-        "title": "All The Beauty"
-      },
-      {
-        "artist": "Elvis Costello",
-        "title": "Mystery Dance"
-      },
-      {
-        "artist": "PJ Harvey",
-        "title": "Dress"
-      },
-      {
-        "artist": "The Menzingers",
-        "title": "Chance Encounters"
-      },
-      {
-        "artist": "Bad Nerves",
-        "title": "Don't Stop"
-      },
-      {
-        "artist": "Sleater-Kinney",
-        "title": "Say It Like You Mean It"
-      },
-      {
-        "artist": "Noah Kahan",
-        "title": "Doors"
-      },
-      {
-        "artist": "Phoenix",
-        "title": "Lisztomania"
-      },
-      {
-        "artist": "Deer Tick",
-        "title": "Mary Singletary"
-      }
-    ],
-    "kcrw": [
-      {
-        "artist": "The Love Cats",
-        "title": "Extended Version-The Cure-Love Cats"
-      },
-      {
-        "artist": "When I Feel Free-The Melodic-On My Way",
-        "title": "EP"
-      }
-    ],
-    "radioparadise": [
-      {
-        "artist": "Jim's Big Ego",
-        "title": "They're Everywhere"
-      },
-      {
-        "artist": "Talking Heads",
-        "title": "Thank You For Sending Me An Angel"
-      },
-      {
-        "artist": "alexsucks",
-        "title": "Autopilot"
-      },
-      {
-        "artist": "Björk",
-        "title": "Human Behavior"
-      },
-      {
-        "artist": "Nick Cave & The Bad Seeds",
-        "title": "Hold on to Yourself"
-      },
-      {
-        "artist": "The New Pornographers",
-        "title": "The Bleeding Heart Show"
-      },
-      {
-        "artist": "Kerala Dust",
-        "title": "White Noise"
-      },
-      {
-        "artist": "The Cure",
-        "title": "Pictures of You"
-      },
-      {
-        "artist": "Modest Mouse",
-        "title": "Perfect Disguise"
-      },
-      {
-        "artist": "Deep Sea Diver",
-        "title": "Billboard Heart"
-      },
-      {
-        "artist": "Geoffroy",
-        "title": "Recuerdo de Ti (Seb Wildblood Remix)"
-      },
-      {
-        "artist": "Morcheeba",
-        "title": "Elephant Clouds"
-      },
-      {
-        "artist": "Kasabian",
-        "title": "Processed Beats"
-      },
-      {
-        "artist": "Stephen Marley",
-        "title": "Fed Up"
-      },
-      {
-        "artist": "Brian Eno",
-        "title": "Baby's On Fire"
-      },
-      {
-        "artist": "Bush",
-        "title": "We're All The Same On The Inside"
-      },
-      {
-        "artist": "Queen",
-        "title": "We Are The Champions"
-      },
-      {
-        "artist": "Danger Mouse",
-        "title": "Wonder (feat. MorMor)"
-      },
-      {
-        "artist": "Neil Young",
-        "title": "Throw Your Hatred Down"
-      },
-      {
-        "artist": "Florence The Machine",
-        "title": "No Light, No Light"
-      },
-      {
-        "artist": "Thievery Corporation",
-        "title": "Pela Janela (Feat Gigi Rezende)"
-      },
-      {
-        "artist": "Skott",
-        "title": "Rule the World"
-      },
-      {
-        "artist": "T. Rex",
-        "title": "Hot Love"
-      },
-      {
-        "artist": "Anna Calvi",
-        "title": "God's Lonely Man (w/ Iggy Pop)"
-      },
-      {
-        "artist": "Deftones",
-        "title": "Change (In the House of Flies)"
-      },
-      {
-        "artist": "The Alarm",
-        "title": "Rain In The Summertime"
-      },
-      {
-        "artist": "Tori Amos",
-        "title": "A Sorta Fairytale"
-      },
-      {
-        "artist": "Tash Sultana",
-        "title": "Kiss the Sky"
-      },
-      {
-        "artist": "AHI",
-        "title": "Black Monday"
-      },
-      {
-        "artist": "U2",
-        "title": "Song Of The Future"
-      },
-      {
-        "artist": "Slowdive",
-        "title": "Sugar for the Pill"
-      },
-      {
-        "artist": "Beach Weather",
-        "title": "Sex, Drugs, Etc."
-      },
-      {
-        "artist": "Kings of Leon",
-        "title": "Knocked Up"
-      },
-      {
-        "artist": "The Sorcerers",
-        "title": "Kid Mahout"
-      },
-      {
-        "artist": "Neil Halstead",
-        "title": "Seasons"
-      },
-      {
-        "artist": "Nightmares On Wax",
-        "title": "On Purpose (with Adrian Sherwood)"
-      },
-      {
-        "artist": "William Orbit",
-        "title": "Water from a Vine Leaf (w/ Beth Orton)"
-      },
-      {
-        "artist": "Folk Bitch Trio",
-        "title": "Cathode Ray"
-      },
-      {
-        "artist": "Hermanos Gutiérrez",
-        "title": "Nuevo Mundo"
-      },
-      {
-        "artist": "Tamikrest",
-        "title": "Toumast Anlet"
-      },
-      {
-        "artist": "Kaleo",
-        "title": "Run No More"
-      },
-      {
-        "artist": "Lord Huron",
-        "title": "Vide Noir"
-      },
-      {
-        "artist": "Traffic",
-        "title": "Rainmaker"
-      },
-      {
-        "artist": "Son Volt",
-        "title": "Medication"
-      },
-      {
-        "artist": "Medium Build",
-        "title": "Sympathy Is A Knife"
-      },
-      {
-        "artist": "Gracie Abrams",
-        "title": "Hit the Wall"
-      },
-      {
-        "artist": "Buzzcocks",
-        "title": "Why Can't I Touch It?"
-      },
-      {
-        "artist": "Ezra Collective",
-        "title": "No One's Watching Me (w/ Olivia Dean)"
-      },
-      {
-        "artist": "The Neighbourhood",
-        "title": "Private"
-      },
-      {
-        "artist": "Duran Duran",
-        "title": "Save A Prayer"
-      },
-      {
-        "artist": "Camel",
-        "title": "The Snow Goose"
-      },
-      {
-        "artist": "Black Rebel Motorcycle Club",
-        "title": "In Like The Rose"
-      },
-      {
-        "artist": "The Black Crowes",
-        "title": "It’s Like That"
+        "artist": "Nothing But Thieves",
+        "title": "Trip Switch"
       },
       {
         "artist": "Arctic Monkeys",
         "title": "Opening Night"
       },
       {
-        "artist": "Josh Rouse",
-        "title": "Lemon Tree"
+        "artist": "The Smashing Pumpkins",
+        "title": "1979"
       },
       {
-        "artist": "Stephen Sanchez",
-        "title": "High"
+        "artist": "Queen",
+        "title": "Tie Your Mother Down"
       },
       {
-        "artist": "King Crimson",
-        "title": "Walking On Air"
+        "artist": "Elbow",
+        "title": "One Day Like This"
       },
       {
-        "artist": "The Mountain Goats",
-        "title": "Cold at Night"
+        "artist": "Manic Street Preachers",
+        "title": "You Stole the Sun From My Heart"
       },
       {
-        "artist": "Wailing Souls",
-        "title": "Mother & Child Reunion"
+        "artist": "The Beaches",
+        "title": "Takes One To Know One"
       },
       {
-        "artist": "Grateful Dead",
-        "title": "Althea"
+        "artist": "Alice Cooper",
+        "title": "Poison"
       },
       {
-        "artist": "Moby",
-        "title": "On Air (feat. serpentwithfeet)"
+        "artist": "Snow Patrol and Martha Wainwright",
+        "title": "Set the Fire to the Third Bar"
       },
       {
-        "artist": "Wolf Alice",
-        "title": "Bros"
+        "artist": "The Haunted Youth",
+        "title": "forget me"
       },
       {
-        "artist": "J.J. Cale",
-        "title": "City Girls"
+        "artist": "The Black Crowes",
+        "title": "Hard To Handle"
       },
       {
-        "artist": "Joe Strummer & The Mescaleros",
-        "title": "Coma Girl"
+        "artist": "Interpol",
+        "title": "Obstacle 1"
       },
       {
-        "artist": "Johnny Cash",
-        "title": "Rusty Cage"
+        "artist": "The Cranberries",
+        "title": "Promises"
       },
       {
-        "artist": "Red Hot Chili Peppers",
-        "title": "Eddie"
+        "artist": "Pixies",
+        "title": "Where Is My Mind"
       },
       {
-        "artist": "Down Like Silver",
-        "title": "To the River"
+        "artist": "Mumford and Sons",
+        "title": "I Will Wait"
       },
       {
-        "artist": "Rosalía",
-        "title": "Sexo, Violencia Y Llantas"
+        "artist": "The Offspring",
+        "title": "The Kids Aren't Alright"
       },
       {
-        "artist": "Gone Gone Beyond",
-        "title": "Everything (feat. Sean Rodman)"
+        "artist": "No Doubt",
+        "title": "Ex Girlfriend"
       },
       {
-        "artist": "thenewno2",
-        "title": "Never Too Late"
+        "artist": "Enter Shikari",
+        "title": "Find Out the Hard Way"
       },
       {
-        "artist": "Jack White",
-        "title": "It's Rough On Rats (If You're Asking)"
+        "artist": "Beastie Boys",
+        "title": "Intergalactic"
       },
       {
-        "artist": "Lucinda Williams",
-        "title": "Can't Let Go"
+        "artist": "U2",
+        "title": "The Unforgettable Fire"
       },
       {
-        "artist": "The Rolling Stones",
-        "title": "Country Honk"
+        "artist": "Razorlight",
+        "title": "Golden Touch"
       },
       {
-        "artist": "Blur",
-        "title": "Out Of Time"
+        "artist": "Go Back to the Zoo",
+        "title": "Electric"
       },
       {
-        "artist": "Cream",
-        "title": "I Feel Free"
+        "artist": "The Goo Goo Dolls",
+        "title": "Iris"
       },
       {
-        "artist": "Violet Grohl",
-        "title": "595"
+        "artist": "The Beatles",
+        "title": "I Am The Walrus"
       },
       {
-        "artist": "Dirtwire",
-        "title": "Sailing the Solar Flares"
+        "artist": "Sum 41",
+        "title": "In Too Deep"
       },
       {
-        "artist": "Beth Orton",
-        "title": "Stolen Car"
+        "artist": "Johan",
+        "title": "Swing"
+      },
+      {
+        "artist": "Biffy Clyro",
+        "title": "Biblical"
+      },
+      {
+        "artist": "Pearl Jam",
+        "title": "Elderly Woman Behind The Counter In A Small Town"
+      },
+      {
+        "artist": "Sam Fender",
+        "title": "Rein Me In (ft. Olivia Dean)"
+      },
+      {
+        "artist": "Jimi Hendrix",
+        "title": "Purple Haze"
+      },
+      {
+        "artist": "The Kooks",
+        "title": "Mr. Maker"
+      },
+      {
+        "artist": "Foo Fighters",
+        "title": "Window"
+      },
+      {
+        "artist": "Queensryche",
+        "title": "Silent Lucidity"
+      },
+      {
+        "artist": "Klaxons",
+        "title": "Golden Skans"
+      },
+      {
+        "artist": "Radiohead",
+        "title": "High & Dry"
+      },
+      {
+        "artist": "Rammstein",
+        "title": "Radio"
+      },
+      {
+        "artist": "The Pretenders",
+        "title": "Don't Get Me Wrong"
+      },
+      {
+        "artist": "White Lies",
+        "title": "Death"
+      },
+      {
+        "artist": "The Presidents of The USA",
+        "title": "Lump"
+      },
+      {
+        "artist": "Joy Division",
+        "title": "Love Will Tear Us Apart"
+      },
+      {
+        "artist": "Wodan Boys",
+        "title": "Blindsided"
+      },
+      {
+        "artist": "Lush",
+        "title": "Ladykillers"
+      },
+      {
+        "artist": "Lenny Kravitz",
+        "title": "Let Love Rule"
+      },
+      {
+        "artist": "Vampire Weekend",
+        "title": "A-Punk"
+      },
+      {
+        "artist": "Muse",
+        "title": "Psycho"
+      },
+      {
+        "artist": "Bush",
+        "title": "Glycerine"
+      },
+      {
+        "artist": "Inhaler",
+        "title": "Hole In The Ground"
+      },
+      {
+        "artist": "System Of A Down",
+        "title": "Aerials"
+      },
+      {
+        "artist": "Tom Petty & The Heartbreakers",
+        "title": "A Face In The Crowd"
+      },
+      {
+        "artist": "Stone",
+        "title": "Stack Up The Reasons"
+      },
+      {
+        "artist": "Trockener Kecks",
+        "title": "Met Hart En Ziel"
+      },
+      {
+        "artist": "Bring Me The Horizon",
+        "title": "Mother Tongue"
+      },
+      {
+        "artist": "Green Day",
+        "title": "Jesus of Suburbia"
+      },
+      {
+        "artist": "Suede",
+        "title": "Trash"
+      },
+      {
+        "artist": "Bruce Springsteen",
+        "title": "I'm On Fire"
+      },
+      {
+        "artist": "Within Temptation",
+        "title": "Mother Earth"
+      },
+      {
+        "artist": "Living Colour",
+        "title": "Love Rears It's Ugly Head"
+      },
+      {
+        "artist": "Dropkick Murphys",
+        "title": "Rose Tattoo"
+      },
+      {
+        "artist": "Yungblud",
+        "title": "Suburban Requiem"
+      },
+      {
+        "artist": "Alanis Morissette",
+        "title": "Ironic"
+      },
+      {
+        "artist": "Big Country",
+        "title": "Look Away"
+      },
+      {
+        "artist": "Paramore",
+        "title": "Misery Business"
+      },
+      {
+        "artist": "Ash",
+        "title": "Oh Yeah"
+      },
+      {
+        "artist": "Tame Impala",
+        "title": "Let It Happen"
       },
       {
         "artist": "Led Zeppelin",
-        "title": "The Rain Song"
+        "title": "Immigrant Song"
       },
       {
-        "artist": "FKJ",
-        "title": "Moments (Part 2)"
+        "artist": "The Zutons",
+        "title": "Valerie"
+      },
+      {
+        "artist": "Nirvana",
+        "title": "Man Who Sold The World (Unplugged)"
+      },
+      {
+        "artist": "Blur",
+        "title": "Parklife"
+      },
+      {
+        "artist": "Iggy Pop",
+        "title": "The Passenger"
+      },
+      {
+        "artist": "Circa Waves",
+        "title": "T-Shirt Weather"
+      },
+      {
+        "artist": "The Verve",
+        "title": "The Drugs Don't Work"
+      },
+      {
+        "artist": "The Rasmus",
+        "title": "In The Shadows"
+      },
+      {
+        "artist": "U2",
+        "title": "American Obituary"
+      },
+      {
+        "artist": "Skunk Anansie",
+        "title": "Secretly"
+      },
+      {
+        "artist": "Guns N' Roses",
+        "title": "Welcome To The Jungle"
+      }
+    ],
+    "nporadio2": [
+      {
+        "artist": "Gerry Rafferty",
+        "title": "Baker Street"
+      },
+      {
+        "artist": "Diana Ross",
+        "title": "I'm coming out"
+      },
+      {
+        "artist": "The Kooks",
+        "title": "Mr Maker"
+      },
+      {
+        "artist": "Simply Red",
+        "title": "Something got me started"
+      },
+      {
+        "artist": "Nona",
+        "title": "What A Way To Die"
+      },
+      {
+        "artist": "Kane",
+        "title": "Rain Down On Me"
+      },
+      {
+        "artist": "Robert Palmer",
+        "title": "Best of both worlds"
+      },
+      {
+        "artist": "Jonas Blue ft. Malive",
+        "title": "Edge Of Desire"
+      },
+      {
+        "artist": "Weezer",
+        "title": "Buddy Holly"
+      },
+      {
+        "artist": "Alphabeat",
+        "title": "Fascination"
+      },
+      {
+        "artist": "Hall & Oates",
+        "title": "Out of touch"
+      },
+      {
+        "artist": "David Guetta & Sia",
+        "title": "Flames (korte edit)"
+      },
+      {
+        "artist": "Bananarama",
+        "title": "Venus"
+      },
+      {
+        "artist": "Purple Disco Machine Ft. Eyelar",
+        "title": "Dopamine"
+      },
+      {
+        "artist": "Creedence Clearwater Revival",
+        "title": "Have you ever seen the rain"
+      },
+      {
+        "artist": "Rihanna",
+        "title": "Diamonds"
+      },
+      {
+        "artist": "Bill Medley & Jennifer Warnes",
+        "title": "I've Had The Time Of My Life"
+      },
+      {
+        "artist": "Prince",
+        "title": "Most Beautiful Girl In The World"
+      },
+      {
+        "artist": "Crowded House",
+        "title": "It's only natural"
+      },
+      {
+        "artist": "Ed Sheeran",
+        "title": "Sing"
+      },
+      {
+        "artist": "Simple Minds",
+        "title": "Alive And Kicking"
+      },
+      {
+        "artist": "Rufus & Chaka Khan",
+        "title": "Ain't nobody"
+      },
+      {
+        "artist": "The Fray",
+        "title": "How to save a life"
+      },
+      {
+        "artist": "Robin S",
+        "title": "Show Me Love"
+      },
+      {
+        "artist": "The Alan Parsons Project",
+        "title": "Old And Wise"
+      },
+      {
+        "artist": "André van Duin",
+        "title": "Als de zon schijnt"
+      },
+      {
+        "artist": "Nirvana",
+        "title": "Lithium"
+      },
+      {
+        "artist": "Taylor Swift",
+        "title": "Cardigan"
+      },
+      {
+        "artist": "Harry Styles",
+        "title": "As it was"
+      },
+      {
+        "artist": "Waterboys",
+        "title": "The whole of the moon"
+      },
+      {
+        "artist": "Leonard Cohen",
+        "title": "Famous Blue Raincoat"
+      },
+      {
+        "artist": "Outkast",
+        "title": "Hey Ya!"
+      },
+      {
+        "artist": "Pink Floyd",
+        "title": "Another Brick In The Wall"
+      },
+      {
+        "artist": "Eva Cassidy",
+        "title": "Fields of gold"
+      },
+      {
+        "artist": "Gerard Cox",
+        "title": "'t Is weer voorbij die mooie zomer"
+      },
+      {
+        "artist": "Run Dmc",
+        "title": "Walk This Way"
+      },
+      {
+        "artist": "Dire Straits",
+        "title": "Tunnel Of Love"
+      },
+      {
+        "artist": "Post Malone",
+        "title": "Circles"
+      },
+      {
+        "artist": "Avicii",
+        "title": "Levels"
+      },
+      {
+        "artist": "Keane",
+        "title": "Bedshaped"
+      },
+      {
+        "artist": "Doe Maar",
+        "title": "Sinds 1 Dag Of 2 (32 Jaar)"
+      },
+      {
+        "artist": "Bob Dylan",
+        "title": "Blowin' in the Wind"
+      },
+      {
+        "artist": "Peter Gabriel",
+        "title": "Solsbury Hill"
+      },
+      {
+        "artist": "Carpenters",
+        "title": "(They Long To Be) Close To You"
+      },
+      {
+        "artist": "Muse",
+        "title": "Uprising"
+      },
+      {
+        "artist": "Tears For Fears & Oleta Adams",
+        "title": "Woman in chains"
+      },
+      {
+        "artist": "Arcade Fire",
+        "title": "Everything now"
+      },
+      {
+        "artist": "Jeff Buckley",
+        "title": "Grace"
+      },
+      {
+        "artist": "Meat Loaf",
+        "title": "I'd Do Anything For Love (But I Won't Do That)"
+      },
+      {
+        "artist": "Eagles",
+        "title": "The Last Resort"
+      },
+      {
+        "artist": "Maarten van Roozendaal",
+        "title": "Red Mij Niet"
+      },
+      {
+        "artist": "Killing Joke",
+        "title": "Love Like Blood"
+      },
+      {
+        "artist": "George Michael",
+        "title": "Freedom! '90"
+      },
+      {
+        "artist": "Bee Gees",
+        "title": "I Started A Joke"
+      },
+      {
+        "artist": "Bruce Springsteen",
+        "title": "Streets of Philadelphia"
+      },
+      {
+        "artist": "Pink ft. Nate Ruess",
+        "title": "Just give me a reason"
+      },
+      {
+        "artist": "Golden Earring",
+        "title": "Back home"
+      },
+      {
+        "artist": "Queen",
+        "title": "Who Wants To Live Forever"
+      },
+      {
+        "artist": "Michael Bublé",
+        "title": "Feeling Good"
+      },
+      {
+        "artist": "Di-Rect",
+        "title": "Through the looking glass"
+      },
+      {
+        "artist": "John Lennon",
+        "title": "Imagine"
+      },
+      {
+        "artist": "Suzan & Freek & Snelle",
+        "title": "De overkant"
+      },
+      {
+        "artist": "Michael Jackson",
+        "title": "Dirty Diana"
+      },
+      {
+        "artist": "Fleetwood Mac",
+        "title": "Rhiannon"
+      },
+      {
+        "artist": "Kiss",
+        "title": "I was made for loving you"
+      },
+      {
+        "artist": "U2",
+        "title": "One"
+      },
+      {
+        "artist": "David Bowie & Tina Turner",
+        "title": "Tonight"
+      },
+      {
+        "artist": "Blue Oyster Cult",
+        "title": "Don't fear the reaper"
+      },
+      {
+        "artist": "Whitney Houston",
+        "title": "I Wanna Dance With Somebody (Who Loves Me)"
+      },
+      {
+        "artist": "The Beach Boys",
+        "title": "Tears In The Morning"
+      },
+      {
+        "artist": "Elton John",
+        "title": "Rocket man"
+      },
+      {
+        "artist": "Abba",
+        "title": "Chiquitita"
+      },
+      {
+        "artist": "Van Halen",
+        "title": "Why Can't This Be Love"
+      },
+      {
+        "artist": "Cat Stevens",
+        "title": "Morning has broken"
+      },
+      {
+        "artist": "Sniff 'n' The Tears",
+        "title": "Driver's Seat"
+      },
+      {
+        "artist": "De Dijk",
+        "title": "Nergens goed voor"
+      },
+      {
+        "artist": "2Pac",
+        "title": "Changes"
+      },
+      {
+        "artist": "Alanis Morissette",
+        "title": "You Oughta Know"
+      },
+      {
+        "artist": "Son Mieux",
+        "title": "Dark Before The Dawn"
+      },
+      {
+        "artist": "Nile Rodgers & CHIC",
+        "title": "Good Times"
+      }
+    ],
+    "pinguin": [
+      {
+        "artist": "Opus Kink",
+        "title": "The Sweet Goodbye"
+      },
+      {
+        "artist": "Byrds",
+        "title": "Eight Miles High"
+      },
+      {
+        "artist": "My New Band Believe",
+        "title": "Love Story"
+      },
+      {
+        "artist": "Manic Street Preachers",
+        "title": "Motorcycle Emptiness"
+      },
+      {
+        "artist": "Nick Cave &The Bad Seeds",
+        "title": "Are You The One That I've Been Waiting For?"
+      },
+      {
+        "artist": "Muse",
+        "title": "New Born"
+      },
+      {
+        "artist": "Getdown Services",
+        "title": "I Can't Die Like That"
+      },
+      {
+        "artist": "Zero 7",
+        "title": "Destiny"
+      },
+      {
+        "artist": "The Reytons",
+        "title": "Jukebox"
+      },
+      {
+        "artist": "Bad Religion",
+        "title": "American Jesus"
+      },
+      {
+        "artist": "Spoon",
+        "title": "Do You"
+      },
+      {
+        "artist": "Swapmeet",
+        "title": "Sand"
+      },
+      {
+        "artist": "Jet",
+        "title": "Are You Gonna Be My Girl"
+      },
+      {
+        "artist": "untitled",
+        "title": "Say It Again"
+      },
+      {
+        "artist": "Arctic Monkeys",
+        "title": "Do I Wanna Know"
+      },
+      {
+        "artist": "The Cure",
+        "title": "Never Enough"
+      },
+      {
+        "artist": "Toumastine",
+        "title": "Attiba (Ephemeral) feat. Mdou Moctar"
+      },
+      {
+        "artist": "Alice In Chains",
+        "title": "Would?"
+      },
+      {
+        "artist": "RIP Magic",
+        "title": "Screwdark"
+      },
+      {
+        "artist": "NOTHING",
+        "title": "toothless coal"
+      },
+      {
+        "artist": "Waltzburg",
+        "title": "Inbetween"
+      },
+      {
+        "artist": "Blur",
+        "title": "Beetlebum"
+      },
+      {
+        "artist": "The Afghan Whigs",
+        "title": "Duvateen"
+      },
+      {
+        "artist": "Honey I'm Home",
+        "title": "Hyperspace Mountain"
+      },
+      {
+        "artist": "SOFIA ISELLA",
+        "title": "Above the Neck"
+      },
+      {
+        "artist": "Lene Lovich",
+        "title": "Bird Song"
+      },
+      {
+        "artist": "Beck",
+        "title": "Ride Lonesome"
+      },
+      {
+        "artist": "Talking Heads",
+        "title": "Wild Wild Life"
+      },
+      {
+        "artist": "Radiohead",
+        "title": "How To Disapear Completely"
+      },
+      {
+        "artist": "MIA",
+        "title": "Paper planes"
+      },
+      {
+        "artist": "Mew",
+        "title": "The Zookeepers Boy"
+      },
+      {
+        "artist": "Father John Misty",
+        "title": "The Payoff"
+      },
+      {
+        "artist": "James",
+        "title": "Laid"
+      },
+      {
+        "artist": "Snarls",
+        "title": "No Lock, No Prayer"
+      },
+      {
+        "artist": "Royal Blood",
+        "title": "Ten Tonne Skeleton"
+      },
+      {
+        "artist": "Stiff Little Fingers",
+        "title": "Alternative Ulster"
+      },
+      {
+        "artist": "Cosey Mueller",
+        "title": "Der Politiker"
+      },
+      {
+        "artist": "The Chameleons",
+        "title": "Up the Down Escalator"
+      },
+      {
+        "artist": "Geese",
+        "title": "Cobra"
+      },
+      {
+        "artist": "Roxy Music",
+        "title": "A Song For Europe"
+      },
+      {
+        "artist": "Still Blank",
+        "title": "love guilt"
+      },
+      {
+        "artist": "Mazzy Star",
+        "title": "Look On Down from the Bridge"
+      },
+      {
+        "artist": "The Bug Club",
+        "title": "A Good Day For Dying"
+      },
+      {
+        "artist": "Robber Robber",
+        "title": "New Year's Eve"
+      },
+      {
+        "artist": "Elbow",
+        "title": "New York Morning"
+      },
+      {
+        "artist": "Tooth",
+        "title": "Restless in Bloom"
+      },
+      {
+        "artist": "Live",
+        "title": "I Alone"
+      },
+      {
+        "artist": "Gurriers",
+        "title": "Nobody's Coming To Save You"
+      },
+      {
+        "artist": "A.A.Williams",
+        "title": "Hold It Together"
+      },
+      {
+        "artist": "Madness",
+        "title": "Our House"
+      },
+      {
+        "artist": "The Slow Country",
+        "title": "In The Mud"
+      },
+      {
+        "artist": "David Bowie",
+        "title": "Where Are We Now"
+      },
+      {
+        "artist": "Dinosaur Jr.",
+        "title": "In A Jar"
+      },
+      {
+        "artist": "Highly Suspect",
+        "title": "Wasted"
+      },
+      {
+        "artist": "M83",
+        "title": "Oceans Niagara"
+      },
+      {
+        "artist": "thistle.",
+        "title": "pieces"
+      },
+      {
+        "artist": "Television",
+        "title": "Venus"
+      },
+      {
+        "artist": "Getdown Services",
+        "title": "The Radiator"
+      },
+      {
+        "artist": "Florence Road",
+        "title": "Storm Warnings"
+      },
+      {
+        "artist": "Elvis Costello",
+        "title": "Oliver's Army"
+      },
+      {
+        "artist": "Lime Garden",
+        "title": "Cross My Heart"
+      },
+      {
+        "artist": "The Vices",
+        "title": "Before It Might Be Gone"
+      },
+      {
+        "artist": "Pond",
+        "title": "Terrestrials"
+      },
+      {
+        "artist": "Faith No More",
+        "title": "Epic"
+      },
+      {
+        "artist": "Ben Howard",
+        "title": "Oats In The Water"
+      },
+      {
+        "artist": "Tanita Tikaram",
+        "title": "Twist In My Sobriety"
+      },
+      {
+        "artist": "Arcade Fire",
+        "title": "The Suburbs"
+      },
+      {
+        "artist": "Kraftwerk",
+        "title": "Computer Liebe"
+      },
+      {
+        "artist": "Annabelle Chairlegs",
+        "title": "Patty Get Your Gun"
+      },
+      {
+        "artist": "Bright Eyes",
+        "title": "Four Winds"
+      },
+      {
+        "artist": "Foo Fighters",
+        "title": "Walking After You"
+      },
+      {
+        "artist": "Death Cab for Cutie",
+        "title": "Riptides"
+      },
+      {
+        "artist": "Oasis",
+        "title": "The Shock Of The Lightning"
+      },
+      {
+        "artist": "Nirvana",
+        "title": "The Man Who Sold The World"
+      },
+      {
+        "artist": "Sam Fender",
+        "title": "That Sound"
+      },
+      {
+        "artist": "Sinead O'Connor",
+        "title": "Succes Has Made A Failure Of Our Home"
+      },
+      {
+        "artist": "Fontaines D.C.",
+        "title": "Bug"
+      },
+      {
+        "artist": "The Fall",
+        "title": "Victoria"
+      },
+      {
+        "artist": "Modern Woman",
+        "title": "Johnny's Dreamworld"
+      },
+      {
+        "artist": "Fit",
+        "title": "Rewrite History"
+      }
+    ],
+    "bbc6": [
+      {
+        "artist": "Cold War Kids",
+        "title": "Hang Me Up To Dry"
+      },
+      {
+        "artist": "Laura Marling",
+        "title": "Cross Your Fingers"
+      },
+      {
+        "artist": "Deftones",
+        "title": "Change (In The House Of Flies)"
+      },
+      {
+        "artist": "Roots Manuva",
+        "title": "Colossal Insight"
+      },
+      {
+        "artist": "Ice Cube",
+        "title": "You Can Do It"
+      },
+      {
+        "artist": "Blaze",
+        "title": "Most Precious Love (feat. Barbara Tucker)"
+      },
+      {
+        "artist": "Arctic Monkeys",
+        "title": "From The Ritz To The Rubble"
+      },
+      {
+        "artist": "The Coral",
+        "title": "In The Morning"
+      },
+      {
+        "artist": "Le Tigre",
+        "title": "TKO"
+      },
+      {
+        "artist": "Friendly Fires",
+        "title": "Paris"
+      },
+      {
+        "artist": "Amy Winehouse",
+        "title": "Back To Black"
+      },
+      {
+        "artist": "The Chemical Brothers",
+        "title": "Star Guitar"
+      },
+      {
+        "artist": "Nick Cave & the Bad Seeds",
+        "title": "There She Goes, My Beautiful World"
+      },
+      {
+        "artist": "Gossip",
+        "title": "Jealous Girls"
+      },
+      {
+        "artist": "Kings of Tomorrow",
+        "title": "Finally (feat. Julie McKnight)"
+      },
+      {
+        "artist": "N*E*R*D",
+        "title": "Run To The Sun"
+      },
+      {
+        "artist": "Basement Jaxx",
+        "title": "Where's Your Head At"
+      },
+      {
+        "artist": "Sugar",
+        "title": "If I Can't Change Your Mind"
+      },
+      {
+        "artist": "Aphex Twin",
+        "title": "Ageispolis"
+      },
+      {
+        "artist": "Bahamadia",
+        "title": "Uknowhowwedu (You Know How We Do)"
+      },
+      {
+        "artist": "The Verve",
+        "title": "Bitter Sweet Symphony"
+      },
+      {
+        "artist": "Jeff Buckley",
+        "title": "Grace"
+      },
+      {
+        "artist": "Oasis",
+        "title": "Rock 'N' Roll Star"
+      },
+      {
+        "artist": "Pulp",
+        "title": "Razzmatazz"
+      },
+      {
+        "artist": "Erykah Badu",
+        "title": "On & On"
+      },
+      {
+        "artist": "Roy Davis Jr.",
+        "title": "Gabriel (feat. Peven Everett)"
+      },
+      {
+        "artist": "Portishead",
+        "title": "Glory Box"
+      },
+      {
+        "artist": "The Sundays",
+        "title": "Here's Where The Story Ends"
+      },
+      {
+        "artist": "The La’s",
+        "title": "There She Goes"
+      },
+      {
+        "artist": "Utah Saints",
+        "title": "What Can You Do For Me"
+      },
+      {
+        "artist": "Nine Inch Nails",
+        "title": "Head Like A Hole"
+      },
+      {
+        "artist": "Bikini Kill",
+        "title": "New Radio"
+      },
+      {
+        "artist": "Mantronix",
+        "title": "Got To Have Your Love"
+      },
+      {
+        "artist": "Ibibio Sound Machine",
+        "title": "Give Me A Reason (6 Music Session, 7 Mar 2017)"
+      },
+      {
+        "artist": "Lonnie Liston Smith",
+        "title": "Expansions"
+      },
+      {
+        "artist": "Cigarettes After Sex",
+        "title": "Affection (6 Music Session, 20 Apr 2017)"
+      },
+      {
+        "artist": "Battles",
+        "title": "Atlas"
+      },
+      {
+        "artist": "Yard Act",
+        "title": "We Make Hits"
+      },
+      {
+        "artist": "Loyle Carner",
+        "title": "Ain't Nothing Changed (6 Music Session, 19 Oct 2016)"
+      },
+      {
+        "artist": "EPMD",
+        "title": "So Wat Cha Sayin'"
+      },
+      {
+        "artist": "Chairlift",
+        "title": "I Belong In Your Arms"
+      },
+      {
+        "artist": "Grimes",
+        "title": "Oblivion"
+      },
+      {
+        "artist": "Sounds of Blackness",
+        "title": "The Pressure"
+      },
+      {
+        "artist": "Show Me the Body",
+        "title": "Dance In The USA"
+      },
+      {
+        "artist": "Eartheater",
+        "title": "Paradise Rains"
+      },
+      {
+        "artist": "Kelela",
+        "title": "linknb"
+      },
+      {
+        "artist": "Jack White",
+        "title": "Derecho Demonico"
+      },
+      {
+        "artist": "Beverly Glenn‐Copeland",
+        "title": "Ever"
+      },
+      {
+        "artist": "Sampha",
+        "title": "(No One Knows Me) Like the Piano"
+      },
+      {
+        "artist": "Wu-Lu",
+        "title": "Gooie"
+      },
+      {
+        "artist": "keiyaA",
+        "title": "I! Gits! Weary!"
+      },
+      {
+        "artist": "Moodymann",
+        "title": "I'll Provide"
+      },
+      {
+        "artist": "Goldie",
+        "title": "Mother VIP (Vocal Mix)"
+      },
+      {
+        "artist": "Massive Attack",
+        "title": "Angel (feat. Horace Andy)"
+      },
+      {
+        "artist": "Tirzah & Coby Sey",
+        "title": "Devotion"
+      },
+      {
+        "artist": "Kelsey Lu",
+        "title": "Running To Pain"
+      },
+      {
+        "artist": "Rihanna",
+        "title": "Needed Me"
+      },
+      {
+        "artist": "Three 6 Mafia",
+        "title": "Poppin' My Collar (feat. Project Pat)"
+      },
+      {
+        "artist": "David Banner",
+        "title": "Like A Pimp (feat. Lil’ Flip)"
+      },
+      {
+        "artist": "Florence the Machine",
+        "title": "Big God"
+      },
+      {
+        "artist": "Robyn",
+        "title": "Sexistential"
+      },
+      {
+        "artist": "Honey Dijon",
+        "title": "I Like It Hot (feat. Greentea Peng)"
+      },
+      {
+        "artist": "Suns of Arqa",
+        "title": "Acid Tabla Dub"
+      },
+      {
+        "artist": "U‐Roy",
+        "title": "The Tide Is High"
+      },
+      {
+        "artist": "Boards of Canada",
+        "title": "You Retreat In Time And Space"
+      },
+      {
+        "artist": "The Pastels",
+        "title": "Summer Rain"
+      },
+      {
+        "artist": "Camera Obscura",
+        "title": "Denon"
+      },
+      {
+        "artist": "BCUC",
+        "title": "Magwala"
+      },
+      {
+        "artist": "Gorillaz",
+        "title": "Orange County (feat. Bizarrap, Kara Jackson & Anoushka Shankar)"
+      },
+      {
+        "artist": "Rostam",
+        "title": "Back of a Truck"
+      },
+      {
+        "artist": "Ann Peebles",
+        "title": "You Keep Me Hanging On (Radio 1 Session, 9 Oct 1974)"
+      },
+      {
+        "artist": "Echo & the Bunnymen",
+        "title": "The Back Of Love"
+      },
+      {
+        "artist": "Cinder Well",
+        "title": "Beyond the Pale"
+      },
+      {
+        "artist": "Big Audio Dynamite",
+        "title": "Beyond The Pale"
+      },
+      {
+        "artist": "Rival Consoles",
+        "title": "Pulses of Information"
+      },
+      {
+        "artist": "The Pogues",
+        "title": "Dark Streets Of London"
+      },
+      {
+        "artist": "Say Sue Me",
+        "title": "In This Mess"
+      },
+      {
+        "artist": "The Strokes",
+        "title": "Last Nite"
+      },
+      {
+        "artist": "The Strokes",
+        "title": "Someday"
+      },
+      {
+        "artist": "Silver Jews",
+        "title": "Strange Victory, Strange Defeat"
+      }
+    ],
+    "fluxfm": [
+      {
+        "artist": "Jan Petat",
+        "title": "Heidewitska"
+      },
+      {
+        "artist": "Het Grolsch Combo",
+        "title": "De bouwvakker"
+      },
+      {
+        "artist": "Peerken en Leerken",
+        "title": "Vrouw smits"
+      },
+      {
+        "artist": "Nelly Van Orsouw",
+        "title": "Mandolinen In De Nacht"
+      },
+      {
+        "artist": "Dana Winner",
+        "title": "Op het dak van de wereld"
+      },
+      {
+        "artist": "Teenager",
+        "title": "Baby hold on"
+      },
+      {
+        "artist": "Het Radi Ensemble",
+        "title": "Bella Donna"
+      },
+      {
+        "artist": "The Moonlights",
+        "title": "Als De Bouzouki's Klinken"
+      },
+      {
+        "artist": "De Lenco\"s",
+        "title": "Scheiden doet zo'n pijn"
+      },
+      {
+        "artist": "Frank, Mirella",
+        "title": "De Witte Zeilen Van Santa Monica"
+      },
+      {
+        "artist": "Antko en Sylvia Greven",
+        "title": "Jij bent de ware"
+      },
+      {
+        "artist": "Henk Wijngaard",
+        "title": "De Zon In M'n Leven"
+      },
+      {
+        "artist": "Armand",
+        "title": "Op De Tandem Naar Marokko"
+      },
+      {
+        "artist": "Highway",
+        "title": "huil maar niet"
+      },
+      {
+        "artist": "Anita Berends",
+        "title": "Oma's bijbel"
+      },
+      {
+        "artist": "De Zingende Tarzan",
+        "title": "Tarzan Van Het Zwarte Woud"
+      },
+      {
+        "artist": "The Rakes",
+        "title": "Drie jaar geleden"
+      },
+      {
+        "artist": "Dimitri Van Toren",
+        "title": "Een Lied Alleen Voor Kinderen"
+      },
+      {
+        "artist": "The Rapsodie's",
+        "title": "Jouw eerste schooldag"
+      },
+      {
+        "artist": "Will Tura",
+        "title": "Hopeloos"
+      },
+      {
+        "artist": "Johnny Hoes & Thomas Berge",
+        "title": "Jantje's Gitaar"
+      },
+      {
+        "artist": "De Willyjo's",
+        "title": "Ik ben het zat"
+      },
+      {
+        "artist": "Duo Onbekend",
+        "title": "Alles In 't Leven Duurt Maar Even"
+      },
+      {
+        "artist": "De Four Tak",
+        "title": "Als De Klokken Van Ons Kerkje Luiden Gaan"
+      },
+      {
+        "artist": "Het Radi Esemble",
+        "title": "Bonna Mia"
+      },
+      {
+        "artist": "Els",
+        "title": "De Bazouki"
+      },
+      {
+        "artist": "The Crisito's",
+        "title": "Als de zuidwester loeit"
+      },
+      {
+        "artist": "Heikrekels",
+        "title": "Waarom Heb Je Me Laten Staan"
+      },
+      {
+        "artist": "De Paladijns",
+        "title": "Marion"
+      },
+      {
+        "artist": "Anita & Roberto, De Heikrekels",
+        "title": "Je Kunt Je Hart Maar Eenmaal Geven"
+      },
+      {
+        "artist": "Jo Hoogendoorn",
+        "title": "De Man Kwam Thuis"
+      },
+      {
+        "artist": "JTJ Trio",
+        "title": "In 't Bejaardenhuis"
+      },
+      {
+        "artist": "De Marlets",
+        "title": "Ik heb 'n tic van ellentrik"
+      },
+      {
+        "artist": "Corry Konings",
+        "title": "Ik Krijg 'N Heel Apart Gevoel Van Binnen"
+      },
+      {
+        "artist": "Zingende Busschaufeur",
+        "title": "Mag Ik Even Rapport"
+      },
+      {
+        "artist": "jan en zwaan",
+        "title": "Sha la la"
+      },
+      {
+        "artist": "De Heikrekels",
+        "title": "Bella Maria"
+      },
+      {
+        "artist": "Linda Williams",
+        "title": "Kameraad"
+      },
+      {
+        "artist": "De Wiko's",
+        "title": "De zwabber"
+      },
+      {
+        "artist": "Koos Alberts",
+        "title": "In De Zon"
+      },
+      {
+        "artist": "Lucas & Gea",
+        "title": "Onder de sterrenpracht"
+      },
+      {
+        "artist": "Cocktail Trio",
+        "title": "Alley Oop"
+      },
+      {
+        "artist": "Andy De Witt",
+        "title": "Ik Wil Vannacht Samen Vrijen"
+      },
+      {
+        "artist": "Ella",
+        "title": "Loop Voor Mijn Part Naar De Maan"
+      },
+      {
+        "artist": "Duo Nationaal",
+        "title": "Oude visser"
+      },
+      {
+        "artist": "Siska and The Nightbirds",
+        "title": "Dit Is Werkelijk Gemeen"
+      },
+      {
+        "artist": "Het Noorder Bar trio",
+        "title": "Vrouwen zijn er zat"
+      },
+      {
+        "artist": "Henk Wijngaard",
+        "title": "Als een wals"
+      },
+      {
+        "artist": "Jannes",
+        "title": "Ik Wil Altijd Bij Jou Zijn"
+      },
+      {
+        "artist": "The Dutch Boys",
+        "title": "Heb Jij Mien Zwien Ook Zien"
+      },
+      {
+        "artist": "Frank & Mirella",
+        "title": "Verliefd, Verloofd, Getrouwd"
+      },
+      {
+        "artist": "New Four",
+        "title": "Ademloos"
+      },
+      {
+        "artist": "Normaal",
+        "title": "Ik Bun Maor Een Eenvoudigen Boerenlul"
+      },
+      {
+        "artist": "De Heikrekels, Marian",
+        "title": "Met Jou Op 'n Bank"
+      },
+      {
+        "artist": "The Sunstreams",
+        "title": "Ik Hou Nog Steeds Van Jou"
+      },
+      {
+        "artist": "De Four Tak",
+        "title": "Droog Je Tranen, Jacqueline"
+      },
+      {
+        "artist": "Rudi van Dalm & His Raindrops",
+        "title": "Waarom huil je toch, Nona Manis"
+      },
+      {
+        "artist": "Onzen Hat",
+        "title": "De Legionair"
+      },
+      {
+        "artist": "Anneke Gronloh",
+        "title": "Speelbal In De Wind"
+      },
+      {
+        "artist": "Andy Borg",
+        "title": "Adios Amor (Neuaufnahme)"
+      },
+      {
+        "artist": "Blue Sky Selection",
+        "title": "De moord in raamsdonk"
+      },
+      {
+        "artist": "Lapland Duo",
+        "title": "De Walvis"
+      },
+      {
+        "artist": "Theo Diepenbrock",
+        "title": "Meisje van toen"
+      },
+      {
+        "artist": "Het Holland Duo",
+        "title": "Onder De Sterren"
+      },
+      {
+        "artist": "Jenny",
+        "title": "Ik zou met jou op een eiland willen wonen"
+      },
+      {
+        "artist": "Aline",
+        "title": "Als je nu echt de waarheid zegt"
+      },
+      {
+        "artist": "Marc & Dave",
+        "title": "Twee Mannen Als Wij"
+      },
+      {
+        "artist": "The Marios",
+        "title": "Androregenusrus"
+      },
+      {
+        "artist": "Lowland Trio",
+        "title": "Barneveldse Mien"
+      },
+      {
+        "artist": "Highway",
+        "title": "oh Jenny girl"
+      },
+      {
+        "artist": "Wipe Outs",
+        "title": "Aan De Rand Van Het Groene Woud"
+      },
+      {
+        "artist": "The Lonely Band",
+        "title": "Zoals Jij Is Er Niet Een"
+      },
+      {
+        "artist": "Carola",
+        "title": "Je Ogen Hebben Geen Geheimen"
+      },
+      {
+        "artist": "Jantje and White Comets",
+        "title": "Pappie Lief"
+      },
+      {
+        "artist": "Apollo Trio",
+        "title": "Ik verlang geen rode rozen"
+      },
+      {
+        "artist": "The Shorts",
+        "title": "Comment зa va"
+      },
+      {
+        "artist": "Little Ricky & De Heikrekels",
+        "title": "Ik Ben Voor De ..."
+      },
+      {
+        "artist": "Exit",
+        "title": "'t Meisje Uit M'n Dromen"
+      },
+      {
+        "artist": "Cees Alleen",
+        "title": "Meisje In Je Spijkerbroek"
+      },
+      {
+        "artist": "De Stars",
+        "title": "Zonder jou"
+      }
+    ],
+    "triplej": [
+      {
+        "artist": "3% & Sarah Wolfe",
+        "title": "Running Through My Head"
+      },
+      {
+        "artist": "horsegiirL",
+        "title": "only the best"
+      },
+      {
+        "artist": "Thundercat & Mac Miller",
+        "title": "She Knows Too Much"
+      },
+      {
+        "artist": "Ecca Vandal",
+        "title": "VERTICAL WORLDS"
+      },
+      {
+        "artist": "Headwreck",
+        "title": "Raindrops"
+      },
+      {
+        "artist": "Kendrick Lamar",
+        "title": "HUMBLE."
+      },
+      {
+        "artist": "Illy",
+        "title": "Swear Jar"
+      },
+      {
+        "artist": "South Summit",
+        "title": "NEW WORLD"
+      },
+      {
+        "artist": "Ashnikko",
+        "title": "Smoochie Girl"
+      },
+      {
+        "artist": "Devaura",
+        "title": "DANCEHEAD"
+      },
+      {
+        "artist": "Grouplove",
+        "title": "Borderlines And Aliens"
+      },
+      {
+        "artist": "MALI JO$E",
+        "title": "432hz (feat. Pink Siifu)"
+      },
+      {
+        "artist": "Pacific Avenue",
+        "title": "Tell Me It Ain't Over"
+      },
+      {
+        "artist": "Samara Cyn",
+        "title": "oooshxt!"
+      },
+      {
+        "artist": "Sly Withers",
+        "title": "Sick"
+      },
+      {
+        "artist": "Benny Benassi",
+        "title": "Cinema"
+      },
+      {
+        "artist": "BOY SODA",
+        "title": "Chase Your Tail"
+      },
+      {
+        "artist": "SOPHIE",
+        "title": "Immaterial"
+      },
+      {
+        "artist": "Speed",
+        "title": "AIN'T MY GAME"
+      },
+      {
+        "artist": "Genesis Owusu",
+        "title": "BIG DOG"
+      },
+      {
+        "artist": "Prospa & Cloonee",
+        "title": "Free Your Mind"
+      },
+      {
+        "artist": "Fat Dog",
+        "title": "Go Fuck Urself"
+      },
+      {
+        "artist": "The Wombats",
+        "title": "Tokyo (Vampires & Wolves)"
+      },
+      {
+        "artist": "horsegiirL",
+        "title": "an apple a day"
+      },
+      {
+        "artist": "Mid Drift",
+        "title": "Whiplash"
+      },
+      {
+        "artist": "DRIZZZ",
+        "title": "VENTIN"
+      },
+      {
+        "artist": "beabadoobee",
+        "title": "Sun Has Set"
+      },
+      {
+        "artist": "dust",
+        "title": "drawbacks"
+      },
+      {
+        "artist": "Disco Lines & Tinashe",
+        "title": "No Broke Boys"
+      },
+      {
+        "artist": "Windwaker",
+        "title": "click."
+      },
+      {
+        "artist": "Barkaa",
+        "title": "King Brown"
+      },
+      {
+        "artist": "Lime Garden",
+        "title": "Cross My Heart"
+      },
+      {
+        "artist": "MUNA",
+        "title": "Dancing On The Wall"
+      },
+      {
+        "artist": "Ruby Fields",
+        "title": "Dinosaurs"
+      },
+      {
+        "artist": "GENER8ION & Yung Lean",
+        "title": "STORM II"
+      },
+      {
+        "artist": "Drake",
+        "title": "NOKIA"
+      },
+      {
+        "artist": "underscores",
+        "title": "Music"
+      },
+      {
+        "artist": "Sleepazoid",
+        "title": "NEW AGE"
+      },
+      {
+        "artist": "Jimmy Eat World",
+        "title": "The Middle"
+      },
+      {
+        "artist": "Teen Jesus and the Jean Teasers",
+        "title": "GO WASTE MY TIME"
+      },
+      {
+        "artist": "Don Toliver",
+        "title": "ATM"
+      },
+      {
+        "artist": "3%",
+        "title": "Land Back"
+      },
+      {
+        "artist": "Nia Archives",
+        "title": "Gud Gudbyez"
+      },
+      {
+        "artist": "Lucky",
+        "title": "Lady Beetle"
+      },
+      {
+        "artist": "Vv Pete, DEELA, Lisha G & UTILITY",
+        "title": "Toss It"
+      },
+      {
+        "artist": "MAY-A",
+        "title": "Claws"
+      },
+      {
+        "artist": "Sycco",
+        "title": "Peacemaker"
+      },
+      {
+        "artist": "RÜFÜS DU SOL",
+        "title": "You Were Right"
+      },
+      {
+        "artist": "Hockey Dad",
+        "title": "All Hat No Cattle"
+      },
+      {
+        "artist": "Chappell Roan",
+        "title": "HOT TO GO!"
+      },
+      {
+        "artist": "Meg Mac",
+        "title": "He Said No"
+      },
+      {
+        "artist": "Teenage Joans",
+        "title": "Three Leaf Clover"
+      },
+      {
+        "artist": "A$AP Rocky",
+        "title": "PUNK ROCKY"
+      },
+      {
+        "artist": "bbno$ & VNLLA",
+        "title": "bing bong"
+      },
+      {
+        "artist": "Charli XCX",
+        "title": "SS26"
+      },
+      {
+        "artist": "Mel Blue",
+        "title": "Be That to You"
+      },
+      {
+        "artist": "Jungle",
+        "title": "The Wave"
+      },
+      {
+        "artist": "Kucka",
+        "title": "Drowning"
+      },
+      {
+        "artist": "Jim Legxacy",
+        "title": "idk idk"
+      },
+      {
+        "artist": "Molly Millington",
+        "title": "Just Drive"
+      },
+      {
+        "artist": "Crooked Colours",
+        "title": "I Hope You Get It"
+      },
+      {
+        "artist": "Laufey",
+        "title": "Madwoman"
+      },
+      {
+        "artist": "Doja Cat",
+        "title": "Gorgeous"
+      },
+      {
+        "artist": "Fergus James",
+        "title": "backseat"
+      },
+      {
+        "artist": "Kehlani",
+        "title": "Folded"
+      },
+      {
+        "artist": "Matt Corby",
+        "title": "War To Love"
+      },
+      {
+        "artist": "Maisie Peters",
+        "title": "You're Just A Boy (And I'm Kinda The Man)"
+      },
+      {
+        "artist": "Kobie Dee",
+        "title": "Aim For The Stars"
+      },
+      {
+        "artist": "Julia Wolf",
+        "title": "Deep End"
+      },
+      {
+        "artist": "Harry Hayes",
+        "title": "I Did You Wrong"
+      },
+      {
+        "artist": "Telenova",
+        "title": "THE DEEP"
+      },
+      {
+        "artist": "Northlane",
+        "title": "Evian"
+      },
+      {
+        "artist": "Ninajirachi & Izzy Camina",
+        "title": "Ninacamina"
+      },
+      {
+        "artist": "Banks",
+        "title": "Underdog"
+      },
+      {
+        "artist": "Wolf Alice",
+        "title": "Just Two Girls"
+      },
+      {
+        "artist": "Dom Dolla",
+        "title": "Don't Worry Baby"
+      },
+      {
+        "artist": "Gracie Abrams",
+        "title": "Hit the Wall"
+      },
+      {
+        "artist": "Kito & Empress Of",
+        "title": "Wild Girl"
+      },
+      {
+        "artist": "Chase Atlantic",
+        "title": "FACEDOWN"
+      },
+      {
+        "artist": "Major Lazer",
+        "title": "Be Together"
+      }
+    ],
+    "radioswiss": [
+      {
+        "artist": "Dizzy Gillespie & Stan Getz",
+        "title": "Exactly Like You"
+      },
+      {
+        "artist": "Fanakalo",
+        "title": "The wounded lion"
+      },
+      {
+        "artist": "Big Band Liechtenstein",
+        "title": "When You're Smiling"
+      },
+      {
+        "artist": "Bergitta Victor",
+        "title": "Rising High"
+      },
+      {
+        "artist": "Jazz Shakers",
+        "title": "A Smooth One"
+      },
+      {
+        "artist": "Nico Brina",
+        "title": "That's My Way"
+      },
+      {
+        "artist": "P.S. Corporation",
+        "title": "Elephant stomp"
+      },
+      {
+        "artist": "Chris Conz",
+        "title": "Honeymoon Blues"
+      },
+      {
+        "artist": "Peggy Chew",
+        "title": "The Dry Cleaner From Des Moines"
+      },
+      {
+        "artist": "George Scheibel Big Band",
+        "title": "Teddy The Toad"
+      },
+      {
+        "artist": "Erich Fischer Quintett",
+        "title": "Urgu"
+      },
+      {
+        "artist": "Polo Hofer",
+        "title": "Stormy Monday"
+      },
+      {
+        "artist": "Philipp Rellstab",
+        "title": "Dança Comigo"
+      },
+      {
+        "artist": "Alpha Latino",
+        "title": "Special"
+      },
+      {
+        "artist": "Ann Malcolm",
+        "title": "Black Coffee"
+      },
+      {
+        "artist": "Markus Hofstetter & Andreas Müller",
+        "title": "Daily Bread"
+      },
+      {
+        "artist": "sMuM Big Band",
+        "title": "Sweet Billie"
+      },
+      {
+        "artist": "Piano Connection",
+        "title": "Fast Boogie"
+      },
+      {
+        "artist": "Fabian Anderhub",
+        "title": "Right Place Wrong Time"
+      },
+      {
+        "artist": "Martijn Schok & Silvan Zingg",
+        "title": "Green Onions"
+      },
+      {
+        "artist": "Sonja Indin",
+        "title": "Silver Sky"
+      },
+      {
+        "artist": "Claudio Rugo",
+        "title": "Pegado A Tí"
+      },
+      {
+        "artist": "Roof Groove Big Band",
+        "title": "Day By Day"
+      },
+      {
+        "artist": "Marco Marchi And The Mojo Workers",
+        "title": "No More Fools At The White House"
+      },
+      {
+        "artist": "Ralf Ruh Trio",
+        "title": "Blockchords Please"
+      },
+      {
+        "artist": "Swing Makers",
+        "title": "Easy To Remember"
+      },
+      {
+        "artist": "Noëmi De Bora",
+        "title": "I Do It My Way"
+      },
+      {
+        "artist": "Vufflens Jazz Band",
+        "title": "Tishomingo Blues"
+      },
+      {
+        "artist": "Memellow",
+        "title": "Twister"
+      },
+      {
+        "artist": "Miriam Dee Band",
+        "title": "The Lady Is A Tramp"
+      },
+      {
+        "artist": "Starry Crown Quartet",
+        "title": "Hallelujah I Just Love Her So"
+      },
+      {
+        "artist": "Hammer",
+        "title": "Let's Party!"
+      },
+      {
+        "artist": "Damaris Rose",
+        "title": "Don't Be On The Outside"
+      },
+      {
+        "artist": "Fusoosh!",
+        "title": "Smooth Stuff"
+      },
+      {
+        "artist": "Raymond Court Quartet",
+        "title": "Days Of Wine And Roses"
+      },
+      {
+        "artist": "Tcha Simmons",
+        "title": "Friday's At My Door"
+      },
+      {
+        "artist": "Chachaloca",
+        "title": "Mahjon"
+      },
+      {
+        "artist": "Sam Burckhardt",
+        "title": "Splanky"
+      },
+      {
+        "artist": "Tremble Kids",
+        "title": "St. Louis Blues"
+      },
+      {
+        "artist": "Michel Portal",
+        "title": "African Wind"
+      },
+      {
+        "artist": "Swiss Jazz Orchestra",
+        "title": "Dolemite"
+      },
+      {
+        "artist": "Birgit Ellmerer & Sophisticated Lady",
+        "title": "Nice Work If You Can Get It"
+      },
+      {
+        "artist": "Julien-François Zbinden Trio",
+        "title": "It's The Talk Of The Town"
+      },
+      {
+        "artist": "Orem",
+        "title": "Cheerful"
+      },
+      {
+        "artist": "Jazzgroup Udo Fink im Trio",
+        "title": "What A Difference A Day Made"
+      },
+      {
+        "artist": "Joe & Dave",
+        "title": "Sicilia"
+      },
+      {
+        "artist": "Floriano Jr. Inacio",
+        "title": "The Island"
+      },
+      {
+        "artist": "Organic Quartett",
+        "title": "Stop And Go"
+      },
+      {
+        "artist": "Jazz Connexion",
+        "title": "Jeep's Blues"
+      },
+      {
+        "artist": "Joris Dudli \"Funk Modes\" Sextet & Felice Dudli",
+        "title": "What Is It?"
+      },
+      {
+        "artist": "Dominik Schürmann Ensemble",
+        "title": "Ramba Samba"
+      },
+      {
+        "artist": "Beat Kaestli",
+        "title": "La Haut sur la Montagne"
+      },
+      {
+        "artist": "Karl-Heinz Steffens, David Gazarov",
+        "title": "Very Early"
+      },
+      {
+        "artist": "Regi Sager",
+        "title": "I've Got The World On A String"
+      },
+      {
+        "artist": "Metronome Quintett",
+        "title": "The Late, Late Show"
+      },
+      {
+        "artist": "Wim's Jazz Express",
+        "title": "Lullaby of Birdland"
+      },
+      {
+        "artist": "Erika Tanner & Guitar Project",
+        "title": "Ain't Got Nothing But The Blues"
+      },
+      {
+        "artist": "P.S. Corporation",
+        "title": "Limehouse Blues"
+      },
+      {
+        "artist": "Maurice Imhof & David \"Dave\" Ruosch & Martin Meyer",
+        "title": "Erbarme dich, mein Gott"
+      },
+      {
+        "artist": "Freddie & the Cannonballs",
+        "title": "Barking Up The Wrong Tree"
+      },
+      {
+        "artist": "Kenny Burrell",
+        "title": "Wess Side"
+      },
+      {
+        "artist": "Jorge Rossy",
+        "title": "Ca-lee-so"
+      },
+      {
+        "artist": "Delta Boys",
+        "title": "Let Me Play With Your Poodle"
+      },
+      {
+        "artist": "Chet Atkins",
+        "title": "Dream"
+      },
+      {
+        "artist": "Wild Bill Davis Super Trio",
+        "title": "Where Or When"
+      },
+      {
+        "artist": "Elsie Bianchi",
+        "title": "Baron Lazar"
+      },
+      {
+        "artist": "Charlie Hunter Quart. & Norah Jones",
+        "title": "More Than This"
+      },
+      {
+        "artist": "Charlie Byrd Trio & Scott Hamilton",
+        "title": "It's A Wonderful World"
+      },
+      {
+        "artist": "Double Version",
+        "title": "Isabelle"
+      },
+      {
+        "artist": "Pasadena Roof Orchestra",
+        "title": "Lullaby of Broadway"
+      },
+      {
+        "artist": "Steve Kuhn Trio",
+        "title": "Wisteria"
+      },
+      {
+        "artist": "Nick Perrin & Stewy von Wattenwyl",
+        "title": "It Might As Well Be Spring"
+      },
+      {
+        "artist": "Simone Kopmajer",
+        "title": "Lucky Mojo"
+      },
+      {
+        "artist": "Ken Peplowski Quartet",
+        "title": "Ballad For Very Tired And Very..."
+      },
+      {
+        "artist": "Richard Pizzorno Trio",
+        "title": "Bossa Na Luz"
+      },
+      {
+        "artist": "Curtis Stigers",
+        "title": "Your Mind Is On Vacation"
+      },
+      {
+        "artist": "Erroll Garner",
+        "title": "The Best Things In Life Are Free"
+      },
+      {
+        "artist": "Gianfranco GFN",
+        "title": "Say Goodbye 2"
+      },
+      {
+        "artist": "Stanley Turrentine",
+        "title": "2 RBs"
+      },
+      {
+        "artist": "Karrin Allyson",
+        "title": "Bernie's Tune"
+      }
+    ],
+    "kexp": [
+      {
+        "artist": "Hanggai",
+        "title": "Beautiful Mongolian Horse"
+      },
+      {
+        "artist": "Inspirative",
+        "title": "Why"
+      },
+      {
+        "artist": "Yanti Bersaudara",
+        "title": "Hariring Kuring"
+      },
+      {
+        "artist": "OOIOO",
+        "title": "Gamel BE SURE TO SPIRAL"
+      },
+      {
+        "artist": "Pantayo",
+        "title": "Bakal Bote"
+      },
+      {
+        "artist": "IQU",
+        "title": "Under the Cherry Blossom"
+      },
+      {
+        "artist": "beabadoobee",
+        "title": "Sun Has Set"
+      },
+      {
+        "artist": "Fantastic Plastic Machine",
+        "title": "Hello and Goodbye"
+      },
+      {
+        "artist": "Dead Can Dance",
+        "title": "The Ubiquitous Mr. Lovegrove"
+      },
+      {
+        "artist": "Sylvan Esso",
+        "title": "Hot Slob"
+      },
+      {
+        "artist": "Arab Strap",
+        "title": "You You You"
+      },
+      {
+        "artist": "Soft Cell",
+        "title": "Memorabilia"
+      },
+      {
+        "artist": "Anne Clark",
+        "title": "Our Darkness (remix)"
+      },
+      {
+        "artist": "Brothertiger",
+        "title": "This Must Be the Place (Naive Melody)"
+      },
+      {
+        "artist": "MUNA",
+        "title": "Why Do I Get a Good Feeling"
+      },
+      {
+        "artist": "Pond",
+        "title": "Two Hands"
+      },
+      {
+        "artist": "Hatchie",
+        "title": "Carousel"
+      },
+      {
+        "artist": "Built to Spill",
+        "title": "Carry The Zero"
+      },
+      {
+        "artist": "Greg Kramer",
+        "title": "Heat Check"
+      },
+      {
+        "artist": "The Supremes",
+        "title": "You Can't Hurry Love"
+      },
+      {
+        "artist": "Mark Ronson feat. Amy Winehouse",
+        "title": "Valerie"
+      },
+      {
+        "artist": "The Jam",
+        "title": "Town Called Malice"
+      },
+      {
+        "artist": "The Decemberists",
+        "title": "The Sporting Life"
+      },
+      {
+        "artist": "The Strokes",
+        "title": "Last Nite"
+      },
+      {
+        "artist": "Iggy Pop",
+        "title": "Lust for Life"
+      },
+      {
+        "artist": "Kate Bush",
+        "title": "Rubberband Girl"
+      },
+      {
+        "artist": "Slowdive",
+        "title": "Souvlaki Space Station"
+      },
+      {
+        "artist": "The Horrors",
+        "title": "Moving Further Away"
+      },
+      {
+        "artist": "Jay Som",
+        "title": "Baybee"
+      },
+      {
+        "artist": "Toro y Moi",
+        "title": "Rose Quartz"
+      },
+      {
+        "artist": "Turnstile & BADBADNOTGOOD",
+        "title": "Underwater Boi"
+      },
+      {
+        "artist": "Lupe Fiasco",
+        "title": "Kick, Push"
+      },
+      {
+        "artist": "Makthaverskan",
+        "title": "Pity Party"
+      },
+      {
+        "artist": "Metric",
+        "title": "Monster Hospital"
+      },
+      {
+        "artist": "Blackberry Marmalade",
+        "title": "Vince Staples - Cry Baby"
+      },
+      {
+        "artist": "Super Bon Bon",
+        "title": "Soul Coughing - Irresistible Bliss"
+      },
+      {
+        "artist": "The Lick",
+        "title": "shame - Songs of Praise"
+      },
+      {
+        "artist": "I Used To",
+        "title": "LCD Soundsystem - American Dream"
+      },
+      {
+        "artist": "Washing Machine Heart",
+        "title": "Mitski - Be the Cowboy"
+      },
+      {
+        "artist": "I Know What I Know",
+        "title": "Geographer - Endless Motion Vol. 1"
+      },
+      {
+        "artist": "Say No Go",
+        "title": "De La Soul - 3 Feet High and Rising"
+      },
+      {
+        "artist": "Sunrise",
+        "title": "Simply Red - Home"
+      },
+      {
+        "artist": "I Cant Go for That (No Can Do)",
+        "title": "Daryl Hall & John Oates - Private Eyes"
+      },
+      {
+        "artist": "Sara Smile",
+        "title": "Daryl Hall & John Oates - Daryl Hall & John Oates"
+      },
+      {
+        "artist": "Out of Touch",
+        "title": "Daryl Hall & John Oates - Big Bam Boom"
+      },
+      {
+        "artist": "Bitch Girl",
+        "title": "Coi Leray - COI"
+      },
+      {
+        "artist": "Rich Girl",
+        "title": "Daryl Hall & John Oates - Bigger Than Both of Us"
+      },
+      {
+        "artist": "Maneater",
+        "title": "Daryl Hall & John Oates - HO"
+      },
+      {
+        "artist": "Everytime You Go Away",
+        "title": "Daryl Hall & John Oates - Voices"
+      },
+      {
+        "artist": "Kiss on My List",
+        "title": "the bird and the bee - Interpreting the Masters, Volume 1: A Tribute to Daryl Hall and John Oates"
+      },
+      {
+        "artist": "WuTang Clan",
+        "title": "Method Man"
+      },
+      {
+        "artist": "Daryl Hall & John Oates",
+        "title": "Method of Modern Love"
+      },
+      {
+        "artist": "hall Oates",
+        "title": "Method of Modern Love"
+      },
+      {
+        "artist": "Letherette",
+        "title": "D&T"
+      },
+      {
+        "artist": "Daryl Hall & John Oates",
+        "title": "Possession Obsession"
+      },
+      {
+        "artist": "Amerie",
+        "title": "Take Control"
+      },
+      {
+        "artist": "Daryl Hall & John Oates",
+        "title": "You Make My Dreams"
+      },
+      {
+        "artist": "Daryl Hall & John Oates",
+        "title": "Wait for Me (live version)"
+      },
+      {
+        "artist": "Rejjie Snow feat. MF DOOM & Cam OBi",
+        "title": "Cookie Chips"
+      },
+      {
+        "artist": "Daryl Hall & John Oates",
+        "title": "Im Just a Kid (Dont Make Me Feel Like a Man)"
+      },
+      {
+        "artist": "JLive",
+        "title": "Nights Like This"
+      },
+      {
+        "artist": "Daryl Hall & John Oates",
+        "title": "Screaming Through December"
+      },
+      {
+        "artist": "Towa Tei, Bebel Gilberto",
+        "title": "Private Eyes"
+      },
+      {
+        "artist": "Daryl Hall & John Oates",
+        "title": "Private Eyes"
+      },
+      {
+        "artist": "Kalapana",
+        "title": "When the Morning Comes"
+      },
+      {
+        "artist": "Daryl Hall & John Oates",
+        "title": "When the Morning Comes"
+      },
+      {
+        "artist": "Imani Coppola",
+        "title": "Naked City (Love to See U Shine)"
+      },
+      {
+        "artist": "Daryl Hall & John Oates",
+        "title": "Las Vegas Turnaround (The Stewardess Song)"
+      },
+      {
+        "artist": "Pinback",
+        "title": "Bouquet"
+      },
+      {
+        "artist": "Tame Impala",
+        "title": "Elephant"
+      },
+      {
+        "artist": "Gil Scott-Heron",
+        "title": "Im New Here"
+      },
+      {
+        "artist": "aja monet",
+        "title": "skinfolk"
+      },
+      {
+        "artist": "Khruangbin",
+        "title": "First Class"
+      },
+      {
+        "artist": "Tune-Yards",
+        "title": "How Big Is The Rainbow"
+      },
+      {
+        "artist": "Sera Cahoone",
+        "title": "Say Something"
+      },
+      {
+        "artist": "Cave Singers",
+        "title": "Dancing On Our Graves"
+      },
+      {
+        "artist": "Joyce Manor",
+        "title": "Well, Whatever It Was"
+      },
+      {
+        "artist": "Beach Bunny",
+        "title": "Promises"
+      },
+      {
+        "artist": "PJ Harvey",
+        "title": "You Said Something"
+      },
+      {
+        "artist": "Craig Finn",
+        "title": "Blankets"
+      }
+    ],
+    "willy": [
+      {
+        "artist": "SIMPLE MINDS",
+        "title": "Alive And Kicking"
+      },
+      {
+        "artist": "PAOLO NUTINI",
+        "title": "Through The Echoes"
+      },
+      {
+        "artist": "DINOSAUR JR",
+        "title": "Feel the Pain"
+      },
+      {
+        "artist": "DAS POP",
+        "title": "Fool for Love"
+      },
+      {
+        "artist": "GORKI",
+        "title": "Mia"
+      },
+      {
+        "artist": "FLEETWOOD MAC",
+        "title": "The Chain"
+      },
+      {
+        "artist": "THE SHEILA DIVINE",
+        "title": "Life Is Fragile"
+      },
+      {
+        "artist": "NICK CAVE AND THE BAD SEEDS",
+        "title": "Red Right Hand"
+      },
+      {
+        "artist": "AMY WINEHOUSE",
+        "title": "Back To Black"
+      },
+      {
+        "artist": "FLORENCE THE MACHINE",
+        "title": "Free"
+      },
+      {
+        "artist": "FOSTER THE PEOPLE",
+        "title": "Pumped Up Kicks"
+      },
+      {
+        "artist": "RADIOHEAD",
+        "title": "Paranoid Android"
+      },
+      {
+        "artist": "BLUE ROBIN",
+        "title": "Rats"
+      },
+      {
+        "artist": "T REX",
+        "title": "Get It On"
+      },
+      {
+        "artist": "ISAAC ROUX",
+        "title": "Young Hearts"
+      },
+      {
+        "artist": "WHITE STRIPES",
+        "title": "My Doorbell"
+      },
+      {
+        "artist": "TALKING HEADS",
+        "title": "Slippery People (Live)"
+      },
+      {
+        "artist": "INTERGALACTIC LOVERS",
+        "title": "Crushing"
+      },
+      {
+        "artist": "NOORDKAAP",
+        "title": "Arme Joe"
+      },
+      {
+        "artist": "PHOENIX",
+        "title": "Alpha Zulu"
+      },
+      {
+        "artist": "STARSAILOR",
+        "title": "Four To The Floor"
+      },
+      {
+        "artist": "PLACEBO",
+        "title": "Every You Every Me"
+      },
+      {
+        "artist": "POLICE",
+        "title": "Can't Stand Losing You"
+      },
+      {
+        "artist": "BJORK",
+        "title": "Human Behaviour"
+      },
+      {
+        "artist": "EDITORS",
+        "title": "Smokers Outside The Hospital Doors"
+      },
+      {
+        "artist": "RED HOT CHILI PEPPERS",
+        "title": "Give It Away"
+      },
+      {
+        "artist": "DEPECHE MODE",
+        "title": "Precious"
+      },
+      {
+        "artist": "QUEEN",
+        "title": "Killer Queen"
+      },
+      {
+        "artist": "NOTHING BUT THIEVES",
+        "title": "Evolution"
+      },
+      {
+        "artist": "ADMIRAL FREEBEE",
+        "title": "Let It Shine"
+      },
+      {
+        "artist": "BEASTIE BOYS",
+        "title": "Sure Shot"
+      },
+      {
+        "artist": "ROYAL BLOOD",
+        "title": "Honeybrains"
+      },
+      {
+        "artist": "LOU REED",
+        "title": "Perfect Day"
+      },
+      {
+        "artist": "BABYSHAMBLES",
+        "title": "Delivery"
+      },
+      {
+        "artist": "MANIC STREET PREACHERS",
+        "title": "Motorcycle Emptiness"
+      },
+      {
+        "artist": "AC/DC",
+        "title": "Highway To Hell"
+      },
+      {
+        "artist": "BLACK KEYS",
+        "title": "Lo/Hi"
+      },
+      {
+        "artist": "KREUNERS",
+        "title": "Maak Me Wakker"
+      },
+      {
+        "artist": "BEATLES",
+        "title": "Come Together"
+      },
+      {
+        "artist": "GHINZU",
+        "title": "Snow White"
+      },
+      {
+        "artist": "KINGS OF LEON",
+        "title": "Supersoaker"
+      },
+      {
+        "artist": "OASIS",
+        "title": "Don't Look Back In Anger"
+      },
+      {
+        "artist": "MUSE",
+        "title": "Compliance"
+      },
+      {
+        "artist": "TWO DOOR CINEMA CLUB",
+        "title": "What You Know"
+      },
+      {
+        "artist": "PRODIGY",
+        "title": "Firestarter"
+      },
+      {
+        "artist": "PORTLAND",
+        "title": "Champain"
+      },
+      {
+        "artist": "THE SMITHS",
+        "title": "Panic"
+      },
+      {
+        "artist": "ALICE MAE",
+        "title": "In a Flash"
+      },
+      {
+        "artist": "BAND OF HORSES",
+        "title": "Is There A Ghost"
+      },
+      {
+        "artist": "THE WHO",
+        "title": "My Generation"
+      },
+      {
+        "artist": "MESKEREM MEES",
+        "title": "Where I'm From"
+      },
+      {
+        "artist": "PULP",
+        "title": "Disco 2000"
+      },
+      {
+        "artist": "FOALS",
+        "title": "2am"
+      },
+      {
+        "artist": "GREEN DAY & U2",
+        "title": "The Saints Are Coming"
+      },
+      {
+        "artist": "SOUL ASYLUM",
+        "title": "Runaway Train"
+      },
+      {
+        "artist": "PRETENDERS",
+        "title": "Don't Get Me Wrong"
+      },
+      {
+        "artist": "KRISTIN HERSH and MICHAEL STIPE",
+        "title": "Your Ghost"
+      },
+      {
+        "artist": "ARCTIC MONKEYS",
+        "title": "I Bet You Look Good On The Dancefloor"
+      },
+      {
+        "artist": "METALLICA",
+        "title": "Nothing Else Matters"
+      },
+      {
+        "artist": "HIGH HI",
+        "title": "Whatever"
+      },
+      {
+        "artist": "RAMMSTEIN",
+        "title": "Sonne"
+      },
+      {
+        "artist": "PRINCE",
+        "title": "When Doves Cry"
+      },
+      {
+        "artist": "TAME IMPALA",
+        "title": "Patience"
+      },
+      {
+        "artist": "LENNY KRAVITZ",
+        "title": "Always On The Run"
+      },
+      {
+        "artist": "OPROER",
+        "title": "If You Change Your Mind"
+      },
+      {
+        "artist": "BRUCE SPRINGSTEEN",
+        "title": "Glory Days"
+      },
+      {
+        "artist": "LINKIN PARK",
+        "title": "Somewhere I Belong"
+      },
+      {
+        "artist": "ARNO",
+        "title": "Les Yeux De Ma Mere (live)"
+      },
+      {
+        "artist": "DAS POP",
+        "title": "Different Class"
+      },
+      {
+        "artist": "DAVID BOWIE",
+        "title": "Rebel Rebel"
+      },
+      {
+        "artist": "BALTHAZAR",
+        "title": "Wait Any Longer"
+      },
+      {
+        "artist": "LIQUIDO",
+        "title": "Narcotic"
+      },
+      {
+        "artist": "LUC VAN ACKER en ANNA DOMINO",
+        "title": "Zanna"
+      },
+      {
+        "artist": "VON BONDIES",
+        "title": "C'mon C'mon"
+      },
+      {
+        "artist": "NICK CAVE and KYLIE MINOGUE",
+        "title": "Where The Wild Roses Grow"
+      },
+      {
+        "artist": "VAMPIRE WEEKEND",
+        "title": "Harmony Hall"
+      },
+      {
+        "artist": "CHEMICAL BROTHERS",
+        "title": "Hey Boy Hey Girl"
+      },
+      {
+        "artist": "TALKING HEADS",
+        "title": "Road To Nowhere"
+      },
+      {
+        "artist": "INTERGALACTIC LOVERS",
+        "title": "Lost"
+      },
+      {
+        "artist": "WITHIN TEMPTATION",
+        "title": "Stand My Ground"
+      }
+    ],
+    "wxpn": [
+      {
+        "artist": "Bon Iver",
+        "title": "Hey, Ma"
+      },
+      {
+        "artist": "Sug Daniels",
+        "title": "Brand New Day"
+      },
+      {
+        "artist": "Poco",
+        "title": "A Good Feelin' To Know"
+      },
+      {
+        "artist": "New Order",
+        "title": "Blue Monday"
+      },
+      {
+        "artist": "Hurry",
+        "title": "Zoned Out"
+      },
+      {
+        "artist": "Lucy Dacus",
+        "title": "Planting Tomatoes"
+      },
+      {
+        "artist": "Fleetwood Mac",
+        "title": "Over My Head"
+      },
+      {
+        "artist": "David Byrne",
+        "title": "Everybody Laughs"
+      },
+      {
+        "artist": "Bonnie Tyler",
+        "title": "Total Eclipse of the Heart"
+      },
+      {
+        "artist": "Sugar",
+        "title": "Changes"
+      },
+      {
+        "artist": "Mt. Joy",
+        "title": "Is Joy Easy"
+      },
+      {
+        "artist": "Adele",
+        "title": "Rumor Has It"
+      },
+      {
+        "artist": "David Bowie",
+        "title": "Modern Love"
+      },
+      {
+        "artist": "The Decemberists",
+        "title": "Severed"
+      },
+      {
+        "artist": "Goose",
+        "title": "Good2B"
+      },
+      {
+        "artist": "Carole King",
+        "title": "Smackwater Jack"
+      },
+      {
+        "artist": "Noah Kahan",
+        "title": "The Great Divide"
+      },
+      {
+        "artist": "Charlatans UK",
+        "title": "The Only One I Know"
+      },
+      {
+        "artist": "Death Cab For Cutie",
+        "title": "Punching the Flowers"
+      },
+      {
+        "artist": "Sonny Boy Williamson",
+        "title": "Bring It On Home"
+      },
+      {
+        "artist": "Geese",
+        "title": "Cobra"
+      },
+      {
+        "artist": "Brandi Carlile",
+        "title": "Life on the Run"
+      },
+      {
+        "artist": "The Kinks",
+        "title": "All Day And All Of The Night"
+      },
+      {
+        "artist": "Soul Coughing",
+        "title": "Super Bon Bon"
+      },
+      {
+        "artist": "The Raconteurs",
+        "title": "Level"
+      },
+      {
+        "artist": "Los Straitjackets",
+        "title": "(What's So Funny 'Bout) Peace, Love And Understanding"
+      },
+      {
+        "artist": "Phish",
+        "title": "Backwards Down The Number Line"
+      },
+      {
+        "artist": "Phish",
+        "title": "The Moma Dance"
+      },
+      {
+        "artist": "Barenaked Ladies",
+        "title": "Be My Yoko Ono"
+      },
+      {
+        "artist": "The Mighty Mighty Bosstones",
+        "title": "The Impression That I Get"
+      },
+      {
+        "artist": "Spin Doctors",
+        "title": "Jimmy Olsen's Blues"
+      },
+      {
+        "artist": "Fastball",
+        "title": "The Way"
+      },
+      {
+        "artist": "Ben Harper",
+        "title": "Ground On Down"
+      },
+      {
+        "artist": "Blues Traveler",
+        "title": "Run Around"
+      },
+      {
+        "artist": "Grateful Dead",
+        "title": "Till The Morning Comes"
+      },
+      {
+        "artist": "Grateful Dead",
+        "title": "Truckin'"
+      },
+      {
+        "artist": "Grateful Dead",
+        "title": "Uncle John's Band"
+      },
+      {
+        "artist": "Grateful Dead",
+        "title": "New Speedway Boogie"
+      },
+      {
+        "artist": "Santana",
+        "title": "Oye Como Va"
+      },
+      {
+        "artist": "Santana",
+        "title": "Black Magic Woman/Gypsy Queen"
+      },
+      {
+        "artist": "Jerry Garcia & Merl Saunders",
+        "title": "After Midnight"
+      },
+      {
+        "artist": "Bob Weir",
+        "title": "Playing in the Band"
+      },
+      {
+        "artist": "The Allman Brothers",
+        "title": "Whipping Post"
+      },
+      {
+        "artist": "King Gizzard & The Lizard Wizard",
+        "title": "Grow Wings and Fly"
+      },
+      {
+        "artist": "Billy Strings",
+        "title": "Home"
+      },
+      {
+        "artist": "Rugby Road",
+        "title": "Superman"
+      },
+      {
+        "artist": "Robert Randolph",
+        "title": "Higher Ground"
+      },
+      {
+        "artist": "The Infamous Stringdusters",
+        "title": "Hard Line"
+      },
+      {
+        "artist": "Widespread Panic",
+        "title": "Don't Wanna Lose You"
+      },
+      {
+        "artist": "Pigeons Playing Ping Pong",
+        "title": "Calm Before The Storm"
+      },
+      {
+        "artist": "Nickel Creek",
+        "title": "Up On Cripple Creek"
+      },
+      {
+        "artist": "Molly Tuttle",
+        "title": "Take The Journey"
+      },
+      {
+        "artist": "Big Head Todd & The Monsters",
+        "title": "Resignation Superman"
+      },
+      {
+        "artist": "Railroad Earth",
+        "title": "Keep Your Eyes Open (feat. Daniel Donato)"
+      },
+      {
+        "artist": "Col. Bruce Hampton & The Aquarian Rescue Unit",
+        "title": "FIXIN' TO DIE"
+      },
+      {
+        "artist": "Moe.",
+        "title": "Okayalright"
+      },
+      {
+        "artist": "Umphrey's McGee",
+        "title": "Women, Wine And Song"
+      },
+      {
+        "artist": "Phish",
+        "title": "Cities"
+      },
+      {
+        "artist": "Phish",
+        "title": "Boogie On Reggae Woman"
+      },
+      {
+        "artist": "Gov't Mule",
+        "title": "Soulshine (lp version)"
+      },
+      {
+        "artist": "The Allman Brothers",
+        "title": "Jessica"
+      },
+      {
+        "artist": "Snarky Puppy",
+        "title": "Tarova"
+      },
+      {
+        "artist": "King Gizzard & The Lizard Wizard",
+        "title": "The River"
+      },
+      {
+        "artist": "Bruce Hornsby",
+        "title": "Jack Straw"
+      },
+      {
+        "artist": "Grant Green",
+        "title": "Ain't It Funky Now"
+      },
+      {
+        "artist": "Medeski Martin & Wood",
+        "title": "Think"
+      },
+      {
+        "artist": "Phish",
+        "title": "Tweezer"
+      },
+      {
+        "artist": "Daniel Donato",
+        "title": "Sunshine in the Rain"
+      },
+      {
+        "artist": "Grace Potter & The Nocturnals",
+        "title": "Nothing But The Water II"
+      },
+      {
+        "artist": "Dispatch",
+        "title": "The General"
+      },
+      {
+        "artist": "Blues Traveler",
+        "title": "Go Outside & Drive"
+      },
+      {
+        "artist": "Eggy",
+        "title": "A Moment's Notice"
+      },
+      {
+        "artist": "Lotus",
+        "title": "Spiritualize"
+      },
+      {
+        "artist": "Dickey Betts & Great Southern",
+        "title": "Out To Get Me"
+      },
+      {
+        "artist": "Gregg Allman",
+        "title": "Queen Of Hearts"
+      },
+      {
+        "artist": "Dave Matthews Band",
+        "title": "#41"
+      },
+      {
+        "artist": "Dave Matthews Band",
+        "title": "Two Step / Best of What's Around"
+      },
+      {
+        "artist": "Dave Matthews & Tim Reynolds",
+        "title": "Crush"
+      },
+      {
+        "artist": "Dave Matthews & Tim Reynolds",
+        "title": "Tripping Billies"
+      },
+      {
+        "artist": "Dave Matthews Band",
+        "title": "Pantala Naga Pampa"
+      }
+    ],
+    "kcrw": [
+      {
+        "artist": "Right Track / Wrong Man",
+        "title": "Alternate Version-Yumi Zouma-Truth or Consequences (Alternate Versions)"
+      },
+      {
+        "artist": "Lights Up (feat Channel Tres)",
+        "title": "clean-Flight Facilities-Lights Up"
+      },
+      {
+        "artist": "Fancy Dance-John Barry-The John Barry Collection",
+        "title": "Vol"
+      },
+      {
+        "artist": "The Love Cats",
+        "title": "Extended Version-The Cure-Love Cats"
+      }
+    ],
+    "radioparadise": [
+      {
+        "artist": "mou",
+        "title": "my love"
+      },
+      {
+        "artist": "Grandbrothers",
+        "title": "Fable"
+      },
+      {
+        "artist": "Skott",
+        "title": "Made of Stars"
+      },
+      {
+        "artist": "John Coltrane",
+        "title": "Theme For Ernie"
+      },
+      {
+        "artist": "Fleetwood Mac",
+        "title": "Oh Well"
+      },
+      {
+        "artist": "Widespread Panic",
+        "title": "Ain't Life Grand"
+      },
+      {
+        "artist": "The Smile",
+        "title": "Don't Get Me Started"
+      },
+      {
+        "artist": "Rosalía",
+        "title": "La Yugular"
+      },
+      {
+        "artist": "Ray LaMontagne",
+        "title": "Homecoming"
+      },
+      {
+        "artist": "Beck",
+        "title": "I Only Have Eyes For You"
+      },
+      {
+        "artist": "Donny Hathaway",
+        "title": "I Love You More Than You'll Ever Know"
+      },
+      {
+        "artist": "Eric Hilton",
+        "title": "The Dharma Lovers"
+      },
+      {
+        "artist": "Fatboy",
+        "title": "The Wolf Is At The Door"
+      },
+      {
+        "artist": "Willie Nelson",
+        "title": "Sitting In Limbo"
+      },
+      {
+        "artist": "Future Islands",
+        "title": "Sail"
+      },
+      {
+        "artist": "Tim Buckley",
+        "title": "Buzzin Fly"
+      },
+      {
+        "artist": "Kurt Vile",
+        "title": "Zoom 97"
+      },
+      {
+        "artist": "Eddie Vedder & Nusrat Fateh Ali Khan",
+        "title": "The Long Road"
+      },
+      {
+        "artist": "Wolf Alice",
+        "title": "Midnight Song"
+      },
+      {
+        "artist": "Four Tet",
+        "title": "Parks"
+      },
+      {
+        "artist": "Love and Rockets",
+        "title": "Seventh Dream Of Teenage Heaven"
+      },
+      {
+        "artist": "Pink Floyd",
+        "title": "Comfortably Numb"
+      },
+      {
+        "artist": "Puscifer",
+        "title": "ImpetuoUs"
+      },
+      {
+        "artist": "The Beatles",
+        "title": "Because"
+      },
+      {
+        "artist": "Aukai",
+        "title": "Lumi"
+      },
+      {
+        "artist": "Adrian Quesada",
+        "title": "Primos (w/ Hermanos Gutiérrez)"
+      },
+      {
+        "artist": "Chris Stapleton",
+        "title": "The Fire"
+      },
+      {
+        "artist": "Integra Pink",
+        "title": "Spiderman Piñata"
+      },
+      {
+        "artist": "Robert Plant & Alison Krauss",
+        "title": "When The Levee Breaks"
+      },
+      {
+        "artist": "Towa Bird",
+        "title": "Dog"
+      },
+      {
+        "artist": "Bob Moses",
+        "title": "Tearing Me Up"
+      },
+      {
+        "artist": "Chris Isaak",
+        "title": "Round 'n' Round"
+      },
+      {
+        "artist": "Peter Himmelman",
+        "title": "I Feel Young Today"
+      },
+      {
+        "artist": "RAYE",
+        "title": "Click Clack Symphony. (feat. Hans Zimmer)"
+      },
+      {
+        "artist": "D.L. Byron",
+        "title": "Listen To the Heartbeat"
+      },
+      {
+        "artist": "AC/DC",
+        "title": "You Shook Me All Night Long"
+      },
+      {
+        "artist": "Kula Shaker",
+        "title": "Lucky Number"
+      },
+      {
+        "artist": "The Cure",
+        "title": "The Hanging Garden"
+      },
+      {
+        "artist": "Rachel Bobbitt",
+        "title": "Don't Cry"
+      },
+      {
+        "artist": "First Aid Kit",
+        "title": "When I Grow Up"
+      },
+      {
+        "artist": "Peter Frampton",
+        "title": "Buried Treasure (feat. Benmont Tench)"
+      },
+      {
+        "artist": "Mountain",
+        "title": "Nantucket Sleighride"
+      },
+      {
+        "artist": "GoGo Penguin",
+        "title": "Mount Analogue"
+      },
+      {
+        "artist": "Nick Cave & The Bad Seeds",
+        "title": "Dig, Lazarus, Dig!"
+      },
+      {
+        "artist": "Robert Plant",
+        "title": "Everybody's Song"
+      },
+      {
+        "artist": "The Clash",
+        "title": "Clampdown"
+      },
+      {
+        "artist": "Pixies",
+        "title": "Hypnotised"
+      },
+      {
+        "artist": "The Young Gods",
+        "title": "Gasoline Man"
+      },
+      {
+        "artist": "David Bowie",
+        "title": "Ziggy Stardust (live)"
+      },
+      {
+        "artist": "Cream",
+        "title": "Strange Brew"
+      },
+      {
+        "artist": "Unified Theory",
+        "title": "Not Dead"
+      },
+      {
+        "artist": "Eels",
+        "title": "Trouble With Dreams"
+      },
+      {
+        "artist": "Kerala Dust",
+        "title": "How The Light Gets In"
+      },
+      {
+        "artist": "Wet Leg",
+        "title": "liquidize"
+      },
+      {
+        "artist": "R.E.M.",
+        "title": "Orange Crush"
+      },
+      {
+        "artist": "Father John Misty",
+        "title": "She Cleans Up"
+      },
+      {
+        "artist": "Jack White",
+        "title": "G.O.D. And The Broken Ribs"
+      },
+      {
+        "artist": "Red Hot Chili Peppers",
+        "title": "Tear"
+      },
+      {
+        "artist": "Morcheeba",
+        "title": "We Live and Die"
+      },
+      {
+        "artist": "Funkadelic",
+        "title": "I Wanna Know If It's Good To You?"
+      },
+      {
+        "artist": "LP Giobbi",
+        "title": "Spirit Higher (w/ Emjie)"
+      },
+      {
+        "artist": "Purple Disco Machine",
+        "title": "Honey Boy (feat. Nile Rodgers & Shenseea)"
+      },
+      {
+        "artist": "U2",
+        "title": "Bad (Live)"
+      },
+      {
+        "artist": "Tebey",
+        "title": "Blinding Lights"
+      },
+      {
+        "artist": "Gregory Alan Isakov",
+        "title": "The Fall"
+      },
+      {
+        "artist": "Jeff Tweedy",
+        "title": "Out in the Dark"
+      },
+      {
+        "artist": "Modest Mouse",
+        "title": "Rotten Fruit (feat. pkpkpkpk)"
+      },
+      {
+        "artist": "New Order",
+        "title": "Age Of Consent"
+      },
+      {
+        "artist": "Robyn Hitchcock",
+        "title": "Balloon Man"
+      },
+      {
+        "artist": "The Zookeepers",
+        "title": "Beautiful World"
+      },
+      {
+        "artist": "Dora Jar",
+        "title": "The Explorer"
+      },
+      {
+        "artist": "The Decemberists",
+        "title": "Down By The Water"
+      },
+      {
+        "artist": "Temple of the Dog",
+        "title": "Hunger Strike"
+      },
+      {
+        "artist": "Gretel",
+        "title": "Maybelline"
+      },
+      {
+        "artist": "Thievery Corporation",
+        "title": "The Supreme Illusion (Feat Gunjan)"
+      },
+      {
+        "artist": "Charlie Parker",
+        "title": "Bloomdido"
+      },
+      {
+        "artist": "Sofi Tukker",
+        "title": "Jacaré"
+      },
+      {
+        "artist": "Shakey Graves",
+        "title": "Coupe Deville"
+      },
+      {
+        "artist": "Tom Waits",
+        "title": "Long Way Home"
+      },
+      {
+        "artist": "Laufey",
+        "title": "Madwoman"
       }
     ]
   }
