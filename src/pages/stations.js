@@ -18,7 +18,8 @@ export function renderStations(container, onGenerate) {
   // load persisted selection + variant
   try {
     const saved = JSON.parse(localStorage.getItem(SELECTED_KEY) || '[]');
-    state.selected = new Set(saved);
+    const known = new Set(STATIONS.map(s => s.id));
+    state.selected = new Set(saved.filter(id => known.has(id)));
   } catch { state.selected = new Set(); }
   state.variant = localStorage.getItem(VARIANT_KEY) || 'grid';
   state.search = '';
@@ -33,7 +34,7 @@ export function renderStations(container, onGenerate) {
 
       <div class="stations__search">
         <span class="material-symbols-outlined">search</span>
-        <input id="stations-search" type="text" placeholder="Search city, name, genre…" autocomplete="off" />
+        <input id="stations-search" type="search" aria-label="Search stations" placeholder="Search city, name, genre…" autocomplete="off" />
         <span class="mono" id="stations-picked">${state.selected.size} picked</span>
       </div>
 
@@ -84,8 +85,6 @@ export function renderStations(container, onGenerate) {
     else state.selected.add(id);
     persistSelected();
     refreshPickedChrome();
-    pickEl.classList.toggle(pickEl.matches('.station-card') ? 'station-card--picked' : 'station-row--picked');
-    const check = pickEl.querySelector('.material-symbols-outlined.check');
     // re-render variant to update inner bits cleanly
     document.getElementById('stations-body').innerHTML = renderVariant();
   });
@@ -139,7 +138,7 @@ function renderGrid(list) {
 function renderCard(st) {
   const picked = state.selected.has(st.id);
   return `
-    <button class="station-card ${picked ? 'station-card--picked' : ''}" data-station="${st.id}">
+    <button class="station-card ${picked ? 'station-card--picked' : ''}" data-station="${st.id}" aria-pressed="${picked}">
       <div class="station-card__top">
         <span class="station-card__dot"></span>
         <span class="station-card__meta">LIVE · ${escapeHtml(st.freq)}</span>
@@ -174,7 +173,7 @@ function renderList(list) {
 function renderRow(st) {
   const picked = state.selected.has(st.id);
   return `
-    <button class="station-row ${picked ? 'station-row--picked' : ''}" data-station="${st.id}">
+    <button class="station-row ${picked ? 'station-row--picked' : ''}" data-station="${st.id}" aria-pressed="${picked}">
       <div class="station-row__bar"></div>
       <div class="station-row__main">
         <div class="station-row__name">${escapeHtml(st.name)}</div>

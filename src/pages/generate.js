@@ -37,17 +37,18 @@ export function runGenerate(selectedIds, onDone, onCancel) {
   `;
 
   const fills = root.querySelector('#gen-fills');
+  const fillTimers = [];
   const stations = selectedIds.map(id => findStation(id)).filter(Boolean);
   stations.slice(0, 6).forEach((st, i) => {
     const row = document.createElement('div');
     row.className = 'fill-row';
     row.innerHTML = `
-      <span class="fill-row__label">${st.cc} ${st.country}</span>
+      <span class="fill-row__label">${st.cc} ${st.name}</span>
       <div class="fill-row__track"><div class="fill-row__bar" data-bar></div></div>
       <span class="fill-row__pct" data-pct>0%</span>
     `;
     fills.appendChild(row);
-    animateFill(row, i * 80);
+    animateFill(row, i * 80, fillTimers);
   });
   if (stations.length > 6) {
     const more = document.createElement('div');
@@ -73,30 +74,45 @@ export function runGenerate(selectedIds, onDone, onCancel) {
     if (countEl) countEl.textContent = String(displayed).padStart(2, '0');
   }, COUNT_STEP_MS);
 
-  buildPromise.then(tracks => { target = tracks.length; });
+  buildPromise.then(tracks => {
+    target = tracks.length;
+    root.querySelector('.generate__count-total').textContent = ` / ${target}`;
+    if (displayed > target) {
+      displayed = target;
+      if (countEl) countEl.textContent = String(displayed).padStart(2, '0');
+    }
+    if (!target) {
+      const status = root.querySelector('#gen-status');
+      if (status) status.textContent = 'These stations have no tracks right now. Try again later or pick another station.';
+    }
+  });
 
+  let cancelled = false;
   const minTime = new Promise(r => setTimeout(r, TARGET_MS));
   Promise.all([minTime, buildPromise]).then(([, tracks]) => {
+    if (cancelled) return;          // user hit ✕ — don't navigate anyway
     cleanup();
     if (onDone) onDone(tracks);
   });
 
   root.querySelector('[data-action="cancel"]').addEventListener('click', () => {
+    cancelled = true;
     cleanup();
     if (onCancel) onCancel();
   });
 
   function cleanup() {
     clearInterval(counter);
+    fillTimers.forEach(clearInterval);
     root.remove();
   }
 }
 
-function animateFill(rowEl, delayMs) {
+function animateFill(rowEl, delayMs, timers) {
   const bar = rowEl.querySelector('[data-bar]');
   const pct = rowEl.querySelector('[data-pct]');
   let fill = 0;
-  setTimeout(() => {
+  const t = setTimeout(() => {
     const iv = setInterval(() => {
       fill += 0.18 + Math.random() * 0.12;
       if (fill >= 1) {
@@ -109,5 +125,7 @@ function animateFill(rowEl, delayMs) {
       }
       bar.style.width = `${fill * 100}%`;
     }, 60);
+    timers.push(iv);
   }, delayMs);
+  timers.push(t);
 }

@@ -47,10 +47,28 @@ export function addFavorite(track) {
       coverArt: track.coverArt || null,
       previewUrl: track.previewUrl || null,
       duration: track.duration || null,
-      genre: track.genre || 'rock',
+      station: track.station || '',
       deezerLink: track.deezerLink || null,
       addedAt: Date.now(),
     });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+    notify();
+  }
+}
+
+/**
+ * Patch an existing favorite with late-arriving data (e.g. cover art that
+ * was still loading when the user tapped Like). No-op if not a favorite.
+ */
+export function updateFavorite(track) {
+  const favorites = getFavorites();
+  const f = favorites.find(x => x.id === track.id);
+  if (!f) return;
+  let changed = false;
+  for (const k of ['coverArt', 'previewUrl', 'album', 'duration']) {
+    if (!f[k] && track[k]) { f[k] = track[k]; changed = true; }
+  }
+  if (changed) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
     notify();
   }

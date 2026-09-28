@@ -3,12 +3,16 @@
  *
  * Tracks come back from buildMosaic() with just artist+title+stationId;
  * cover art and the 30-second preview URL are fetched on demand from
- * Deezer the moment a slide enters view, with the next two slides
+ * iTunes the moment a slide enters view, with the next slides
  * pre-fetched in parallel so swipes feel instant.
+ *
+ * Tap the cover to play / pause. If the browser blocks autoplay (e.g. the
+ * app was opened straight onto the feed, without a Generate tap), the
+ * slide shows a play button instead of an error.
  */
 import { buildMosaic, enrichTrack } from '../services/dataService.js';
-import { isFavorite, toggleFavorite, getFavorites } from '../services/favoritesService.js';
-import { playPreview, stopPreview, onAudio } from '../components/audioPlayer.js';
+import { isFavorite, toggleFavorite, updateFavorite } from '../services/favoritesService.js';
+import { playPreview, stopPreview, togglePreview, onAudio } from '../components/audioPlayer.js';
 import { findStation } from '../data/stations.js';
 
 const PREFETCH_AHEAD = 3;
@@ -18,10 +22,25 @@ let currentIndex = 0;
 let progressTimer = null;
 let audioUnsub = null;
 let scrollEl = null;
+let observer = null;
 
 export function clearFeed() {
   tracks = [];
   currentIndex = 0;
+}
+
+/** Hand over a freshly built mix (from the Generate overlay) so we don't rebuild it. */
+export function setFeedTracks(list) {
+  tracks = Array.isArray(list) ? list : [];
+  currentIndex = 0;
+}
+
+/** Tear down timers/observers/listeners when navigating away from the feed. */
+export function leaveFeed() {
+  if (progressTimer) { clearInterval(progressTimer); progressTimer = null; }
+  if (observer) { observer.disconnect(); observer = null; }
+  if (audioUnsub) { audioUnsub(); audioUnsub = null; }
+  scrollEl = null;
 }
 
 export async function renderFeed(container) {
@@ -38,11 +57,16 @@ export async function renderFeed(container) {
     </div>
   `;
 
-  if (audioUnsub) audioUnsub();
+  leaveFeed();
   audioUnsub = onAudio({
-    onError: ({ message, code }) => {
-      const text = message || (code ? `Audio code ${code}` : 'Audio failed');
-      toast(text);
+    onPlay:  () => setPlayState(true),
+    onPause: () => setPlayState(false),
+    onEnd:   () => setPlayState(false),
+    onError: ({ name, code }) => {
+      setPlayState(false);
+      // Autoplay blocked → the play button on the cover is the fix; no scary toast.
+      if (name === 'NotAllowedError') return;
+      toast(code ? 'This preview could not be played' : 'Playback failed, tap the cover to retry');
     },
   });
 
@@ -69,7 +93,7 @@ export async function renderFeed(container) {
   scrollEl = container.querySelector('.feed__scroll');
   scrollEl.innerHTML = tracks.map((t, i) => renderSlide(t, i)).join('');
 
-  const observer = new IntersectionObserver((entries) => {
+  observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting && e.intersectionRatio > 0.6) {
         const idx = parseInt(e.target.dataset.index, 10);
@@ -83,6 +107,7 @@ export async function renderFeed(container) {
 
   scrollEl.querySelectorAll('.feed-slide').forEach(s => observer.observe(s));
 
+  if (currentIndex >= tracks.length) currentIndex = 0;
   if (currentIndex > 0) {
     const target = scrollEl.querySelector(`.feed-slide[data-index="${currentIndex}"]`);
     if (target) target.scrollIntoView({ behavior: 'instant' });
@@ -110,9 +135,9 @@ async function activateSlide(idx) {
   if (t?.previewUrl) {
     playPreview(t.previewUrl, t.id);
   } else {
-    // No preview available — keep audio paused, surface a quiet hint.
+    // No preview available — keep audio paused, mark the slide.
     stopPreview();
-    if (t) toast(`No preview: ${t.title}`);
+    slideEl?.classList.add('feed-slide--no-preview');
   }
 
   // Pre-fetch ahead so the next swipes are instant.
@@ -123,10 +148,12 @@ async function ensureEnriched(idx) {
   if (idx < 0 || idx >= tracks.length) return null;
   const t = tracks[idx];
   if (!t || t._enriched) return t;
-  const enriched = await enrichTrack(t);
-  enriched._enriched = true;
+  const enriched = { ...(await enrichTrack(t)), _enriched: true };
+  // The feed may have been regenerated while we were waiting.
+  if (tracks[idx]?.id !== t.id) return enriched;
   tracks[idx] = enriched;
   applyEnrichmentToDom(idx, enriched);
+  updateFavorite(enriched);   // liked before the cover arrived? patch it in
   return enriched;
 }
 
@@ -184,6 +211,10 @@ function renderSlide(track, i) {
               <span class="material-symbols-outlined" style="font-size:48px">music_note</span>
             </div>
           `}
+          <button class="feed-slide__play" data-action="toggle-play" aria-label="Play or pause preview">
+            <span class="material-symbols-outlined">play_arrow</span>
+          </button>
+          <div class="feed-slide__nopreview mono mono--light">No preview</div>
           <button class="feed-slide__handoff" data-action="handoff" aria-label="Open in Spotify">
             <span class="material-symbols-outlined" style="font-size:18px">open_in_new</span>
           </button>
@@ -261,38 +292,49 @@ function handleClick(e) {
 
   e.stopPropagation();
   const action = btn.dataset.action;
-  if (action === 'like') {
-    const nowFav = toggleFavorite(track);
+  if (action === 'toggle-play') {
+    const idx = parseInt(slide.dataset.index, 10);
+    if (!track.previewUrl) return;
+    if (idx !== currentIndex) return;
+    const audio = document.getElementById('audio-player');
+    // Nothing (or another track) loaded yet → start this one; else toggle.
+    if (!audio?.src || audio.src !== track.previewUrl) playPreview(track.previewUrl, track.id);
+    else togglePreview();
+  } else if (action === 'like') {
+    const nowFav = toggleFavorite(track);   // the global badge updates via onFavoritesChange
     btn.classList.toggle('feed-action--active', nowFav);
     const icon = btn.querySelector('.material-symbols-outlined');
     if (icon) icon.style.fontVariationSettings = `'FILL' ${nowFav ? 1 : 0}`;
     const label = btn.querySelector('span:last-child');
     if (label) label.textContent = nowFav ? 'LIKED' : 'LIKE';
-    updateLikedBadge();
   } else if (action === 'share') {
+    const text = `${track.title} by ${track.artist} (heard on RadioFlow)`;
+    const url = track.spotifyLink;
     if (navigator.share) {
-      navigator.share({
-        title: `${track.title} — ${track.artist}`,
-        text: `Heard on RadioFlow: "${track.title}" by ${track.artist}`,
-      }).catch(() => {});
-    } else {
-      toast(`Share: ${track.title}`);
+      navigator.share({ title: `${track.title} — ${track.artist}`, text, url }).catch(() => {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(`${text}\n${url}`)
+        .then(() => toast('Link copied'))
+        .catch(() => toast('Could not copy the link'));
     }
   } else if (action === 'handoff') {
     const url = track.spotifyLink || `https://open.spotify.com/search/${encodeURIComponent(`${track.artist} ${track.title}`)}`;
-    window.open(url, '_blank');
-    toast(`→ OPENING SPOTIFY: ${track.title}`);
+    window.open(url, '_blank', 'noopener');
   } else if (action === 'open-stations') {
     window.location.hash = '/stations';
   }
 }
 
-function updateLikedBadge() {
-  const badge = document.getElementById('nav-liked-badge');
-  if (!badge) return;
-  const n = getFavorites().length;
-  if (n > 0) { badge.textContent = String(n); badge.hidden = false; }
-  else { badge.hidden = true; }
+/** Reflect play / pause on the active slide's cover button. */
+function setPlayState(playing) {
+  const slideEl = scrollEl?.querySelector(`.feed-slide[data-index="${currentIndex}"]`);
+  if (!slideEl) return;
+  scrollEl.querySelectorAll('.feed-slide--playing').forEach(el => {
+    if (el !== slideEl) el.classList.remove('feed-slide--playing');
+  });
+  slideEl.classList.toggle('feed-slide--playing', playing);
+  const icon = slideEl.querySelector('.feed-slide__play .material-symbols-outlined');
+  if (icon) icon.textContent = playing ? 'pause' : 'play_arrow';
 }
 
 function mmss(seconds) {
@@ -300,12 +342,19 @@ function mmss(seconds) {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
 
+let toastEl = null;
+let toastTimer = null;
 function toast(text) {
-  const el = document.createElement('div');
-  el.className = 'toast';
-  el.textContent = text;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 1800);
+  // Reuse a single toast so fast swiping doesn't stack them up.
+  if (!toastEl) {
+    toastEl = document.createElement('div');
+    toastEl.className = 'toast';
+    toastEl.setAttribute('role', 'status');
+  }
+  toastEl.textContent = text;
+  if (!toastEl.isConnected) document.body.appendChild(toastEl);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.remove(), 1800);
 }
 
 function escapeHtml(str) {

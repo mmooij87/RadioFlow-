@@ -3,18 +3,22 @@
  */
 import { route, navigate, initRouter } from './router.js';
 import { renderStations } from './pages/stations.js';
-import { renderFeed, clearFeed } from './pages/mosaic.js';
+import { renderFeed, clearFeed, setFeedTracks, leaveFeed } from './pages/mosaic.js';
 import { renderFavorites } from './pages/favorites.js';
 import { runGenerate } from './pages/generate.js';
 import { stopPreview } from './components/audioPlayer.js';
 import { getFavorites, onFavoritesChange } from './services/favoritesService.js';
 
 route('/stations', (container) => {
+  leaveFeed();
   stopPreview();
   renderStations(container, (selectedStations) => {
     localStorage.setItem('radioflow_stations', JSON.stringify(selectedStations));
     clearFeed();
-    runGenerate(selectedStations, () => {
+    runGenerate(selectedStations, (tracks) => {
+      // Reuse the mix the overlay just built instead of building a second,
+      // differently-shuffled one on the feed page.
+      setFeedTracks(tracks);
       navigate('/feed');
     }, () => {
       // cancel: stay on stations
@@ -29,11 +33,13 @@ route('/feed', async (container) => {
 // backward-compat aliases
 route('/mosaic', async (container) => { await renderFeed(container); });
 route('/favorites', (container) => {
+  leaveFeed();
   stopPreview();
   renderFavorites(container);
 });
 
 route('/liked', (container) => {
+  leaveFeed();
   stopPreview();
   renderFavorites(container);
 });

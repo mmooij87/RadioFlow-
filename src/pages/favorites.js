@@ -46,8 +46,8 @@ export function renderFavorites(container) {
             EXPORT
           </button>
           <button class="tool-pill tool-pill--accent" data-action="handoff-all">
-            <span class="material-symbols-outlined">open_in_new</span>
-            SEND · SPOTIFY
+            <span class="material-symbols-outlined">content_copy</span>
+            COPY LIST
           </button>
           <button class="tool-pill tool-pill--danger" data-action="clear">
             <span class="material-symbols-outlined">delete_sweep</span>
@@ -68,9 +68,17 @@ export function renderFavorites(container) {
       if (!btn) return;
       const action = btn.dataset.action;
       if (action === 'handoff-all') {
-        const ids = getFavorites().map(f => `${f.artist} ${f.title}`).join(' ');
-        const q = encodeURIComponent(ids);
-        window.open(`https://open.spotify.com/search/${q}`, '_blank');
+        // Spotify has no URL for "search many songs at once", so copy a clean
+        // "Artist - Title" list that can be pasted into a playlist importer
+        // (e.g. Soundiiz / TuneMyMusic) or a note.
+        const list = getFavorites().map(f => `${f.artist} - ${f.title}`).join('\n');
+        const label = btn.lastChild;
+        const done = (msg) => { label.textContent = ` ${msg}`; setTimeout(() => { label.textContent = ' COPY LIST'; }, 1600); };
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(list).then(() => done('COPIED')).catch(() => done('COPY FAILED'));
+        } else {
+          done('COPY FAILED');
+        }
       } else if (action === 'export') {
         exportM3U(getFavorites());
       } else if (action === 'clear') {
@@ -89,7 +97,7 @@ export function renderFavorites(container) {
       if (track) {
         // click = open in Spotify (quickest next step once liked)
         const q = encodeURIComponent(`${track.artist} ${track.title}`);
-        window.open(`https://open.spotify.com/search/${q}`, '_blank');
+        window.open(`https://open.spotify.com/search/${q}`, '_blank', 'noopener');
       }
     });
   }
@@ -103,7 +111,7 @@ export function renderFavorites(container) {
 
 function renderTile(t) {
   const bg = t.coverArt
-    ? `style="background-image:url('${escapeAttr(t.coverArt)}')"`
+    ? `style="background-image:url('${escapeAttr(t.coverArt).replace(/'/g, '%27')}')"`
     : '';
   return `
     <button class="liked-tile" data-track-id="${escapeAttr(t.id)}">
@@ -126,7 +134,7 @@ function exportM3U(favs) {
   const lines = ['#EXTM3U'];
   favs.forEach(t => {
     lines.push(`#EXTINF:${t.duration || -1},${t.artist} - ${t.title}`);
-    lines.push(t.previewUrl || t.deezerLink || '');
+    lines.push(t.previewUrl || `https://open.spotify.com/search/${encodeURIComponent(`${t.artist} ${t.title}`)}`);
   });
   const blob = new Blob([lines.join('\n')], { type: 'audio/x-mpegurl' });
   const url = URL.createObjectURL(blob);

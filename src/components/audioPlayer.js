@@ -46,6 +46,7 @@ function getAudio() {
         listeners.end.forEach(fn => fn(id));
       });
       audioEl.addEventListener('error', () => {
+        if (!currentSrc) return;   // fired by stopPreview()/primeAudio() clearing src
         const code = audioEl.error?.code;
         const label = MEDIA_ERR[code] || `code ${code}`;
         const message = `${label} · ${srcLabel(currentSrc)}`;
@@ -93,10 +94,11 @@ export async function playPreview(previewUrl, trackId) {
   const audio = getAudio();
   if (!audio || !previewUrl) return false;
 
-  // toggle: if same track is currently playing, pause instead
-  if (currentTrackId === trackId && !audio.paused) {
-    audio.pause();
-    return false;
+  // Same track already loaded: just (re)start it, never silently pause.
+  if (currentTrackId === trackId && currentSrc === previewUrl) {
+    if (!audio.paused) return true;
+    try { await audio.play(); return true; }
+    catch (err) { reportPlayError(err, trackId, previewUrl); return false; }
   }
 
   audio.pause();
@@ -112,11 +114,26 @@ export async function playPreview(previewUrl, trackId) {
     primed = true;
     return true;
   } catch (err) {
-    const message = `${err?.name || 'Error'}: ${err?.message || err} · ${srcLabel(previewUrl)}`;
-    console.warn('Audio playback failed:', message);
-    listeners.error.forEach(fn => fn({ id: trackId, message }));
+    reportPlayError(err, trackId, previewUrl);
     return false;
   }
+}
+
+function reportPlayError(err, trackId, url) {
+  // AbortError = a newer play() replaced this one (fast swiping). Not an error.
+  if (err?.name === 'AbortError') return;
+  const message = `${err?.name || 'Error'}: ${err?.message || err} · ${srcLabel(url)}`;
+  console.warn('Audio playback failed:', message);
+  listeners.error.forEach(fn => fn({ id: trackId, message, name: err?.name }));
+}
+
+/** Pause if playing, resume if paused. Returns the new playing state. */
+export async function togglePreview() {
+  const audio = getAudio();
+  if (!audio || !currentSrc) return false;
+  if (!audio.paused) { audio.pause(); return false; }
+  try { await audio.play(); primed = true; return true; }
+  catch (err) { reportPlayError(err, currentTrackId, currentSrc); return false; }
 }
 
 export function pausePreview() {
