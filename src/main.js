@@ -6,6 +6,7 @@ import { buildMix, knownCounts, stationTrackCounts } from './services/dataServic
 import { getFavorites, onFavoritesChange } from './services/favoritesService.js';
 import {
   getMyStations, getSelected, setStationOn, onStoreChange, findMyStation,
+  getSolo, soloStation, restoreFromSolo,
 } from './services/stationStore.js';
 import { primeAudio, playPreview, stopPreview } from './components/audioPlayer.js';
 import { createDial } from './ui/dial.js';
@@ -39,12 +40,36 @@ const dial = createDial(document.getElementById('dial'), {
     setStationOn(id, on);
     const st = findMyStation(id);
     if (on && knownCounts()[id] === 0) toast(`${st?.name || 'This station'} hasn't shared a song list today`);
+    else if (!hasLearned(SOLO_TIP)) {
+      learned(SOLO_TIP);
+      setTimeout(() => toast('Tip: press and hold a station to hear only that one', 4200), 600);
+    }
   },
   onAdd: () => settings.openSearch(),
+  onSolo(id) {
+    primeAudio();
+    const st = findMyStation(id);
+    if (knownCounts()[id] === 0) { toast(`${st?.name || 'This station'} hasn't shared a song list today`); return; }
+    learned(SOLO_TIP);
+    jumpToStation = id;             // leave the current song if it's from elsewhere
+    soloStation(id);
+  },
+  onUnsolo() {
+    primeAudio();
+    restoreFromSolo();
+    toast('All your stations are back on');
+  },
 });
+
+// One-time tip, since press-and-hold can't be seen.
+const SOLO_TIP = 'rf_learned_solo';
+const learned = (k) => { try { localStorage.setItem(k, '1'); } catch {} };
+const hasLearned = (k) => { try { return !!localStorage.getItem(k); } catch { return true; } };
+let jumpToStation = null;
 
 function syncDial() {
   dial.setStations(getMyStations(), getSelected());
+  dial.setSolo(getSolo());
   dial.setCounts(knownCounts());
 }
 
@@ -52,7 +77,7 @@ function syncDial() {
 let rebuildTimer = 0;
 onStoreChange((what) => {
   if (what === 'openIn') { feed.refreshLinks(); return; }
-  if (what === 'stations') syncDial(); else dial.setSelected(getSelected());
+  if (what === 'stations') syncDial(); else { dial.setSelected(getSelected()); dial.setSolo(getSolo()); }
   clearTimeout(rebuildTimer);
   rebuildTimer = setTimeout(() => rebuild({ fresh: !feed.hasTracks() }), 150);
 });
@@ -71,7 +96,10 @@ async function rebuild({ fresh }) {
     else feed.renderEmpty('no-data');
   } else {
     feed.replaceUpcoming(mix);
+    // Soloing a station: don't make the listener sit out a song from elsewhere.
+    if (jumpToStation && feed.current()?.stationId !== jumpToStation && mix.length) feed.next();
   }
+  jumpToStation = null;
 }
 
 // ── Sheets ──────────────────────────────────────────────────

@@ -11,6 +11,7 @@ import { STATIONS, flagOf } from '../data/stations.js';
 const LIST_KEY = 'rf_my_stations_v1';
 const SEL_KEY  = 'radioflow_stations';      // selected ids (kept from v1 for continuity)
 const OPEN_KEY = 'rf_open_in';
+const SOLO_KEY = 'rf_solo_prev';            // selection to restore after a solo
 
 export const SERVICES = {
   spotify: { label: 'Spotify' },
@@ -62,13 +63,14 @@ export function addStation(st) {
 }
 
 export function removeStation(id) {
+  if (getSolo() === id) restoreFromSolo(false);
   saveList(getMyStations().filter(s => s.id !== id));
   const sel = getSelected(); sel.delete(id); saveSelected(sel);
   emit('stations');
 }
 
 export function resetStations() {
-  try { localStorage.removeItem(LIST_KEY); localStorage.removeItem(SEL_KEY); } catch {}
+  try { localStorage.removeItem(LIST_KEY); localStorage.removeItem(SEL_KEY); localStorage.removeItem(SOLO_KEY); } catch {}
   emit('stations');
 }
 
@@ -82,11 +84,39 @@ export function getSelected() {
 }
 function saveSelected(set) { write(SEL_KEY, [...set]); }
 export function setStationOn(id, on) {
+  clearSolo();                                // touching the dial by hand ends a solo
   const sel = getSelected();
   if (on) sel.add(id); else sel.delete(id);
   saveSelected(sel);
   emit('selection');
 }
+
+// ── Solo: hear one station only ────────────────────────────
+/** The soloed station id, or null. */
+export function getSolo() {
+  const prev = read(SOLO_KEY, null);
+  if (!Array.isArray(prev)) return null;
+  const sel = getSelected();
+  return sel.size === 1 ? [...sel][0] : null;
+}
+
+export function soloStation(id) {
+  if (!getSolo()) write(SOLO_KEY, [...getSelected()]);   // remember what was on
+  saveSelected(new Set([id]));
+  emit('selection');
+}
+
+/** Put back the stations that were on before the solo. */
+export function restoreFromSolo(notify = true) {
+  const prev = read(SOLO_KEY, null);
+  clearSolo();
+  const ids = new Set(getMyStations().map(s => s.id));
+  const back = Array.isArray(prev) ? prev.filter(id => ids.has(id)) : [...ids];
+  saveSelected(new Set(back.length ? back : ids));
+  if (notify) emit('selection');
+}
+
+function clearSolo() { try { localStorage.removeItem(SOLO_KEY); } catch {} }
 
 // ── Where songs open ───────────────────────────────────────
 export function getOpenIn() {

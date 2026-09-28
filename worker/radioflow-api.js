@@ -20,6 +20,7 @@
 const ORB = 'https://onlineradiobox.com';
 const UA = 'Mozilla/5.0 (compatible; RadioFlow/1.0; +https://mmooij87.github.io/RadioFlow-/)';
 const MAX_TRACKS = 80;
+const CACHE_VERSION = '3';   // bump to invalidate everything cached by older versions
 
 export default {
   async fetch(request, env, ctx) {
@@ -27,6 +28,7 @@ export default {
     const url = new URL(request.url);
     try {
       if (url.pathname === '/health') return json({ ok: true });
+      if (url.pathname === '/debug') return json(await debug(url));
       if (url.pathname === '/search') {
         const q = (url.searchParams.get('q') || '').trim().slice(0, 80);
         const c = (url.searchParams.get('c') || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 2);
@@ -57,7 +59,7 @@ async function search(q, c) {
 export function parseSearch(html) {
   // Every result tile starts with a link to /<cc>/<slug>/ and, unlike the
   // "Recommended" sidebar, carries a country filter link (search?c=xx).
-  const anchor = /<a\b[^>]*href="(?:https?:\/\/onlineradiobox\.com)?\/([a-z]{2})\/([a-z0-9_.-]+)\/"[^>]*>([\s\S]*?)<\/a>/gi;
+  const anchor = /<a\b[^>]*href=["'](?:(?:https?:)?\/\/(?:www\.)?onlineradiobox\.com)?\/([a-z]{2})\/([a-z0-9_.-]+)\/?(?:\?[^"']*)?["'][^>]*>([\s\S]*?)<\/a>/gi;
   const hits = [];
   let m;
   while ((m = anchor.exec(html))) hits.push({ cc: m[1], slug: m[2], inner: m[3], start: m.index, end: anchor.lastIndex });
@@ -67,22 +69,25 @@ export function parseSearch(html) {
   for (let i = 0; i < hits.length; i++) {
     const h = hits[i];
     const tail = html.slice(h.end, hits[i + 1]?.start ?? h.end + 3000);
-    const country = /search\?c=([a-z]{2})"[^>]*title="([^"]*)"/i.exec(tail) || /search\?c=([a-z]{2})"/i.exec(tail);
+    // Country link: search?c=xx, with its name in a title attribute
+    // (before or after the href). Result tiles have one; sidebars don't.
+    const cm = /<a\b[^>]*[?&]c=([a-z]{2})(?=["'&])[^>]*>/i.exec(tail);
+    const country = cm && [cm[0], cm[1], /title=["']([^"']*)["']/i.exec(cm[0])?.[1] || ''];
     if (!country) continue;                       // not a result tile
     const id = `${h.cc}/${h.slug}`;
-    if (seen.has(id) || ['genre', 'search'].includes(h.slug)) continue;
+    if (seen.has(id) || ['genre', 'search', 'playlist', 'app'].includes(h.slug)) continue;
     seen.add(id);
 
-    const alt = /\balt="([^"]+)"/i.exec(h.inner)?.[1] || /\btitle="([^"]+)"/i.exec(h.inner)?.[1];
+    const alt = /\balt=["']([^"']+)["']/i.exec(h.inner)?.[1] || /\btitle=["']([^"']+)["']/i.exec(h.inner)?.[1];
     let name = decode(alt || text(h.inner));
     // Tiles often print the name twice (logo alt + caption): keep one.
     const half = name.length / 2;
     if (Number.isInteger(half) && name.slice(0, half).trim() === name.slice(half).trim()) name = name.slice(0, half).trim();
     if (!name) continue;
 
-    const logoSrc = /\b(?:data-src|src)="([^"]*\/img\/l\/[^"]+)"/i.exec(h.inner)?.[1];
-    const genres = [...tail.matchAll(/search\?s=[^"]*"[^>]*>([^<]{1,30})</gi)].map(g => decode(g[1]).trim()).filter(Boolean);
-    const city = /search\?c=[a-z]{2}&(?:amp;)?ct=\d+[^"]*"[^>]*>([^<]+)</i.exec(tail)?.[1];
+    const logoSrc = /\b(?:data-src|src)=["']([^"']*\/img\/l\/[^"']+)["']/i.exec(h.inner)?.[1];
+    const genres = [...tail.matchAll(/(?:[?&]|&amp;)s=[^"']*["'][^>]*>([^<]{1,30})</gi)].map(g => decode(g[1]).trim()).filter(Boolean);
+    const city = /[?&](?:amp;)?ct=\d+[^"']*["'][^>]*>([^<]+)</i.exec(tail)?.[1];
 
     out.push({
       id,
@@ -96,6 +101,35 @@ export function parseSearch(html) {
     if (out.length >= 30) break;
   }
   return out;
+}
+
+// ─── Diagnostics: /debug?q=jazz  or  /debug?id=de/fluxfm1006 ───
+async function debug(url) {
+  const id = url.searchParams.get('id');
+  const q = url.searchParams.get('q') || 'jazz';
+  const target = id ? `${ORB}/${id}/playlist/?lang=en` : `${ORB}/search?${new URLSearchParams({ lang: 'en', q })}`;
+  const res = await fetch(target, { headers: { 'User-Agent': UA, 'Accept': 'text/html', 'Accept-Language': 'en-US,en;q=0.8' } });
+  const html = await res.text();
+  const around = (needle, n = 700) => {
+    const i = html.indexOf(needle);
+    return i < 0 ? null : html.slice(Math.max(0, i - n), i + 300).replace(/\s+/g, ' ');
+  };
+  return {
+    target,
+    status: res.status,
+    finalUrl: res.url,
+    bytes: html.length,
+    title: /<title>([^<]*)/i.exec(html)?.[1] || null,
+    counts: {
+      countryLinks: (html.match(/[?&]c=[a-z]{2}["'&]/gi) || []).length,
+      stationLinks: (html.match(/href=["'][^"']*\/[a-z]{2}\/[a-z0-9_.-]+\/?["']/gi) || []).length,
+      trackLinks: (html.match(/\/track\//g) || []).length,
+      tables: (html.match(/<table/gi) || []).length,
+      rows: (html.match(/<tr\b/gi) || []).length,
+    },
+    parsed: id ? parsePlaylist(html).slice(0, 5) : parseSearch(html).slice(0, 5),
+    sample: id ? around('/track/') || around('<table') : around('c=us') || around('c=') || html.slice(0, 1500).replace(/\s+/g, ' '),
+  };
 }
 
 // ─── Playlist ────────────────────────────────────────────────
@@ -162,12 +196,16 @@ async function get(url) {
 
 async function cached(request, ctx, ttl, produce) {
   const cache = caches.default;
-  const key = new Request(new URL(request.url).toString(), { method: 'GET' });
+  const u = new URL(request.url);
+  u.searchParams.set('_v', CACHE_VERSION);
+  const key = new Request(u.toString(), { method: 'GET' });
   const hit = await cache.match(key);
   if (hit) return hit;
   const data = await produce();
-  const res = json(data, 200, { 'Cache-Control': `public, max-age=${ttl}` });
-  ctx.waitUntil(cache.put(key, res.clone()));
+  // Never keep an empty answer for long: it's usually a hiccup upstream.
+  const keep = Array.isArray(data) && data.length === 0 ? 60 : ttl;
+  const res = json(data, 200, { 'Cache-Control': `public, max-age=${keep}` });
+  if (keep > 60) ctx.waitUntil(cache.put(key, res.clone()));
   return res;
 }
 

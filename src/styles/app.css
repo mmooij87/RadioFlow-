@@ -19,6 +19,7 @@
 
   --top-h:  56px;
   --dial-h: 112px;
+  --dock-extra: 0px;                 /* room for the solo bar when it's up */
   --safe-t: env(safe-area-inset-top, 0px);
   --safe-b: env(safe-area-inset-bottom, 0px);
   --ease:   cubic-bezier(.2, .8, .2, 1);
@@ -92,7 +93,8 @@ a { text-decoration: none; }
   background:
     linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.28) 70%),
     var(--tint, var(--page-tint));
-  padding: calc(var(--top-h) + var(--safe-t) + 8px) 24px calc(var(--dial-h) + var(--safe-b) + 14px);
+  padding: calc(var(--top-h) + var(--safe-t) + 8px) 24px calc(var(--dial-h) + var(--dock-extra) + var(--safe-b) + 14px);
+  transition: padding .3s var(--ease);
   display: grid;
   grid-template-rows: 1fr auto auto auto;
   justify-items: center;
@@ -104,7 +106,7 @@ a { text-decoration: none; }
 
 .art {
   position: relative;
-  width: min(100%, calc(100dvh - var(--top-h) - var(--dial-h) - 250px), 440px);
+  width: min(100%, calc(100dvh - var(--top-h) - var(--dial-h) - var(--dock-extra) - 250px), 440px);
   min-width: 180px;
   aspect-ratio: 1;
   border-radius: 6px;
@@ -352,6 +354,29 @@ a { text-decoration: none; }
 }
 .icon-btn:hover { background: var(--hair); }
 .icon-btn--quiet { color: var(--mute); }
+
+/* ---------- Dial: solo ---------- */
+body.is-solo { --dock-extra: 58px; }
+.dial--solo .dial__st:not(.dial__st--solo) { opacity: .32; }
+.dial__st--solo .dial__name { color: var(--accent); }
+/* Holding a station: it presses in while the hold counts down. */
+.dial__st--holding { transform: scale(.94); transition: transform .45s var(--ease); }
+.dial__solo {
+  position: absolute; left: 50%; bottom: calc(100% + 12px); transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px;
+  width: max-content; max-width: calc(100vw - 32px);
+  padding: 6px 6px 6px 16px; border-radius: 22px;
+  background: var(--text); color: #221D1A;
+  font-size: 15px; font-weight: 700;
+  box-shadow: 0 10px 26px rgba(0,0,0,.3);
+  animation: hint-in .35s var(--ease);
+}
+.dial__solo[hidden] { display: none; }
+.dial__solo-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dial__solo-btn {
+  flex: none; height: 34px; padding: 0 14px; border-radius: 17px;
+  background: #221D1A; color: var(--text); font-size: 14px; font-weight: 700;
+}
 
 /* ---------- Top bar actions ---------- */
 .topbar__actions { display: flex; align-items: center; gap: 8px; }
