@@ -212,43 +212,39 @@ export async function enrichTrack(track) {
 }
 
 /**
- * Build the feed.
+ * Build a mix for the given station ids.
  *
- * For each selected station, take up to PER_STATION (40) random tracks.
- * Round-robin across stations, then final-shuffle. Tracks come back
- * un-enriched — covers and previews are fetched on demand by the feed.
+ * For each station, take up to PER_STATION random tracks (skipping any id
+ * in `exclude`, e.g. tracks already heard this session), round-robin across
+ * stations, then final-shuffle. Tracks come back un-enriched: covers and
+ * previews are fetched on demand by the feed.
  */
-export async function buildMosaic() {
-  let selected = [];
-  try {
-    selected = JSON.parse(localStorage.getItem('radioflow_stations') || '[]');
-  } catch {}
-  if (!selected.length) return [];
-
+export async function buildMix(stationIds, exclude = new Set()) {
+  if (!stationIds?.length) return [];
   const all = await loadPlaylists();
 
-  const queues = selected
+  const queues = stationIds
     .map(id => {
       const station = findStation(id);
-      const tracks = (all.stations?.[id] || []).map(t => ({
-        id:          trackId(id, t.artist, t.title),
-        artist:      t.artist,
-        title:       t.title,
-        album:       '',
-        coverArt:    null,
-        previewUrl:  null,
-        duration:    null,
-        deezerLink:  null,
-        appleLink:   null,
-        spotifyLink: `https://open.spotify.com/search/${encodeURIComponent(`${t.artist} ${t.title}`)}`,
-        stationId:   id,
-        station:     station?.name || 'Radio',
-      }));
+      const tracks = (all.stations?.[id] || [])
+        .map(t => ({
+          id:          trackId(id, t.artist, t.title),
+          artist:      t.artist,
+          title:       t.title,
+          album:       '',
+          coverArt:    null,
+          previewUrl:  null,
+          duration:    null,
+          deezerLink:  null,
+          appleLink:   null,
+          spotifyLink: `https://open.spotify.com/search/${encodeURIComponent(`${t.artist} ${t.title}`)}`,
+          stationId:   id,
+          station:     station?.name || 'Radio',
+        }))
+        .filter(t => !exclude.has(t.id));
       return { id, queue: shuffle(tracks).slice(0, PER_STATION) };
     })
     .filter(s => s.queue.length > 0);
-
-  if (!queues.length) return [];
 
   const picked = [];
   while (queues.some(s => s.queue.length)) {
@@ -256,8 +252,22 @@ export async function buildMosaic() {
       if (s.queue.length) picked.push(s.queue.shift());
     }
   }
-
   return shuffle(picked);
+}
+
+/** Back-compat: build from the stations saved in localStorage. */
+export async function buildMosaic() {
+  let selected = [];
+  try { selected = JSON.parse(localStorage.getItem('radioflow_stations') || '[]'); } catch {}
+  return buildMix(selected);
+}
+
+/** Number of tracks available per station in today's data. */
+export async function stationTrackCounts() {
+  const all = await loadPlaylists();
+  return Object.fromEntries(
+    Object.entries(all.stations || {}).map(([id, arr]) => [id, arr.length])
+  );
 }
 
 export async function feedDiagnostics() {

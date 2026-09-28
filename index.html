@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>RadioFlow · v2</title>
-  <meta name="description" content="RadioFlow — a fast, TikTok-style radio discovery feed. Pick stations worldwide, swipe through last-24h plays, hand off to Spotify." />
-  <meta name="theme-color" content="#0E0E0C" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>RadioFlow</title>
+  <meta name="description" content="Hear what radio stations around the world played in the last 24 hours. Tune in, swipe, save what you love." />
+  <meta name="theme-color" content="#2A2622" />
   <link rel="icon" type="image/svg+xml" href="/icon.svg" />
   <link rel="apple-touch-icon" href="/icon.svg" />
   <link rel="manifest" href="/manifest.webmanifest" />
@@ -15,43 +15,28 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/src/styles/design-system.css" />
-  <link rel="stylesheet" href="/src/styles/pages.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://is1-ssl.mzstatic.com" crossorigin />
 </head>
 <body>
-  <!-- Top App Bar -->
-  <header id="top-bar" class="top-bar">
-    <div class="top-bar__left">
-      <span class="top-bar__brand"><span class="top-bar__accent"></span>RADIOFLOW</span>
-    </div>
-    <div class="top-bar__right">
-      <span class="mono" id="top-bar-meta">v2 · LAST 24H</span>
-    </div>
+  <header class="topbar">
+    <span class="wordmark" aria-label="RadioFlow"><span class="wordmark__dot"></span>RadioFlow</span>
+    <button class="saved-btn" id="saved-btn" aria-label="Saved songs" aria-haspopup="dialog">
+      <span class="saved-btn__icon" data-icon="heart"></span>
+      <span class="saved-btn__count" id="saved-count">0</span>
+    </button>
   </header>
 
-  <!-- Main Content Area (SPA pages render here) -->
-  <main id="app"></main>
+  <main class="feed" id="feed" aria-label="Songs" tabindex="-1"></main>
 
-  <!-- Bottom Navigation -->
-  <nav id="bottom-nav" class="bottom-nav">
-    <a href="#/stations" class="bottom-nav__item" data-page="stations" id="nav-stations">
-      <span class="material-symbols-outlined">radio</span>
-      <span class="bottom-nav__label">Stations</span>
-    </a>
-    <a href="#/feed" class="bottom-nav__item" data-page="feed" id="nav-feed">
-      <span class="material-symbols-outlined">menu</span>
-      <span class="bottom-nav__label">Feed</span>
-    </a>
-    <a href="#/liked" class="bottom-nav__item" data-page="liked" id="nav-liked">
-      <span class="material-symbols-outlined">favorite</span>
-      <span class="bottom-nav__label">Liked</span>
-      <span class="bottom-nav__badge" id="nav-liked-badge" hidden>0</span>
-    </a>
-  </nav>
+  <div class="coach" id="coach" hidden></div>
 
-  <!-- Global Audio Player (hidden) -->
+  <nav class="dial" id="dial" aria-label="Stations"></nav>
+
+  <dialog class="sheet" id="saved-sheet" aria-labelledby="sheet-title"></dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <audio id="audio-player" preload="metadata" playsinline></audio>
 
   <script type="module" src="/src/main.js"></script>
