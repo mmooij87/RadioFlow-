@@ -54,6 +54,7 @@ const clean = (s) => String(s || '').replace(/\s+/g, ' ').trim();
 const JUNK_RE = /\b(promo|jingle|advert\w*|reclame|pinguinklap|station ?id|sweeper|commercial|\[break\])\b/i;
 function isJunk(artist, title) {
   if (!/^[\p{L}\p{N}]/u.test(artist)) return true;          // "* 6am", "@", …
+  if (/^(the )?(news|nieuws|nachrichten|journaal|weather|verkeer)\b/i.test(artist)) return true;
   if (JUNK_RE.test(artist) || JUNK_RE.test(title)) return true;
   if (/^(pinguin|kink|kexp|kcrw|willy|bbc|npo)\b/i.test(artist) && !/\s/.test(artist)) return true;
   return false;
@@ -86,17 +87,29 @@ async function scrapePage(stationId, url) {
   const html = await res.text();
   const root = parse(html);
 
-  let links = [];
+  // Preferred: read every row of the playlist table. Rows are
+  // "[time] [Artist - Title]", and the title is only a link when ORB
+  // knows the track: reading the last cell catches both kinds.
+  let lines = [];
   let usedScope = null;
-  for (const sel of SCOPES) {
-    const found = root.querySelectorAll(sel);
-    if (found.length) { links = found; usedScope = sel; break; }
+  const rows = root.querySelectorAll('table.tablelist-schedule tr');
+  if (rows.length) {
+    usedScope = 'table rows';
+    for (const tr of rows) {
+      const tds = tr.querySelectorAll('td');
+      if (tds.length) lines.push(clean(tds[tds.length - 1].textContent));
+    }
+  }
+  if (!lines.length) {
+    for (const sel of SCOPES) {
+      const found = root.querySelectorAll(sel);
+      if (found.length) { lines = found.map(a => clean(a.textContent)); usedScope = sel; break; }
+    }
   }
 
   const tracks = [];
   const seen = new Set();
-  for (const link of links) {
-    const text = clean(link.textContent);
+  for (const text of lines) {
     const idx = text.indexOf(' - ');
     if (idx < 1) continue;
     const artist = clean(text.slice(0, idx));

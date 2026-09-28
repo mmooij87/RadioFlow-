@@ -5,13 +5,10 @@
 import { icon } from './icons.js';
 import { toast } from './toast.js';
 import { getFavorites, removeFavorite, clearFavorites, onFavoritesChange } from '../services/favoritesService.js';
+import { SERVICES, getOpenIn, songUrl } from '../services/stationStore.js';
 
 export function createSavedSheet(dialog, { onPreview, onClose }) {
   let previewingId = null;
-
-  function spotifyUrl(t) {
-    return `https://open.spotify.com/search/${encodeURIComponent(`${t.artist} ${t.title}`)}`;
-  }
 
   function render() {
     const favs = getFavorites();
@@ -35,8 +32,8 @@ export function createSavedSheet(dialog, { onPreview, onClose }) {
                   <span class="saved-row__artist">${esc(t.artist)}</span>
                 </span>
               </button>
-              <a class="icon-btn" href="${spotifyUrl(t)}" target="_blank" rel="noopener"
-                aria-label="Open ${esc(t.title)} in Spotify">${icon('external', { size: 20 })}</a>
+              <a class="icon-btn" href="${esc(songUrl(t))}" target="_blank" rel="noopener"
+                aria-label="Open ${esc(t.title)} in ${SERVICES[getOpenIn()].label}">${icon('external', { size: 20 })}</a>
               <button class="icon-btn icon-btn--quiet" data-act="remove" aria-label="Remove ${esc(t.title)}">
                 ${icon('close', { size: 18 })}</button>
             </li>`).join('')}
@@ -129,7 +126,7 @@ function exportM3U(favs) {
   const lines = ['#EXTM3U'];
   favs.forEach(t => {
     lines.push(`#EXTINF:${t.duration || -1},${t.artist} - ${t.title}`);
-    lines.push(t.previewUrl || `https://open.spotify.com/search/${encodeURIComponent(`${t.artist} ${t.title}`)}`);
+    lines.push(t.previewUrl || songUrl(t));
   });
   const url = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'audio/x-mpegurl' }));
   const a = Object.assign(document.createElement('a'), { href: url, download: 'radioflow-saved.m3u' });

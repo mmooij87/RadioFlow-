@@ -16,7 +16,7 @@
  * matches persist for ENRICH_TTL_MS; misses are cached briefly so we don't
  * pound the API for tracks iTunes simply doesn't have.
  */
-import { findStation } from '../data/stations.js';
+import { fetchOrbPlaylist } from './orbApi.js';
 
 const PER_STATION    = 40;
 const ENRICH_TTL_MS  = 24 * 60 * 60 * 1000;   // iTunes URLs are stable; cache for 24h
@@ -211,24 +211,44 @@ export async function enrichTrack(track) {
   return data ? { ...track, ...data } : track;
 }
 
-/**
- * Build a mix for the given station ids.
- *
- * For each station, take up to PER_STATION random tracks (skipping any id
- * in `exclude`, e.g. tracks already heard this session), round-robin across
- * stations, then final-shuffle. Tracks come back un-enriched: covers and
- * previews are fetched on demand by the feed.
- */
-export async function buildMix(stationIds, exclude = new Set()) {
-  if (!stationIds?.length) return [];
-  const all = await loadPlaylists();
+const counts = {};
 
-  const queues = stationIds
-    .map(id => {
-      const station = findStation(id);
-      const tracks = (all.stations?.[id] || [])
+/**
+ * Songs for one station. Built-in stations read the nightly JSON and fall
+ * back to the live Worker when tonight's scrape came up empty; added
+ * stations always come live from the Worker.
+ */
+export async function getStationTracks(station) {
+  let list = [];
+  if (station.source !== 'orb') {
+    const all = await loadPlaylists();
+    list = all.stations?.[station.id] || [];
+  }
+  if (!list.length && station.orb) list = await fetchOrbPlaylist(station.orb);
+  counts[station.id] = list.length;
+  return list;
+}
+
+/** Track counts seen so far this session, by station id. */
+export const knownCounts = () => ({ ...counts });
+
+/**
+ * Build a mix from station objects.
+ *
+ * For each station, take up to PER_STATION random tracks (skipping ids in
+ * `exclude`, e.g. songs already heard), round-robin across stations, then
+ * final-shuffle. Tracks come back un-enriched: covers and previews are
+ * fetched on demand by the feed.
+ */
+export async function buildMix(stations, exclude = new Set()) {
+  if (!stations?.length) return [];
+  const lists = await Promise.all(stations.map(st => getStationTracks(st).catch(() => [])));
+
+  const queues = stations
+    .map((st, k) => {
+      const tracks = lists[k]
         .map(t => ({
-          id:          trackId(id, t.artist, t.title),
+          id:          trackId(st.id, t.artist, t.title),
           artist:      t.artist,
           title:       t.title,
           album:       '',
@@ -237,12 +257,11 @@ export async function buildMix(stationIds, exclude = new Set()) {
           duration:    null,
           deezerLink:  null,
           appleLink:   null,
-          spotifyLink: `https://open.spotify.com/search/${encodeURIComponent(`${t.artist} ${t.title}`)}`,
-          stationId:   id,
-          station:     station?.name || 'Radio',
+          stationId:   st.id,
+          station:     st.name || 'Radio',
         }))
         .filter(t => !exclude.has(t.id));
-      return { id, queue: shuffle(tracks).slice(0, PER_STATION) };
+      return { queue: shuffle(tracks).slice(0, PER_STATION) };
     })
     .filter(s => s.queue.length > 0);
 
@@ -253,13 +272,6 @@ export async function buildMix(stationIds, exclude = new Set()) {
     }
   }
   return shuffle(picked);
-}
-
-/** Back-compat: build from the stations saved in localStorage. */
-export async function buildMosaic() {
-  let selected = [];
-  try { selected = JSON.parse(localStorage.getItem('radioflow_stations') || '[]'); } catch {}
-  return buildMix(selected);
 }
 
 /** Number of tracks available per station in today's data. */

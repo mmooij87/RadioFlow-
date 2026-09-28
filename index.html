@@ -21,19 +21,25 @@
 <body>
   <header class="topbar">
     <span class="wordmark" aria-label="RadioFlow"><span class="wordmark__dot"></span>RadioFlow</span>
-    <button class="saved-btn" id="saved-btn" aria-label="Saved songs" aria-haspopup="dialog">
-      <span class="saved-btn__icon" data-icon="heart"></span>
-      <span class="saved-btn__count" id="saved-count">0</span>
-    </button>
+    <div class="topbar__actions">
+      <button class="round-btn" id="settings-btn" aria-label="Settings and stations" aria-haspopup="dialog">
+        <span data-icon="tune" data-size="22"></span>
+      </button>
+      <button class="saved-btn" id="saved-btn" aria-label="Saved songs" aria-haspopup="dialog">
+        <span class="saved-btn__icon" data-icon="heart"></span>
+        <span class="saved-btn__count" id="saved-count">0</span>
+      </button>
+    </div>
   </header>
 
   <main class="feed" id="feed" aria-label="Songs" tabindex="-1"></main>
 
-  <div class="coach" id="coach" hidden></div>
+  <div class="swipe-hint" id="swipe-hint" role="status" hidden></div>
 
   <nav class="dial" id="dial" aria-label="Stations"></nav>
 
   <dialog class="sheet" id="saved-sheet" aria-labelledby="sheet-title"></dialog>
+  <dialog class="sheet sheet--tall" id="settings-sheet" aria-labelledby="settings-title"></dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

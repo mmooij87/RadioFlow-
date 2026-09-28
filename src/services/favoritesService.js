@@ -49,6 +49,7 @@ export function addFavorite(track) {
       duration: track.duration || null,
       station: track.station || '',
       deezerLink: track.deezerLink || null,
+      appleLink: track.appleLink || null,
       addedAt: Date.now(),
     });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
@@ -65,7 +66,7 @@ export function updateFavorite(track) {
   const f = favorites.find(x => x.id === track.id);
   if (!f) return;
   let changed = false;
-  for (const k of ['coverArt', 'previewUrl', 'album', 'duration']) {
+  for (const k of ['coverArt', 'previewUrl', 'album', 'duration', 'appleLink']) {
     if (!f[k] && track[k]) { f[k] = track[k]; changed = true; }
   }
   if (changed) {

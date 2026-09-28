@@ -10,6 +10,11 @@ const P = {
   trash:      '<path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/>',
   shuffle:    '<path d="M4 7h3.5c4 0 5 10 9 10H20m0 0-3-3m3 3-3 3M4 17h3.5c1.4 0 2.4-1.2 3.2-2.8M20 7h-3.5c-1.4 0-2.4 1.2-3.2 2.8M20 7l-3-3m3 3-3 3"/>',
   up:         '<path d="M12 19V5m-6 6 6-6 6 6"/>',
+  plus:       '<path d="M12 5v14M5 12h14"/>',
+  back:       '<path d="M15 5l-7 7 7 7"/>',
+  search:     '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>',
+  check:      '<path d="m5 12.5 4.5 4.5L19 7"/>',
+  tune:       '<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
 };
 const FILLED = new Set(['heart', 'play', 'pause']);
 

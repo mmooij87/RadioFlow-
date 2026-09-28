@@ -18,13 +18,18 @@ import { icon } from './icons.js';
 import { toast } from './toast.js';
 import { coverTint } from './color.js';
 import { setNowPlaying, setPlaybackState } from './mediaSession.js';
+import { SERVICES, getOpenIn, songUrl } from '../services/stationStore.js';
 
 const PREFETCH_AHEAD = 3;
 const DOUBLE_TAP_MS = 280;
 const LONG_PRESS_MS = 520;
+const LEARNED_SWIPE = 'rf_learned_swipe';
+const LEARNED_SAVE = 'rf_learned_save';
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const flag = (k) => { try { return !!localStorage.getItem(k); } catch { return true; } };
+const setFlag = (k) => { try { localStorage.setItem(k, '1'); } catch {} };
 
-export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle }) {
+export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, isBusy = () => false }) {
   let tracks = [];
   let idx = 0;
   let observer = null;
@@ -74,7 +79,7 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle }) {
         </div>
         <div class="slide__bar" aria-hidden="true"><span></span></div>
         <div class="slide__foot">
-          <a class="spotify-link" href="${t.spotifyLink}" target="_blank" rel="noopener">Open in Spotify ${icon('external', { size: 16 })}</a>
+          <a class="open-link" href="${esc(songUrl(t))}" target="_blank" rel="noopener">${openLabel()} ${icon('external', { size: 16 })}</a>
         </div>
       </section>`;
   }
@@ -114,6 +119,7 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle }) {
     root.scrollTop = 0;
     observeAll();
     activate(0, { autoplay });
+    scheduleSwipeHint();
   }
 
   /** Keep what's been heard + the current song, swap everything after it. */
@@ -153,6 +159,7 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle }) {
     idx = i;
     const t = tracks[i];
     if (!t) return;
+    if (i > 0) learnedSwipe();
     onTrackChange(t);
     applyTint(i);
     startProgress();
@@ -209,6 +216,8 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle }) {
       art.classList.add('art--missing');
     }
     if (!t.previewUrl) s.classList.add('slide--nopreview');
+    const link = s.querySelector('.open-link');
+    if (link) link.href = songUrl(t);
   }
 
   function applyTint(i) {
@@ -290,6 +299,7 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle }) {
       btn.innerHTML = icon('heart', { size: 26, filled: saved });
     }
     if (saved) {
+      setFlag(LEARNED_SAVE);
       navigator.vibrate?.(12);
       burst(point);
       flyToSaved();
@@ -343,11 +353,66 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle }) {
     const t = cur();
     if (!t) return;
     const text = `${t.title} by ${t.artist}, heard on ${t.station} via RadioFlow`;
+    const url = songUrl(t);
     if (navigator.share) {
-      navigator.share({ title: `${t.title} by ${t.artist}`, text, url: t.spotifyLink }).catch(() => {});
+      navigator.share({ title: `${t.title} by ${t.artist}`, text, url }).catch(() => {});
     } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(`${text}\n${t.spotifyLink}`).then(() => toast('Link copied')).catch(() => {});
+      navigator.clipboard.writeText(`${text}\n${url}`).then(() => toast('Link copied')).catch(() => {});
     }
+  }
+
+  // ── First-run hints ───────────────────────────────────────
+  // The first song teaches the swipe: the song nudges up to reveal the
+  // next one while a fingertip traces the gesture, until the listener
+  // swipes once. After that, a single nudge about double-tap to save.
+  const hintEl = document.getElementById('swipe-hint');
+  let hintTimer = 0, peekTimer = 0;
+
+  function scheduleSwipeHint() {
+    if (flag(LEARNED_SWIPE) || !hintEl) return;
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(showSwipeHint, 1400);
+  }
+
+  function showSwipeHint() {
+    if (flag(LEARNED_SWIPE) || idx !== 0 || tracks.length < 2) return;
+    if (isBusy()) { hintTimer = setTimeout(showSwipeHint, 1500); return; }
+    const touch = matchMedia('(pointer: coarse)').matches;
+    hintEl.className = 'swipe-hint';
+    hintEl.innerHTML = `
+      <span class="swipe-hint__finger" aria-hidden="true"><span class="swipe-hint__dot"></span></span>
+      <span class="swipe-hint__text">${touch ? 'Swipe up for the next song' : 'Scroll or press ↓ for the next song'}</span>`;
+    hintEl.hidden = false;
+    peek();
+    clearInterval(peekTimer);
+    peekTimer = setInterval(() => { if (!isBusy()) peek(); }, 5200);
+  }
+
+  function peek() {
+    if (reduceMotion() || idx !== 0) return;
+    const a = slideAt(0), b = slideAt(1);
+    [a, b].forEach(el => { if (!el) return; el.classList.remove('slide--peek'); void el.offsetWidth; el.classList.add('slide--peek'); });
+  }
+
+  function learnedSwipe() {
+    if (flag(LEARNED_SWIPE)) return;
+    setFlag(LEARNED_SWIPE);
+    clearTimeout(hintTimer); clearInterval(peekTimer);
+    root.querySelectorAll('.slide--peek').forEach(el => el.classList.remove('slide--peek'));
+    if (hintEl) hintEl.hidden = true;
+    if (!flag(LEARNED_SAVE)) setTimeout(showSaveHint, 2200);
+  }
+
+  function showSaveHint() {
+    if (flag(LEARNED_SAVE) || !hintEl || isBusy()) return;
+    setFlag(LEARNED_SAVE);
+    const touch = matchMedia('(pointer: coarse)').matches;
+    hintEl.className = 'swipe-hint swipe-hint--save';
+    hintEl.innerHTML = `
+      <span class="swipe-hint__heart" aria-hidden="true">${icon('heart', { size: 22 })}</span>
+      <span class="swipe-hint__text">${touch ? 'Double-tap the cover to save a song' : 'Double-click the cover (or press S) to save a song'}</span>`;
+    hintEl.hidden = false;
+    setTimeout(() => { if (hintEl.classList.contains('swipe-hint--save')) hintEl.hidden = true; }, 4200);
   }
 
   // ── Gestures on the cover ─────────────────────────────────
@@ -413,6 +478,13 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle }) {
       else setPlaying(false);
     },
     isPlaying: () => !audio.paused && audio.src === cur()?.previewUrl,
+    refreshLinks() {
+      root.querySelectorAll('.slide[data-i]').forEach(s => {
+        const t = tracks[+s.dataset.i];
+        const a = s.querySelector('.open-link');
+        if (t && a) { a.href = songUrl(t); a.innerHTML = `${openLabel()} ${icon('external', { size: 16 })}`; }
+      });
+    },
     refreshSaved() {
       root.querySelectorAll('.slide[data-i]').forEach(s => {
         const t = tracks[+s.dataset.i];
@@ -427,6 +499,8 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle }) {
     },
   };
 }
+
+function openLabel() { return `Open in ${SERVICES[getOpenIn()].label}`; }
 
 function esc(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

@@ -2,61 +2,70 @@
  * RadioFlow — one screen: the song, and the dial.
  */
 import './styles/app.css';
-import { STATIONS, findStation } from './data/stations.js';
-import { buildMix, stationTrackCounts } from './services/dataService.js';
+import { buildMix, knownCounts, stationTrackCounts } from './services/dataService.js';
 import { getFavorites, onFavoritesChange } from './services/favoritesService.js';
+import {
+  getMyStations, getSelected, setStationOn, onStoreChange, findMyStation,
+} from './services/stationStore.js';
 import { primeAudio, playPreview, stopPreview } from './components/audioPlayer.js';
 import { createDial } from './ui/dial.js';
 import { createFeed } from './ui/feed.js';
 import { createSavedSheet } from './ui/savedSheet.js';
+import { createSettingsSheet } from './ui/settingsSheet.js';
 import { initMediaSession } from './ui/mediaSession.js';
 import { hydrateIcons } from './ui/icons.js';
 import { toast } from './ui/toast.js';
 
-const SELECTED_KEY = 'radioflow_stations';
-const COACH_KEY = 'rf_coach_swipe_v1';
-
-// ── State ───────────────────────────────────────────────────
-const known = new Set(STATIONS.map(s => s.id));
-let selected;
-try { selected = new Set(JSON.parse(localStorage.getItem(SELECTED_KEY) || '[]').filter(id => known.has(id))); }
-catch { selected = new Set(); }
-const persist = () => { try { localStorage.setItem(SELECTED_KEY, JSON.stringify([...selected])); } catch {} };
-let counts = {};
-
 hydrateIcons();
+
+let savedSheet = null;
+let settings = null;
+const anySheetOpen = () => !!(savedSheet?.isOpen || settings?.isOpen);
+const onStations = () => getMyStations().filter(s => getSelected().has(s.id));
 
 // ── Feed ────────────────────────────────────────────────────
 const feed = createFeed(document.getElementById('feed'), {
   onTrackChange: (t) => dial.setNeedle(t?.stationId || null),
-  onFirstPlay: maybeCoach,
   onReshuffle: () => rebuild({ fresh: true }),
+  isBusy: anySheetOpen,
 });
 
 // ── Dial ────────────────────────────────────────────────────
 const dial = createDial(document.getElementById('dial'), {
-  stations: STATIONS,
-  selected,
   onToggle(id, on) {
-    // This tap is a user gesture: unlock audio for mobile browsers now,
+    // A tap is a user gesture: unlock audio for mobile browsers right now,
     // synchronously, before any await.
     primeAudio();
-    if (on) selected.add(id); else selected.delete(id);
-    persist();
-    dial.render();
-    const st = findStation(id);
-    if (on && counts[id] === 0) toast(`${st.name} hasn't sent a playlist today`);
-    rebuild({ fresh: !feed.hasTracks() });
+    setStationOn(id, on);
+    const st = findMyStation(id);
+    if (on && knownCounts()[id] === 0) toast(`${st?.name || 'This station'} hasn't shared a song list today`);
   },
+  onAdd: () => settings.openSearch(),
+});
+
+function syncDial() {
+  dial.setStations(getMyStations(), getSelected());
+  dial.setCounts(knownCounts());
+}
+
+// Rebuild the upcoming songs whenever the dial changes.
+let rebuildTimer = 0;
+onStoreChange((what) => {
+  if (what === 'openIn') { feed.refreshLinks(); return; }
+  if (what === 'stations') syncDial(); else dial.setSelected(getSelected());
+  clearTimeout(rebuildTimer);
+  rebuildTimer = setTimeout(() => rebuild({ fresh: !feed.hasTracks() }), 150);
 });
 
 async function rebuild({ fresh }) {
-  if (!selected.size) {
+  const stations = onStations();
+  if (!stations.length) {
     if (!feed.hasTracks() || fresh) { stopPreview(); feed.renderEmpty('no-stations'); }
     else feed.replaceUpcoming([]);   // keep the current song, drop what's queued
     return;
   }
-  const mix = await buildMix([...selected], fresh ? new Set() : feed.playedIds());
+  const mix = await buildMix(stations, fresh ? new Set() : feed.playedIds());
+  dial.setCounts(knownCounts());
   if (fresh || !feed.hasTracks()) {
     if (mix.length) feed.setTracks(mix);
     else feed.renderEmpty('no-data');
@@ -65,9 +74,9 @@ async function rebuild({ fresh }) {
   }
 }
 
-// ── Saved sheet ─────────────────────────────────────────────
+// ── Sheets ──────────────────────────────────────────────────
 let wasPlaying = false;
-const sheet = createSavedSheet(document.getElementById('saved-sheet'), {
+savedSheet = createSavedSheet(document.getElementById('saved-sheet'), {
   onPreview(track) {
     if (track) { feed.suspend(); playPreview(track.previewUrl, `saved:${track.id}`); }
     else stopPreview();
@@ -77,17 +86,17 @@ const sheet = createSavedSheet(document.getElementById('saved-sheet'), {
     if (location.hash === '#saved') history.replaceState(null, '', location.pathname + location.search);
   },
 });
+settings = createSettingsSheet(document.getElementById('settings-sheet'), {
+  onClose() {},
+});
+
 const savedBtn = document.getElementById('saved-btn');
-savedBtn.addEventListener('click', openSaved);
-function openSaved() {
-  wasPlaying = feed.isPlaying();
-  sheet.open();
-}
+savedBtn.addEventListener('click', () => { wasPlaying = feed.isPlaying(); savedSheet.open(); });
+document.getElementById('settings-btn').addEventListener('click', () => settings.open());
 
 function syncCount() {
   const n = getFavorites().length;
-  const el = document.getElementById('saved-count');
-  el.textContent = String(n);
+  document.getElementById('saved-count').textContent = String(n);
   savedBtn.classList.toggle('saved-btn--has', n > 0);
   savedBtn.setAttribute('aria-label', `Saved songs: ${n}`);
   feed.refreshSaved();
@@ -97,7 +106,7 @@ syncCount();
 
 // ── Keyboard ────────────────────────────────────────────────
 document.addEventListener('keydown', (e) => {
-  if (sheet.isOpen || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (anySheetOpen() || e.metaKey || e.ctrlKey || e.altKey) return;
   if (e.target.closest?.('input, textarea, .dial')) return;
   const k = e.key;
   if (k === ' ' && !e.target.closest('button, a')) { e.preventDefault(); feed.togglePlay(); }
@@ -114,29 +123,10 @@ initMediaSession({
   onPrev: () => feed.prev(),
 });
 
-// ── One-time gesture coach ─────────────────────────────────
-function maybeCoach() {
-  try { if (localStorage.getItem(COACH_KEY)) return; } catch { return; }
-  const coach = document.getElementById('coach');
-  const touch = matchMedia('(pointer: coarse)').matches;
-  coach.innerHTML = touch
-    ? '<span data-icon="up" data-size="18"></span>Swipe up for the next song. Double-tap to save.'
-    : '<span data-icon="up" data-size="18"></span>Scroll or press ↓ for the next song. Double-click to save.';
-  hydrateIcons(coach);
-  setTimeout(() => { coach.hidden = false; }, 1600);
-  const done = () => {
-    coach.hidden = true;
-    try { localStorage.setItem(COACH_KEY, '1'); } catch {}
-    document.getElementById('feed').removeEventListener('scroll', done);
-  };
-  document.getElementById('feed').addEventListener('scroll', done, { passive: true, once: true });
-  setTimeout(done, 9000);
-}
-
 // ── Boot ────────────────────────────────────────────────────
 (async () => {
-  counts = await stationTrackCounts();
-  dial.setCounts(counts);
-  if (location.hash === '#saved' || location.hash === '#/liked') openSaved();
+  syncDial();
+  dial.setCounts(await stationTrackCounts());
+  if (location.hash === '#saved' || location.hash === '#/liked') { wasPlaying = false; savedSheet.open(); }
   await rebuild({ fresh: true });
 })();
