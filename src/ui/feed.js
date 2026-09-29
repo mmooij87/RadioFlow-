@@ -21,7 +21,8 @@ import { coverTint } from './color.js';
 import { setNowPlaying, setPlaybackState } from './mediaSession.js';
 import { SERVICES, getOpenIn, songUrl } from '../services/stationStore.js';
 
-const PREFETCH_AHEAD = 3;
+const PREFETCH_AHEAD = 4;
+const TOP_UP_AT = 8;         // songs left before the mix tops itself up
 const DOUBLE_TAP_MS = 280;
 const LONG_PRESS_MS = 520;
 const LEARNED_SWIPE = 'rf_learned_swipe';
@@ -33,7 +34,7 @@ const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)')
 const flag = (k) => { try { return !!localStorage.getItem(k); } catch { return true; } };
 const setFlag = (k) => { try { localStorage.setItem(k, '1'); } catch {} };
 
-export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, getStationSongs, isBusy = () => false }) {
+export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, onNeedMore, getStationSongs, isBusy = () => false }) {
   let tracks = [];
   let idx = 0;
   let observer = null;
@@ -94,15 +95,6 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, getS
         </div>`;
   }
 
-  const endHtml = () => `
-    <section class="slide slide--end" data-end>
-      <div class="note">
-        <h2>That's the lot</h2>
-        <p>You've heard everything we picked from your stations. Shuffle for a fresh mix, or tune in more stations below.</p>
-        <button class="pill pill--solid" data-act="reshuffle">${icon('shuffle', { size: 18 })}Shuffle again</button>
-      </div>
-    </section>`;
-
   function renderEmpty(kind) {
     teardown();
     tracks = []; idx = 0;
@@ -125,7 +117,7 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, getS
   function setTracks(list, { autoplay = true } = {}) {
     teardown();
     tracks = list; idx = 0;
-    root.innerHTML = list.map(slideHtml).join('') + endHtml();
+    root.innerHTML = list.map(slideHtml).join('');
     root.scrollTop = 0;
     observeAll();
     activate(0, { autoplay });
@@ -140,10 +132,38 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, getS
       if (i > idx) el.remove();
     });
     tracks = tracks.slice(0, idx + 1).concat(list);
-    root.insertAdjacentHTML('beforeend',
-      list.map((t, k) => slideHtml(t, idx + 1 + k)).join('') + endHtml());
+    root.insertAdjacentHTML('beforeend', list.map((t, k) => slideHtml(t, idx + 1 + k)).join(''));
     observeAll();
-    for (let j = 1; j <= PREFETCH_AHEAD; j++) ensureEnriched(idx + j);
+    prefetchAhead(idx);
+  }
+
+  /** Endless: when the mix runs low, add a fresh round after it. */
+  let toppingUp = false;
+  async function topUp() {
+    if (toppingUp || !onNeedMore) return;
+    const left = tracks.slice(idx + 1).filter(t => !t._gone).length;
+    if (left > TOP_UP_AT) return;
+    toppingUp = true;
+    try {
+      const more = await onNeedMore();
+      if (!more?.length) return;
+      // Don't repeat the song that's on right now as the very next one.
+      if (more[0]?.id === tracks[tracks.length - 1]?.id) more.push(more.shift());
+      const start = tracks.length;
+      tracks = tracks.concat(more);
+      root.insertAdjacentHTML('beforeend', more.map((t, k) => slideHtml(t, start + k)).join(''));
+      root.querySelectorAll('.slide[data-i]').forEach(el => { if (+el.dataset.i >= start) observer?.observe(el); });
+    } finally {
+      toppingUp = false;
+    }
+  }
+
+  function prefetchAhead(from) {
+    let n = 0;
+    for (let j = from + 1; j < tracks.length && n < PREFETCH_AHEAD; j++) {
+      if (tracks[j]._gone) continue;
+      ensureEnriched(j); n++;
+    }
   }
 
   function observeAll() {
@@ -151,7 +171,6 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, getS
     observer = new IntersectionObserver((entries) => {
       for (const e of entries) {
         if (!e.isIntersecting || e.intersectionRatio < 0.6) continue;
-        if (e.target.dataset.end !== undefined) { onTrackChange(null); pauseQuietly(); continue; }
         const i = +e.target.dataset.i;
         if (i !== idx) activate(i, { autoplay: true });
       }
@@ -185,10 +204,32 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, getS
         if (ok) onFirstPlay?.();
       } else setPlaying(false);
     } else {
-      slideAt(i)?.classList.add('slide--nopreview');
+      // Nothing to hear: take it out of the list and move on.
       pauseQuietly();
+      hideSlide(i);
     }
-    for (let j = 1; j <= PREFETCH_AHEAD; j++) ensureEnriched(i + j);
+    prefetchAhead(i);
+    topUp();
+    prefetchNeighbours(e || t);
+  }
+
+  /** Take a song with no preview out of the list. */
+  function hideSlide(i) {
+    const s = slideAt(i);
+    if (!s || !tracks[i] || i < idx) return;     // never shift what's above the listener
+    tracks[i]._gone = true;
+    s.hidden = true;
+    if (i === idx) {
+      // The next song now sits where this one was; make it the current one.
+      const j = nextVisible(i, 1);
+      if (j !== null) requestAnimationFrame(() => { slideAt(j)?.scrollIntoView({ block: 'start' }); activate(j, { autoplay: true }); });
+      else topUp();
+    }
+  }
+
+  function nextVisible(from, dir) {
+    for (let j = from + dir; j >= 0 && j < tracks.length; j += dir) if (!tracks[j]?._gone) return j;
+    return null;
   }
 
   async function ensureEnriched(i) {
@@ -226,7 +267,7 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, getS
     } else {
       art.classList.add('art--missing');
     }
-    if (!t.previewUrl) s.classList.add('slide--nopreview');
+    if (!t.previewUrl && i > idx) { hideSlide(i); return; }
     const link = s.querySelector('.open-link');
     if (link) link.href = songUrl(t);
   }
@@ -287,11 +328,10 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, getS
   }
 
   function go(i) {
-    const s = slideAt(i) || (i >= tracks.length ? root.querySelector('[data-end]') : null);
-    s?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+    slideAt(i)?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
   }
-  const next = () => go(idx + 1);
-  const prev = () => go(Math.max(0, idx - 1));
+  const next = () => { const j = nextVisible(idx, 1); if (j !== null) go(j); else topUp().then(() => { const k = nextVisible(idx, 1); if (k !== null) go(k); }); };
+  const prev = () => { const j = nextVisible(idx, -1); if (j !== null) go(j); };
 
   // ── Saving ────────────────────────────────────────────────
   function save({ onlyAdd = false, point = null } = {}) {
@@ -471,24 +511,46 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, getS
     const s = slideAt(idx);
     if (!t || !s || browsing || !getStationSongs) { resetArt(fromDrag); return; }
     browsing = true;
+    const art = s.querySelector('.art');
     try {
       const list = await getStationSongs(t.stationId);
+      if (list.length < 2) { bounce(art, dir, fromDrag); return; }
       let pos = list.findIndex(x => x.id === t.id);
-      if (pos < 0) pos = dir > 0 ? -1 : list.length;
-      const nextPos = pos + dir;
-      if (nextPos < 0 || nextPos >= list.length || !list.length) {
-        bounce(s.querySelector('.art'), dir, fromDrag);
-        toast(dir > 0 ? `That's the earliest song we have from ${t.station}` : `That's the latest song from ${t.station}`);
+      if (pos < 0) pos = dir > 0 ? -1 : 0;
+      // Walk the station's playlist (wrapping round at either end) until we
+      // find a song we can actually play.
+      art.classList.add('art--seeking');
+      let found = null, foundPos = -1;
+      for (let step = 1; step <= Math.min(list.length - 1, 12) && !found; step++) {
+        const p = ((pos + dir * step) % list.length + list.length) % list.length;
+        const e = await enrichTrack({ ...list[p] });
+        if (e?.previewUrl) { found = { ...e, _enriched: true }; foundPos = p; }
+      }
+      art.classList.remove('art--seeking');
+      if (!found) {
+        bounce(art, dir, fromDrag);
+        toast(`Couldn't find more playable songs from ${t.station} right now`);
         return;
       }
       setFlag(LEARNED_SIDE);
-      const nt = { ...list[nextPos] };
-      await swapSlide(idx, nt, dir, fromDrag, dx);
-      showPos(s, nextPos, list.length);
+      await swapSlide(idx, found, dir, fromDrag, dx);
+      showPos(s, foundPos, list.length);
+      paintArt(idx, found);
       activate(idx, { autoplay: true });
     } finally {
+      art?.classList.remove('art--seeking');
       browsing = false;
     }
+  }
+
+  /** Warm up the songs either side in this station's playlist. */
+  async function prefetchNeighbours(t) {
+    if (!t || !getStationSongs) return;
+    const list = await getStationSongs(t.stationId).catch(() => []);
+    const pos = list.findIndex(x => x.id === t.id);
+    if (pos < 0 || list.length < 2) return;
+    enrichTrack({ ...list[(pos + 1) % list.length] });
+    enrichTrack({ ...list[(pos - 1 + list.length) % list.length] });
   }
 
   function resetArt(art) { if (art) art.style.transform = ''; }

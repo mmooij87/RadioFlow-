@@ -55,3 +55,16 @@ export async function fetchOrbPlaylist(orbId) {
   try { sessionStorage.setItem(`rf_pl:${orbId}`, JSON.stringify(entry)); } catch {}
   return data;
 }
+
+/** Preview lookup via the Worker. → { status: 'ok', data } | { status: 'miss' } | { status: 'fail' } */
+export async function workerLookup(artist, title) {
+  if (!apiReady()) return { status: 'fail' };
+  try {
+    const r = await getJson(`/lookup?artist=${encodeURIComponent(artist)}&title=${encodeURIComponent(title)}`);
+    if (!r?.found) return { status: 'miss' };
+    const { found, ...data } = r;
+    return { status: 'ok', data };
+  } catch {
+    return { status: 'fail' };
+  }
+}

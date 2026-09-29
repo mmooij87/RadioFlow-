@@ -166,6 +166,10 @@ a { text-decoration: none; }
 }
 .slide__pos { font-weight: 500; font-variant-numeric: tabular-nums; }
 .art--dragging { transition: none; cursor: grabbing; }
+/* Looking for the next playable song from this station. */
+.art--seeking { animation: seeking 1s ease-in-out infinite; }
+@keyframes seeking { 50% { opacity: .55; } }
+.slide[hidden] { display: none; }
 .slide__title {
   font-size: clamp(26px, 7.2vw, 36px);
   font-weight: 800; letter-spacing: -.025em; line-height: 1.04;

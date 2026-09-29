@@ -8,6 +8,7 @@
  *   GET /search?q=jazz            → stations matching a name, city or genre
  *   GET /search?q=&c=nl           → optional country filter (ISO code)
  *   GET /playlist?id=nl/kink      → [{artist,title}] from roughly the last 24h
+ *   GET /lookup?artist=…&title=…  → 30-second preview + cover (Deezer, then iTunes)
  *   GET /health                   → { ok: true }
  *
  * Responses are cached at Cloudflare's edge (search 12h, playlists 20 min),
@@ -20,7 +21,7 @@
 const ORB = 'https://onlineradiobox.com';
 const UA = 'Mozilla/5.0 (compatible; RadioFlow/1.0; +https://mmooij87.github.io/RadioFlow-/)';
 const MAX_TRACKS = 80;
-const CACHE_VERSION = '3';   // bump to invalidate everything cached by older versions
+const CACHE_VERSION = '4';   // bump to invalidate everything cached by older versions
 
 export default {
   async fetch(request, env, ctx) {
@@ -34,6 +35,13 @@ export default {
         const c = (url.searchParams.get('c') || '').toLowerCase().replace(/[^a-z]/g, '').slice(0, 2);
         if (!q && !c) return json({ error: 'q or c required' }, 400);
         return cached(request, ctx, 12 * 3600, () => search(q, c));
+      }
+      if (url.pathname === '/lookup') {
+        const artist = (url.searchParams.get('artist') || '').trim().slice(0, 120);
+        const title = (url.searchParams.get('title') || '').trim().slice(0, 160);
+        if (!artist || !title) return json({ error: 'artist and title required' }, 400);
+        // Short cache: Deezer preview links carry an expiry.
+        return cached(request, ctx, 15 * 60, () => lookup(artist, title));
       }
       if (url.pathname === '/playlist') {
         const id = (url.searchParams.get('id') || '').toLowerCase();
@@ -101,6 +109,82 @@ export function parseSearch(html) {
     if (out.length >= 30) break;
   }
   return out;
+}
+
+// ─── Preview lookup ──────────────────────────────────────────
+async function lookup(artist, title) {
+  const deezer = await deezerLookup(artist, title).catch(() => null);
+  if (deezer) return deezer;
+  const itunes = await itunesLookup(artist, title).catch(() => null);
+  if (itunes) return itunes;
+  return { found: false };
+}
+
+async function deezerLookup(artist, title) {
+  const q = `artist:"${clip(artist)}" track:"${clip(title)}"`;
+  let rows = await deezerSearch(q);
+  if (!rows.length) rows = await deezerSearch(`${artist} ${title}`);
+  const best = pick(rows.map(r => ({
+    r, s: score(r.artist?.name, r.title_short || r.title, artist, title), ok: !!r.preview,
+  })));
+  if (!best) return null;
+  const r = best.r;
+  return {
+    found: true, source: 'deezer',
+    previewUrl: r.preview,
+    coverArt: r.album?.cover_xl || r.album?.cover_big || null,
+    album: r.album?.title || '',
+    duration: r.duration || null,
+    deezerLink: r.link || null,
+    appleLink: null,
+  };
+}
+
+async function deezerSearch(q) {
+  const res = await fetch(`https://api.deezer.com/search?q=${encodeURIComponent(q)}&limit=8`, { cf: { cacheTtl: 900 } });
+  if (!res.ok) return [];
+  const data = await res.json().catch(() => null);
+  return Array.isArray(data?.data) ? data.data : [];
+}
+
+async function itunesLookup(artist, title) {
+  const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(`${artist} ${title}`)}&media=music&entity=song&limit=8`,
+    { cf: { cacheTtl: 86400 } });
+  if (!res.ok) return null;
+  const data = await res.json().catch(() => null);
+  const best = pick((data?.results || []).map(r => ({
+    r, s: score(r.artistName, r.trackName, artist, title) - (/karaoke|tribute|in the style of/i.test(`${r.artistName} ${r.collectionName}`) ? 5 : 0),
+    ok: !!r.previewUrl,
+  })));
+  if (!best) return null;
+  const r = best.r;
+  return {
+    found: true, source: 'itunes',
+    previewUrl: r.previewUrl,
+    coverArt: r.artworkUrl100 ? r.artworkUrl100.replace(/\/\d+x\d+(bb)?\.(jpg|png)$/i, '/1000x1000bb.jpg') : null,
+    album: r.collectionName || '',
+    duration: r.trackTimeMillis ? Math.round(r.trackTimeMillis / 1000) : null,
+    deezerLink: null,
+    appleLink: r.trackViewUrl || null,
+  };
+}
+
+function pick(cands) {
+  const best = cands.filter(c => c.ok).sort((a, b) => b.s - a.s)[0];
+  return best && best.s >= 3 ? best : null;   // no convincing match → nothing, not a wrong song
+}
+function clip(s) { return String(s).replace(/"/g, '').replace(/\(.*?\)|\[.*?\]/g, '').trim(); }
+function norm(s) {
+  return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .replace(/\(.*?\)|\[.*?\]/g, ' ').replace(/\b(feat|ft|featuring)\b.*$/, ' ')
+    .replace(/[^a-z0-9]+/g, ' ').trim();
+}
+function score(ra, rt, artist, title) {
+  const a = norm(artist), t = norm(title), xa = norm(ra), xt = norm(rt);
+  let s = 0;
+  if (xa === a) s += 4; else if (xa && a && (xa.includes(a) || a.includes(xa))) s += 3;
+  if (xt === t) s += 3; else if (xt && t && (xt.includes(t) || t.includes(xt))) s += 2;
+  return s;
 }
 
 // ─── Diagnostics: /debug?q=jazz  or  /debug?id=de/fluxfm1006 ───

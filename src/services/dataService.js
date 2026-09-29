@@ -16,12 +16,12 @@
  * matches persist for ENRICH_TTL_MS; misses are cached briefly so we don't
  * pound the API for tracks iTunes simply doesn't have.
  */
-import { fetchOrbPlaylist } from './orbApi.js';
+import { fetchOrbPlaylist, workerLookup, apiReady } from './orbApi.js';
 
 const PER_STATION    = 40;
 const ENRICH_TTL_MS  = 24 * 60 * 60 * 1000;   // iTunes URLs are stable; cache for 24h
 const NEG_TTL_MS     = 6  * 60 * 60 * 1000;   // re-try unknown tracks after 6h
-const LS_PREFIX      = 'rf_enrich_v3:';   // bumped: matching logic changed
+const LS_PREFIX      = 'rf_enrich_v4:';   // bumped: v3 held false 'not found' entries from rate limits
 const ITUNES_SEARCH  = 'https://itunes.apple.com/search';
 
 let playlistsPromise = null;
@@ -122,22 +122,34 @@ function scoreResult(r, artist, title) {
   return score;
 }
 
+// Apple allows roughly 20 searches a minute per visitor. Stay under it and
+// hand the rest to the Worker instead of getting refused.
+const ITUNES_BUDGET = 18;
+const itunesCalls = [];
+function itunesHasBudget() {
+  const now = Date.now();
+  while (itunesCalls.length && now - itunesCalls[0] > 60000) itunesCalls.shift();
+  return itunesCalls.length < ITUNES_BUDGET;
+}
+
+/** → { status: 'ok', data } | { status: 'miss' } | { status: 'fail' } */
 async function itunesLookup(artist, title) {
+  itunesCalls.push(Date.now());
   const q = encodeURIComponent(`${artist} ${title}`);
   const url = `${ITUNES_SEARCH}?term=${q}&media=music&entity=song&limit=8`;
   let res;
   try {
     res = await fetch(url, { headers: { 'Accept': 'application/json' } });
   } catch (e) {
-    console.warn('iTunes fetch error:', e?.message || e);
-    return null;
+    return { status: 'fail' };        // network error or blocked: not a verdict on the song
   }
   if (!res.ok) {
-    console.warn(`iTunes HTTP ${res.status} for "${artist} - ${title}"`);
-    return null;
+    // 403/429 = Apple says "slow down": sit out the rest of the minute.
+    if (res.status === 403 || res.status === 429) while (itunesCalls.length < ITUNES_BUDGET) itunesCalls.push(Date.now());
+    return { status: 'fail' };
   }
   let data;
-  try { data = await res.json(); } catch { return null; }
+  try { data = await res.json(); } catch { return { status: 'fail' }; }
 
   // Pick the best-matching result instead of blindly taking #1, which is
   // often a cover version, karaoke track or a different artist.
@@ -146,20 +158,37 @@ async function itunesLookup(artist, title) {
     .map(r => ({ r, s: scoreResult(r, artist, title) }))
     .sort((x, y) => y.s - x.s);
   const best = candidates[0];
-  if (!best || best.s < 3) return null;   // no convincing match → no wrong song
+  if (!best || best.s < 3) return { status: 'miss' };   // no convincing match → no wrong song
   const t = best.r;
 
   const art = t.artworkUrl100
     ? t.artworkUrl100.replace(/\/\d+x\d+(bb)?\.(jpg|png)$/i, '/1000x1000bb.jpg')
     : null;
-  return {
+  return { status: 'ok', data: {
     coverArt:   art,
     previewUrl: t.previewUrl,
     album:      t.collectionName || '',
     duration:   t.trackTimeMillis ? Math.round(t.trackTimeMillis / 1000) : null,
     deezerLink: null,
     appleLink:  t.trackViewUrl || null,
-  };
+  } };
+}
+
+/**
+ * Find a preview: iTunes first while we're within Apple's limit, then the
+ * Worker (Deezer, then iTunes from Cloudflare's side). Only a real "no
+ * match" is remembered; a refused or failed request is simply retried later.
+ */
+async function lookupPreview(artist, title) {
+  let first = { status: 'fail' };
+  if (itunesHasBudget()) first = await itunesLookup(artist, title);
+  if (first.status === 'ok') return { ...first, keep: true };
+  if (apiReady()) {
+    const w = await workerLookup(artist, title);
+    if (w.status === 'ok') return { ...w, keep: w.data.source !== 'deezer' };   // Deezer links expire
+    if (w.status === 'miss') return { status: 'miss' };
+  }
+  return first;
 }
 
 /**
@@ -176,7 +205,8 @@ export async function enrichTrack(track) {
   // Memory cache (fastest)
   const mem = memCache.get(key);
   if (mem) {
-    if (mem.data && fresh(mem, ENRICH_TTL_MS)) return { ...track, ...mem.data };
+    const ttl = mem.data?.source === 'deezer' ? 30 * 60 * 1000 : ENRICH_TTL_MS;   // Deezer links expire
+    if (mem.data && fresh(mem, ttl)) return { ...track, ...mem.data };
     if (!mem.data && fresh(mem, NEG_TTL_MS))   return track;
   }
 
@@ -199,12 +229,13 @@ export async function enrichTrack(track) {
     return data ? { ...track, ...data } : track;
   }
 
-  const promise = itunesLookup(track.artist, track.title).then(data => {
+  const promise = lookupPreview(track.artist, track.title).then(r => {
     inflight.delete(key);
-    const entry = { ts: Date.now(), data: data || null };
+    if (r.status === 'fail') return null;                 // don't remember: try again next time
+    const entry = { ts: Date.now(), data: r.status === 'ok' ? r.data : null };
     memCache.set(key, entry);
-    writeLs(key, entry);
-    return data;
+    if (r.status === 'miss' || r.keep) writeLs(key, entry);
+    return entry.data;
   }).catch(() => { inflight.delete(key); return null; });
   inflight.set(key, promise);
   const data = await promise;

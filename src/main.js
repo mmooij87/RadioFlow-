@@ -28,6 +28,8 @@ const onStations = () => getMyStations().filter(s => getSelected().has(s.id));
 const feed = createFeed(document.getElementById('feed'), {
   onTrackChange: (t) => dial.setNeedle(t?.stationId || null),
   onReshuffle: () => rebuild({ fresh: true }),
+  // Endless: when the mix runs low, deal a fresh round from the same stations.
+  onNeedMore: () => buildMix(onStations()),
   getStationSongs: songsOf,
   isBusy: anySheetOpen,
 });
