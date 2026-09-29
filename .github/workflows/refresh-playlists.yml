@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write           # needed to commit the updated JSON
+  actions: write            # needed to start the Pages deploy afterwards
 
 concurrency:
   group: refresh-playlists
@@ -31,15 +32,26 @@ jobs:
       - name: Refresh playlists.json
         run: node scripts/refresh-playlists.js
 
+      - name: Find previews for the built-in stations
+        run: node scripts/resolve-previews.js
+        timeout-minutes: 30
+        env:
+          MAX_MINUTES: 20
+
       - name: Commit changes
         run: |
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add public/data/playlists.json
+          git add public/data/playlists.json public/data/previews.json
           git rm -f --ignore-unmatch data/track-cache.json
           if git diff --staged --quiet; then
             echo "No changes."
           else
             git commit -m "chore: refresh playlists $(date -u +%Y-%m-%d)"
             git push
+            # Commits made with the workflow's own token don't trigger other
+            # workflows, so start the Pages deploy explicitly.
+            gh workflow run deploy.yml --ref main
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}

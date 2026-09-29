@@ -11,7 +11,7 @@
  * When a 30-second preview ends, the next song slides in by itself, so it
  * keeps behaving like radio.
  */
-import { enrichTrack } from '../services/dataService.js';
+import { enrichTrack, reresolve } from '../services/dataService.js';
 import { isFavorite, toggleFavorite, addFavorite, updateFavorite } from '../services/favoritesService.js';
 import { playPreview, togglePreview, onAudio } from '../components/audioPlayer.js';
 import { findStation } from '../data/stations.js';
@@ -52,10 +52,20 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, onNe
       // Radio behaviour: roll on to the next song by itself.
       if (audio.ended) setTimeout(() => { if (cur()?.id === id) next(); }, 350);
     },
-    onError: ({ id, name }) => {
+    onError: async ({ id, name }) => {
       if (id !== cur()?.id) return;
       setPlaying(false);
-      if (name !== 'NotAllowedError') toast("This preview wouldn't play. Swipe on for the next one.");
+      if (name === 'NotAllowedError') return;       // autoplay blocked: the play button handles it
+      // Most often an expired preview link: look it up afresh once, else skip it.
+      const i = idx, t = tracks[i];
+      if (t && !t._retried) {
+        const fresh = await reresolve(t);
+        if (fresh?.previewUrl && tracks[i]?.id === t.id) {
+          tracks[i] = { ...fresh, _enriched: true, _retried: true };
+          if (i === idx) { playPreview(fresh.previewUrl, fresh.id); return; }
+        }
+      }
+      if (i === idx) hideSlide(i);
     },
   });
 

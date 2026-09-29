@@ -25,12 +25,32 @@ Free plan: 100,000 requests per day, which is far more than RadioFlow needs.
 9. Commit and push. After the GitHub Pages deploy, the settings panel
    (the sliders icon, top right) lets you search and add stations.
 
+## Add the song catalogue (strongly recommended, 3 minutes)
+
+Without it every visitor looks up every song again, which runs into
+Apple's and Deezer's limits as soon as the site gets busy. With it, each
+song is looked up once and then shared with everyone.
+
+1. In the Cloudflare dashboard, open **Storage & databases** → **D1 SQL database** → **Create**.
+2. Name it `radioflow` and click **Create**. You don't need to add any tables:
+   the Worker creates them itself.
+3. Open your Worker **radioflow-api** → **Bindings** (or **Settings** → **Bindings**) → **Add binding** → **D1 database**.
+4. Variable name: `DB` (capitals, exactly). Database: `radioflow`. Click **Add Binding** / **Deploy**.
+5. Check it: open `https://radioflow-api.yourname.workers.dev/stats`.
+   You should see `"catalogue": true`. As people listen, the song counts grow.
+
+Free plan: 5 million reads and 100,000 writes per day.
+
 ## Endpoints
 
 | Path | Returns |
 | --- | --- |
 | `/search?q=jazz` | Up to 30 stations: `id`, `name`, `country`, `city`, `genres`, `logo` |
 | `/playlist?id=nl/kink` | Up to 80 `{ artist, title }` from today and yesterday |
+| `/songs?k=key&k=key` | Catalogue entries (preview, cover, source) for up to 25 song keys |
+| `POST /songs` | A browser reports a found / missing song (validated) |
+| `/lookup?artist=…&title=…` | Server-side lookup (last resort), stored in the catalogue |
+| `/stats` | Songs in the catalogue, by status and source |
 | `/health` | `{ ok: true }` |
 
 ## If search or playlists come back empty
