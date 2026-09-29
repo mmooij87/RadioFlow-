@@ -2,10 +2,10 @@
  * RadioFlow — one screen: the song, and the dial.
  */
 import './styles/app.css';
-import { buildMix, knownCounts, stationTrackCounts } from './services/dataService.js';
+import { buildMix, knownCounts, stationTrackCounts, stationSongs } from './services/dataService.js';
 import { getFavorites, onFavoritesChange } from './services/favoritesService.js';
 import {
-  getMyStations, getSelected, setStationOn, onStoreChange, findMyStation,
+  getMyStations, getSelected, onStoreChange, findMyStation,
   getSolo, soloStation, restoreFromSolo,
 } from './services/stationStore.js';
 import { primeAudio, playPreview, stopPreview } from './components/audioPlayer.js';
@@ -28,40 +28,40 @@ const onStations = () => getMyStations().filter(s => getSelected().has(s.id));
 const feed = createFeed(document.getElementById('feed'), {
   onTrackChange: (t) => dial.setNeedle(t?.stationId || null),
   onReshuffle: () => rebuild({ fresh: true }),
+  getStationSongs: songsOf,
   isBusy: anySheetOpen,
 });
 
+// A station's playlist, for swiping sideways through it. Cached per session.
+const songCache = new Map();
+function songsOf(stationId) {
+  if (!songCache.has(stationId)) {
+    const st = findMyStation(stationId);
+    songCache.set(stationId, st ? stationSongs(st) : Promise.resolve([]));
+  }
+  return songCache.get(stationId);
+}
+
 // ── Dial ────────────────────────────────────────────────────
 const dial = createDial(document.getElementById('dial'), {
-  onToggle(id, on) {
-    // A tap is a user gesture: unlock audio for mobile browsers right now,
-    // synchronously, before any await.
-    primeAudio();
-    setStationOn(id, on);
-    const st = findMyStation(id);
-    if (on && knownCounts()[id] === 0) toast(`${st?.name || 'This station'} hasn't shared a song list today`);
-    else if (!hasLearned(SOLO_TIP)) {
-      learned(SOLO_TIP);
-      setTimeout(() => toast('Tip: press and hold a station to hear only that one', 4200), 600);
-    }
-  },
-  onAdd: () => settings.openSearch(),
-  onSolo(id) {
-    primeAudio();
+  // Tap a station: hear only that one. Tap it again: everything plays.
+  onTune(id) {
+    primeAudio();     // a tap is a user gesture: unlock mobile audio right now
+    if (getSolo() === id) { restoreFromSolo(); return; }
     const st = findMyStation(id);
     if (knownCounts()[id] === 0) { toast(`${st?.name || 'This station'} hasn't shared a song list today`); return; }
-    learned(SOLO_TIP);
     jumpToStation = id;             // leave the current song if it's from elsewhere
     soloStation(id);
+    if (!hasLearned(SOLO_TIP)) {
+      learned(SOLO_TIP);
+      setTimeout(() => toast(`Only ${st?.name || 'this station'} now. Swipe the dial to hear all stations again.`, 4200), 500);
+    }
   },
-  onUnsolo() {
-    primeAudio();
-    restoreFromSolo();
-    toast('All your stations are back on');
-  },
+  onUnsolo() { primeAudio(); restoreFromSolo(); },
+  onAdd: () => settings.openSearch(),
 });
 
-// One-time tip, since press-and-hold can't be seen.
+// One-time explainer the first time someone tunes in to a single station.
 const SOLO_TIP = 'rf_learned_solo';
 const learned = (k) => { try { localStorage.setItem(k, '1'); } catch {} };
 const hasLearned = (k) => { try { return !!localStorage.getItem(k); } catch { return true; } };
@@ -77,7 +77,8 @@ function syncDial() {
 let rebuildTimer = 0;
 onStoreChange((what) => {
   if (what === 'openIn') { feed.refreshLinks(); return; }
-  if (what === 'stations') syncDial(); else { dial.setSelected(getSelected()); dial.setSolo(getSolo()); }
+  if (what === 'stations') { songCache.clear(); syncDial(); }
+  else { dial.setSelected(getSelected()); dial.setSolo(getSolo()); }
   clearTimeout(rebuildTimer);
   rebuildTimer = setTimeout(() => rebuild({ fresh: !feed.hasTracks() }), 150);
 });
@@ -135,11 +136,13 @@ syncCount();
 // ── Keyboard ────────────────────────────────────────────────
 document.addEventListener('keydown', (e) => {
   if (anySheetOpen() || e.metaKey || e.ctrlKey || e.altKey) return;
-  if (e.target.closest?.('input, textarea, .dial')) return;
+  if (e.target.closest?.('input, textarea')) return;
   const k = e.key;
   if (k === ' ' && !e.target.closest('button, a')) { e.preventDefault(); feed.togglePlay(); }
   else if (k === 'ArrowDown' || k === 'j') { e.preventDefault(); feed.next(); }
   else if (k === 'ArrowUp' || k === 'k') { e.preventDefault(); feed.prev(); }
+  else if (k === 'ArrowRight') { e.preventDefault(); feed.browse(1); }
+  else if (k === 'ArrowLeft') { e.preventDefault(); feed.browse(-1); }
   else if (k === 's' || k === 'l') feed.save();
 });
 

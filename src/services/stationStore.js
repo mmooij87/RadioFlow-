@@ -9,9 +9,12 @@
 import { STATIONS, flagOf } from '../data/stations.js';
 
 const LIST_KEY = 'rf_my_stations_v1';
-const SEL_KEY  = 'radioflow_stations';      // selected ids (kept from v1 for continuity)
 const OPEN_KEY = 'rf_open_in';
-const SOLO_KEY = 'rf_solo_prev';            // selection to restore after a solo
+const SOLO_KEY = 'rf_solo';                 // id of the station tuned in alone, if any
+
+// Retire the per-station on/off state of earlier versions: every station on
+// your dial now plays, unless you've tuned in to one of them alone.
+try { localStorage.removeItem('radioflow_stations'); localStorage.removeItem('rf_solo_prev'); } catch {}
 
 export const SERVICES = {
   spotify: { label: 'Spotify' },
@@ -57,63 +60,45 @@ export function addStation(st) {
   if (list.some(s => s.id === st.id || (st.orb && s.orb === st.orb))) return false;
   list.push(st);
   saveList(list);
-  const sel = getSelected(); sel.add(st.id); saveSelected(sel);
+  clearSolo();
   emit('stations');
   return true;
 }
 
 export function removeStation(id) {
-  if (getSolo() === id) restoreFromSolo(false);
+  if (getSolo() === id) clearSolo();
   saveList(getMyStations().filter(s => s.id !== id));
-  const sel = getSelected(); sel.delete(id); saveSelected(sel);
   emit('stations');
 }
 
 export function resetStations() {
-  try { localStorage.removeItem(LIST_KEY); localStorage.removeItem(SEL_KEY); localStorage.removeItem(SOLO_KEY); } catch {}
+  try { localStorage.removeItem(LIST_KEY); localStorage.removeItem(SOLO_KEY); } catch {}
   emit('stations');
 }
 
-// ── On / off ───────────────────────────────────────────────
-/** Selected station ids. New listeners start with every station on. */
-export function getSelected() {
-  const ids = new Set(getMyStations().map(s => s.id));
-  const saved = read(SEL_KEY, null);
-  if (!Array.isArray(saved)) return ids;
-  return new Set(saved.filter(id => ids.has(id)));
-}
-function saveSelected(set) { write(SEL_KEY, [...set]); }
-export function setStationOn(id, on) {
-  clearSolo();                                // touching the dial by hand ends a solo
-  const sel = getSelected();
-  if (on) sel.add(id); else sel.delete(id);
-  saveSelected(sel);
-  emit('selection');
+// ── Playing: all stations, or one tuned in alone ─────────
+/** The station tuned in alone, or null when everything plays. */
+export function getSolo() {
+  const id = read(SOLO_KEY, null);
+  return id && getMyStations().some(s => s.id === id) ? id : null;
 }
 
-// ── Solo: hear one station only ────────────────────────────
-/** The soloed station id, or null. */
-export function getSolo() {
-  const prev = read(SOLO_KEY, null);
-  if (!Array.isArray(prev)) return null;
-  const sel = getSelected();
-  return sel.size === 1 ? [...sel][0] : null;
+/** Ids of the stations currently feeding the mix. */
+export function getSelected() {
+  const solo = getSolo();
+  return solo ? new Set([solo]) : new Set(getMyStations().map(s => s.id));
 }
 
 export function soloStation(id) {
-  if (!getSolo()) write(SOLO_KEY, [...getSelected()]);   // remember what was on
-  saveSelected(new Set([id]));
+  write(SOLO_KEY, id);
   emit('selection');
 }
 
-/** Put back the stations that were on before the solo. */
-export function restoreFromSolo(notify = true) {
-  const prev = read(SOLO_KEY, null);
+/** Back to every station on the dial. */
+export function restoreFromSolo() {
+  if (!getSolo()) return;
   clearSolo();
-  const ids = new Set(getMyStations().map(s => s.id));
-  const back = Array.isArray(prev) ? prev.filter(id => ids.has(id)) : [...ids];
-  saveSelected(new Set(back.length ? back : ids));
-  if (notify) emit('selection');
+  emit('selection');
 }
 
 function clearSolo() { try { localStorage.removeItem(SOLO_KEY); } catch {} }

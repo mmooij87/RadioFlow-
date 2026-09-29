@@ -1,19 +1,18 @@
 /**
  * The tuning dial — the app's one bold element.
  *
- * Every station on the listener's dial sits on a horizontal radio scale.
- * Tap a station to switch it on/off; lit stations feed the mix. A needle
- * glides to the station the current song came from. The scale ends in an
- * "Add" slot that opens the station search.
+ * Every station on the listener's dial sits on a horizontal radio scale and
+ * plays in the mix. Tap a station to tune in to it alone; tap it again, or
+ * swipe the dial sideways, and every station plays again. A needle glides
+ * to the station the current song came from. The scale ends in an "Add"
+ * slot that opens the station search.
  */
 import { stationTopLine, stationPlace } from '../services/stationStore.js';
 import { icon } from './icons.js';
 
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const HOLD_MS = 480;
-
-export function createDial(root, { onToggle, onAdd, onSolo, onUnsolo }) {
+export function createDial(root, { onTune, onUnsolo, onAdd }) {
   let stations = [];
   let selected = new Set();
   let solo = null;
@@ -21,13 +20,13 @@ export function createDial(root, { onToggle, onAdd, onSolo, onUnsolo }) {
   let needleId = null;
 
   root.innerHTML = `
-    <p class="dial__hint" id="dial-hint" hidden>Tap a station to start listening</p>
+    <p class="dial__hint" id="dial-hint" hidden>Add a station to start listening</p>
     <div class="dial__solo" id="dial-solo" hidden>
       <span class="dial__solo-text"></span>
       <button class="dial__solo-btn" data-act="unsolo">Hear all stations</button>
     </div>
     <div class="dial__window" id="dial-window">
-      <div class="dial__scale" role="group" aria-label="Stations, tap to switch on or off"></div>
+      <div class="dial__scale" role="group" aria-label="Stations. Tap one to hear only that station."></div>
     </div>`;
   const win = root.querySelector('#dial-window');
   const scale = root.querySelector('.dial__scale');
@@ -35,58 +34,32 @@ export function createDial(root, { onToggle, onAdd, onSolo, onUnsolo }) {
 
   const soloBar = root.querySelector('#dial-solo');
 
-  // Press and hold a station (or right-click it) to hear only that one.
-  let hold = null;
-  let swallowClick = false;
-  root.addEventListener('pointerdown', (e) => {
-    const btn = e.target.closest('.dial__st');
-    if (!btn || e.button > 0) return;
-    hold = { id: btn.dataset.id, x: e.clientX, y: e.clientY, btn };
-    btn.classList.add('dial__st--holding');
-    hold.timer = setTimeout(() => {
-      swallowClick = true;
-      btn.classList.remove('dial__st--holding');
-      navigator.vibrate?.(15);
-      soloToggle(hold.id);
-      hold = null;
-    }, HOLD_MS);
-  });
-  const cancelHold = () => {
-    if (!hold) return;
-    clearTimeout(hold.timer);
-    hold.btn.classList.remove('dial__st--holding');
-    hold = null;
-  };
-  root.addEventListener('pointermove', (e) => {
-    if (hold && Math.hypot(e.clientX - hold.x, e.clientY - hold.y) > 10) cancelHold();
-  });
-  root.addEventListener('pointerup', cancelHold);
-  root.addEventListener('pointercancel', cancelHold);
-  root.addEventListener('pointerleave', cancelHold);
-  root.addEventListener('contextmenu', (e) => {
-    const btn = e.target.closest('.dial__st');
-    if (!btn) return;
-    e.preventDefault();
-    if (swallowClick) return;            // touch long-press already handled it
-    soloToggle(btn.dataset.id);
-  });
-  // Keyboard: Shift+Enter on a focused station.
-  root.addEventListener('keydown', (e) => {
-    const btn = e.target.closest('.dial__st');
-    if (btn && e.key === 'Enter' && e.shiftKey) { e.preventDefault(); soloToggle(btn.dataset.id); }
-  });
-
-  function soloToggle(id) {
-    if (solo === id) onUnsolo(); else onSolo(id);
-  }
-
   root.addEventListener('click', (e) => {
-    if (swallowClick) { swallowClick = false; e.preventDefault(); return; }
     if (e.target.closest('[data-act="unsolo"]')) { onUnsolo(); return; }
     if (e.target.closest('.dial__add')) { onAdd(); return; }
     const btn = e.target.closest('.dial__st');
-    if (btn) onToggle(btn.dataset.id, !selected.has(btn.dataset.id));
+    if (btn) onTune(btn.dataset.id);
   });
+
+  // Swiping the dial sideways brings every station back. We watch the
+  // finger (and the wheel / trackpad) directly rather than scroll events,
+  // because the needle also scrolls the dial by itself after a tap.
+  let touchX = null;
+  win.addEventListener('touchstart', (e) => { touchX = e.touches[0]?.clientX ?? null; }, { passive: true });
+  win.addEventListener('touchmove', (e) => {
+    if (touchX === null || !solo) return;
+    const x = e.touches[0]?.clientX ?? touchX;
+    if (Math.abs(x - touchX) > 36) { touchX = null; onUnsolo(); }
+  }, { passive: true });
+  win.addEventListener('touchend', () => { touchX = null; }, { passive: true });
+  let wheelSum = 0, wheelTimer = 0;
+  win.addEventListener('wheel', (e) => {
+    if (!solo) return;
+    wheelSum += Math.abs(e.deltaX) + Math.abs(e.deltaY);
+    clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(() => { wheelSum = 0; }, 400);
+    if (wheelSum > 60) { wheelSum = 0; onUnsolo(); }
+  }, { passive: true });
 
   // Let a vertical mouse wheel scroll the dial sideways on desktop.
   win.addEventListener('wheel', (e) => {
@@ -99,7 +72,7 @@ export function createDial(root, { onToggle, onAdd, onSolo, onUnsolo }) {
     scale.innerHTML = `
       ${stations.map(st => `
         <button class="dial__st" data-id="${esc(st.id)}" aria-pressed="false"
-          title="${esc(st.name)}${st.city ? ', ' + esc(st.city) : ''}. Press and hold to hear only this station.">
+          title="${esc(st.name)}${st.city ? ', ' + esc(st.city) : ''}. Tap to hear only this station.">
           <span class="dial__freq">${esc(stationTopLine(st))}</span>
           <span class="dial__name">${esc(st.name)}</span>
           <span class="dial__city">${esc(stationPlace(st))}</span>
@@ -120,15 +93,15 @@ export function createDial(root, { onToggle, onAdd, onSolo, onUnsolo }) {
     scale.querySelectorAll('.dial__st').forEach(btn => {
       const id = btn.dataset.id;
       const on = selected.has(id);
-      btn.setAttribute('aria-pressed', String(on));
+      btn.setAttribute('aria-pressed', String(id === solo));   // "tuned in alone"
       btn.classList.toggle('dial__st--on', on);
       btn.classList.toggle('dial__st--quiet', counts[id] === 0);
       btn.classList.toggle('dial__st--tuned', id === needleId);
     });
     scale.querySelectorAll('.dial__st').forEach(btn => btn.classList.toggle('dial__st--solo', btn.dataset.id === solo));
-    root.classList.toggle('dial--empty', selected.size === 0);
+    root.classList.toggle('dial--empty', stations.length === 0);
     root.classList.toggle('dial--solo', !!solo);
-    hint.hidden = selected.size !== 0;
+    hint.hidden = stations.length !== 0;
     const st = solo && stations.find(s => s.id === solo);
     soloBar.hidden = !st;
     document.body.classList.toggle('is-solo', !!st);   // makes room above the dial

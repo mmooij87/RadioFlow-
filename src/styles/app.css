@@ -159,6 +159,13 @@ a { text-decoration: none; }
 
 .slide__info { display: flex; align-items: flex-start; gap: 12px; }
 .slide__text { flex: 1; min-width: 0; }
+.slide__from {
+  font-size: 13px; font-weight: 700; color: var(--mute);
+  margin-bottom: 4px; letter-spacing: .01em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.slide__pos { font-weight: 500; font-variant-numeric: tabular-nums; }
+.art--dragging { transition: none; cursor: grabbing; }
 .slide__title {
   font-size: clamp(26px, 7.2vw, 36px);
   font-weight: 800; letter-spacing: -.025em; line-height: 1.04;
@@ -327,6 +334,19 @@ a { text-decoration: none; }
 }
 .swipe-hint__heart { display: flex; color: var(--accent); }
 .swipe-hint--save { animation: hint-in .45s var(--ease); }
+/* Sideways variant: the fingertip travels left. */
+.swipe-hint__finger--side {
+  width: 52px; height: 26px;
+  background: linear-gradient(to left, transparent, rgba(247,242,233,.14));
+}
+.swipe-hint__finger--side .swipe-hint__dot { left: auto; right: 3px; bottom: 3px; animation-name: fingertip-side; }
+@keyframes fingertip-side {
+  0%   { transform: translateX(0); opacity: 0; }
+  12%  { opacity: 1; }
+  60%  { transform: translateX(-26px); opacity: 1; }
+  80%, 100% { transform: translateX(-26px); opacity: 0; }
+}
+.set-help { font-size: 14px; color: var(--mute); margin-top: 12px; max-width: 46ch; }
 /* The first song lifts to reveal the next one, then settles back. */
 .slide--peek { animation: peek 1.5s cubic-bezier(.45, 0, .2, 1); }
 @keyframes peek {

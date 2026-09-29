@@ -62,6 +62,7 @@ export function createSettingsSheet(dialog, { onClose }) {
                     aria-label="Remove ${esc(st.name)} from your dial">${icon('close', { size: 18 })}</button>
                 </li>`).join('')}
             </ul>` : `<p class="set-empty">Your dial is empty. Add a few stations to start listening.</p>`}
+          <p class="set-help">All your stations play in the mix. Tap one on the dial to hear only that station; swipe the dial to bring them all back.</p>
           <button class="link-btn" data-act="reset">Restore the default stations</button>
         </section>
       </div>`;

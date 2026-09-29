@@ -240,6 +240,29 @@ export const knownCounts = () => ({ ...counts });
  * final-shuffle. Tracks come back un-enriched: covers and previews are
  * fetched on demand by the feed.
  */
+function toTrack(st, t) {
+  return {
+    id:          trackId(st.id, t.artist, t.title),
+    artist:      t.artist,
+    title:       t.title,
+    album:       '',
+    coverArt:    null,
+    previewUrl:  null,
+    duration:    null,
+    deezerLink:  null,
+    appleLink:   null,
+    stationId:   st.id,
+    station:     st.name || 'Radio',
+  };
+}
+
+/** A station's songs in playlist order (most recently played first). */
+export async function stationSongs(station) {
+  const list = await getStationTracks(station).catch(() => []);
+  const seen = new Set();
+  return list.map(t => toTrack(station, t)).filter(t => !seen.has(t.id) && seen.add(t.id));
+}
+
 export async function buildMix(stations, exclude = new Set()) {
   if (!stations?.length) return [];
   const lists = await Promise.all(stations.map(st => getStationTracks(st).catch(() => [])));
@@ -247,19 +270,7 @@ export async function buildMix(stations, exclude = new Set()) {
   const queues = stations
     .map((st, k) => {
       const tracks = lists[k]
-        .map(t => ({
-          id:          trackId(st.id, t.artist, t.title),
-          artist:      t.artist,
-          title:       t.title,
-          album:       '',
-          coverArt:    null,
-          previewUrl:  null,
-          duration:    null,
-          deezerLink:  null,
-          appleLink:   null,
-          stationId:   st.id,
-          station:     st.name || 'Radio',
-        }))
+        .map(t => toTrack(st, t))
         .filter(t => !exclude.has(t.id));
       return { queue: shuffle(tracks).slice(0, PER_STATION) };
     })

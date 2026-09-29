@@ -5,7 +5,8 @@
  *   tap         play / pause           (also: Space, the play icon)
  *   double-tap  save                   (also: heart button, S key)
  *   long-press  share                  (also: Share in the context menu… and navigator.share)
- *   swipe up    next song              (also: ↓ / J, headphone "next")
+ *   swipe up    next song in the mix   (also: ↓ / J, headphone "next")
+ *   swipe side  more from this station (also: ← / →)
  *
  * When a 30-second preview ends, the next song slides in by itself, so it
  * keeps behaving like radio.
@@ -25,11 +26,14 @@ const DOUBLE_TAP_MS = 280;
 const LONG_PRESS_MS = 520;
 const LEARNED_SWIPE = 'rf_learned_swipe';
 const LEARNED_SAVE = 'rf_learned_save';
+const LEARNED_SIDE = 'rf_learned_side';
+const DRAG_START = 12;       // px before a sideways drag takes over
+const DRAG_COMMIT = 70;      // px (or a fast flick) to move to the next song
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const flag = (k) => { try { return !!localStorage.getItem(k); } catch { return true; } };
 const setFlag = (k) => { try { localStorage.setItem(k, '1'); } catch {} };
 
-export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, isBusy = () => false }) {
+export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, getStationSongs, isBusy = () => false }) {
   let tracks = [];
   let idx = 0;
   let observer = null;
@@ -59,10 +63,16 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, isBu
 
   // ── Rendering ─────────────────────────────────────────────
   function slideHtml(t, i) {
+    return `
+      <section class="slide" data-i="${i}" aria-roledescription="song" aria-label="${esc(t.title)} by ${esc(t.artist)}">
+        ${slideInner(t)}
+      </section>`;
+  }
+
+  function slideInner(t) {
     const st = findStation(t.stationId) || {};
     const saved = isFavorite(t.id);
     return `
-      <section class="slide" data-i="${i}" aria-roledescription="song" aria-label="${esc(t.title)} by ${esc(t.artist)}">
         <div class="slide__stage">
           <button class="art art--loading" aria-label="Play or pause. Double-tap to save.">
             <span class="art__img"></span>
@@ -72,16 +82,16 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, isBu
         </div>
         <div class="slide__info">
           <div class="slide__text">
+            <p class="slide__from"><span class="slide__from-name">${esc(st.name || t.station)}</span><span class="slide__pos"></span></p>
             <h2 class="slide__title">${esc(t.title)}</h2>
-            <p class="slide__artist">${esc(t.artist)}<span class="sr-only">, played on ${esc(st.name || t.station)}</span></p>
+            <p class="slide__artist">${esc(t.artist)}</p>
           </div>
           <button class="save-btn" aria-pressed="${saved}" aria-label="Save song">${icon('heart', { size: 26, filled: saved })}</button>
         </div>
         <div class="slide__bar" aria-hidden="true"><span></span></div>
         <div class="slide__foot">
           <a class="open-link" href="${esc(songUrl(t))}" target="_blank" rel="noopener">${openLabel()} ${icon('external', { size: 16 })}</a>
-        </div>
-      </section>`;
+        </div>`;
   }
 
   const endHtml = () => `
@@ -160,6 +170,7 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, isBu
     const t = tracks[i];
     if (!t) return;
     if (i > 0) learnedSwipe();
+    setTimeout(maybeSideHint, 1800);
     onTrackChange(t);
     applyTint(i);
     startProgress();
@@ -394,6 +405,27 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, isBu
     [a, b].forEach(el => { if (!el) return; el.classList.remove('slide--peek'); void el.offsetWidth; el.classList.add('slide--peek'); });
   }
 
+  let songsSeen = 0;
+  function maybeSideHint() {
+    songsSeen++;
+    if (songsSeen < 3 || flag(LEARNED_SIDE) || !flag(LEARNED_SWIPE) || !hintEl || isBusy()) return;
+    if (!hintEl.hidden) return;
+    setFlag(LEARNED_SIDE);
+    const t = cur();
+    const touch = matchMedia('(pointer: coarse)').matches;
+    hintEl.className = 'swipe-hint swipe-hint--side';
+    hintEl.innerHTML = `
+      <span class="swipe-hint__finger swipe-hint__finger--side" aria-hidden="true"><span class="swipe-hint__dot"></span></span>
+      <span class="swipe-hint__text">${touch ? 'Swipe the cover sideways' : 'Drag the cover sideways (or press ← →)'} for more from ${esc(t?.station || 'this station')}</span>`;
+    hintEl.hidden = false;
+    const art = slideAt(idx)?.querySelector('.art');
+    if (art && !reduceMotion()) {
+      art.animate([{ transform: 'none' }, { transform: 'translateX(-46px) rotate(-1.5deg)' }, { transform: 'none' }],
+        { duration: 1100, easing: 'cubic-bezier(.45,0,.2,1)', delay: 300 });
+    }
+    setTimeout(() => { if (hintEl.classList.contains('swipe-hint--side')) hintEl.hidden = true; }, 5000);
+  }
+
   function learnedSwipe() {
     if (flag(LEARNED_SWIPE)) return;
     setFlag(LEARNED_SWIPE);
@@ -415,14 +447,106 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, isBu
     setTimeout(() => { if (hintEl.classList.contains('swipe-hint--save')) hintEl.hidden = true; }, 4200);
   }
 
+  // ── Sideways: more from this station ──────────────────────
+  let browsing = false;
+
+  function endDrag(commit) {
+    if (!drag) return;
+    const { art, dx } = drag;
+    drag = null;
+    art.classList.remove('art--dragging');
+    if (commit) browse(dx < 0 ? 1 : -1, { fromDrag: art, dx });
+    else art.animate([{ transform: art.style.transform || 'none' }, { transform: 'none' }],
+      { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' }).finished.then(() => { art.style.transform = ''; });
+    if (!commit) art.style.transform = '';
+  }
+
+  /**
+   * Replace the current song with the next (+1, swipe left) or previous
+   * (-1, swipe right) song from the same station's playlist. The vertical
+   * mix carries on from here afterwards.
+   */
+  async function browse(dir, { fromDrag = null, dx = 0 } = {}) {
+    const t = cur();
+    const s = slideAt(idx);
+    if (!t || !s || browsing || !getStationSongs) { resetArt(fromDrag); return; }
+    browsing = true;
+    try {
+      const list = await getStationSongs(t.stationId);
+      let pos = list.findIndex(x => x.id === t.id);
+      if (pos < 0) pos = dir > 0 ? -1 : list.length;
+      const nextPos = pos + dir;
+      if (nextPos < 0 || nextPos >= list.length || !list.length) {
+        bounce(s.querySelector('.art'), dir, fromDrag);
+        toast(dir > 0 ? `That's the earliest song we have from ${t.station}` : `That's the latest song from ${t.station}`);
+        return;
+      }
+      setFlag(LEARNED_SIDE);
+      const nt = { ...list[nextPos] };
+      await swapSlide(idx, nt, dir, fromDrag, dx);
+      showPos(s, nextPos, list.length);
+      activate(idx, { autoplay: true });
+    } finally {
+      browsing = false;
+    }
+  }
+
+  function resetArt(art) { if (art) art.style.transform = ''; }
+
+  function bounce(art, dir, fromDrag) {
+    if (!art) return;
+    const from = fromDrag ? art.style.transform || 'none' : 'none';
+    art.style.transform = '';
+    if (reduceMotion()) return;
+    art.animate([
+      { transform: from },
+      { transform: `translateX(${dir > 0 ? -24 : 24}px)` },
+      { transform: 'none' },
+    ], { duration: 360, easing: 'cubic-bezier(.2,.8,.2,1)' });
+  }
+
+  async function swapSlide(i, t, dir, fromDrag, dx) {
+    const s = slideAt(i);
+    const oldArt = s.querySelector('.art');
+    const w = oldArt.getBoundingClientRect().width;
+    const out = dir > 0 ? -1 : 1;           // swipe left → old cover leaves to the left
+    if (!reduceMotion()) {
+      await oldArt.animate([
+        { transform: fromDrag ? oldArt.style.transform : 'none', opacity: 1 },
+        { transform: `translateX(${out * (w + 40)}px) rotate(${out * 6}deg)`, opacity: 0 },
+      ], { duration: 190, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' }).finished;
+    }
+    tracks[i] = t;
+    s.className = 'slide';
+    s.style.removeProperty('--tint');
+    s.setAttribute('aria-label', `${t.title} by ${t.artist}`);
+    s.innerHTML = slideInner(t);
+    const art = s.querySelector('.art');
+    if (!reduceMotion()) {
+      art.animate([
+        { transform: `translateX(${-out * (w * .6)}px)`, opacity: 0 },
+        { transform: 'none', opacity: 1 },
+      ], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      s.querySelector('.slide__info')?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260 });
+    }
+  }
+
+  function showPos(s, pos, total) {
+    const el = s?.querySelector('.slide__pos');
+    if (el) el.textContent = ` · ${pos + 1} of ${total}`;
+  }
+
   // ── Gestures on the cover ─────────────────────────────────
   let press = null;       // { x, y, timer, long }
   let lastTap = null;     // { t, x, y }
   let singleTimer = null;
 
+  let drag = null;        // { art, id, x, y, t, dx, active }
+
   root.addEventListener('pointerdown', (e) => {
     const art = e.target.closest('.art');
     if (!art || e.button > 0) return;
+    drag = { art, id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), dx: 0, active: false };
     press = { x: e.clientX, y: e.clientY, long: false };
     press.timer = setTimeout(() => {
       press.long = true;
@@ -432,12 +556,31 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, isBu
   });
   root.addEventListener('pointermove', (e) => {
     if (press && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 10) { clearTimeout(press.timer); press = null; }
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.active) {
+      if (Math.abs(dx) < DRAG_START || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+      drag.active = true;
+      try { drag.art.setPointerCapture(e.pointerId); } catch {}
+      drag.art.classList.add('art--dragging');
+      clearTimeout(singleTimer); lastTap = null;
+    }
+    drag.dx = dx;
+    drag.art.style.transform = `translateX(${dx}px) rotate(${dx / 40}deg)`;
   });
   const cancelPress = () => { if (press) { clearTimeout(press.timer); press = null; } };
-  root.addEventListener('pointercancel', cancelPress);
+  root.addEventListener('pointercancel', () => { cancelPress(); endDrag(false); });
   root.addEventListener('scroll', cancelPress, { passive: true });
 
   root.addEventListener('pointerup', (e) => {
+    if (drag?.active) {
+      const dt = performance.now() - drag.t;
+      const fast = Math.abs(drag.dx) > 30 && Math.abs(drag.dx) / dt > 0.5;
+      endDrag(Math.abs(drag.dx) > DRAG_COMMIT || fast);
+      cancelPress();
+      return;
+    }
+    drag = null;
     if (!press) return;
     clearTimeout(press.timer);
     const wasLong = press.long;
@@ -464,6 +607,7 @@ export function createFeed(root, { onTrackChange, onFirstPlay, onReshuffle, isBu
 
   return {
     setTracks, replaceUpcoming, renderEmpty, next, prev, togglePlay, save, share,
+    browse: (dir) => browse(dir),
     playedIds: () => new Set(tracks.slice(0, idx + 1).map(t => t.id)),
     hasTracks: () => tracks.length > 0,
     current: cur,
